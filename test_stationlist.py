@@ -1,6 +1,8 @@
 import unittest
+import os
 
 from stationlist import RAOBstation_list
+
 
 class TestRAOBstation_list(unittest.TestCase):
 
@@ -25,25 +27,26 @@ class TestRAOBstation_list(unittest.TestCase):
 
         }
 
-        station_list_file = "station-query.html"
+        self.station_list_file = "station-query.html"
+        assert(os.path.isfile(self.station_list_file))
 
         self.stationList = RAOBstation_list()
-        self.stationList.read(station_list_file)
-
+        self.stationList.read(self.station_list_file)
 
     def test_by_index(self):
         station = self.stationList.get_by_stnm('01003')
         self.assertEqual(len(station), 1)
-        self.assertDictEqual(station[0],self.stn['01003'])
+        self.assertDictEqual(station[0], self.stn['01003'])
 
         station = self.stationList.get_by_stnm('01015')
         self.assertEqual(len(station), 1)
-        self.assertDictEqual(station[0],self.stn['01015'])
+        self.assertDictEqual(station[0], self.stn['01015'])
 
     def test_by_id(self):
         station = self.stationList.get_by_id('BJC')
         self.assertEqual(len(station), 1)
-        self.assertDictEqual(station[0],self.stn['BJC'])
+        self.assertDictEqual(station[0], self.stn['BJC'])
+
 
 if __name__ == "__main__":
 
