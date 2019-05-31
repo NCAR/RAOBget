@@ -111,21 +111,21 @@ def main(args):
                         "data/imagery from the University of Wyoming " +
                         "Radiosonde Archive")
     parser.add_argument('--region', type=str, default='North America',
-                      help='Region for which to download sonde info. ' +
-                           'Defaults to North America.')
+                        help='Region for which to download sonde info. ' +
+                        'Defaults to North America.')
     parser.add_argument('--raobtype', type=str, default='TEXT:LIST',
-                      help='Data/image type to request - ' +
-                      'TEXT:LIST or GIF:SKEWT')
+                        help='Data/image type to request - ' +
+                        'TEXT:LIST or GIF:SKEWT')
     parser.add_argument('--year', type=str, default='2019',
-                      help='Year to request data ')
+                        help='Year to request data ')
     parser.add_argument('--month', type=str, default='05',
-                      help='Month to request data ')
+                        help='Month to request data ')
     parser.add_argument('--begin', type=str, default='2812',
-                      help='Begin day and hour (ddhh) to request data ')
+                        help='Begin day and hour (ddhh) to request data ')
     parser.add_argument('--end', type=str, default='2812',
-                      help='End day and hour (ddhh) to request data ')
+                        help='End day and hour (ddhh) to request data ')
     parser.add_argument('--stnm', type=str, default='72672',
-                      help='Station number for which to request data ')
+                        help='Station number for which to request data ')
     (args) = parser.parse_args()
 
     raob = RAOBget()

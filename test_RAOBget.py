@@ -22,7 +22,7 @@ class TestRAOBstation_list(unittest.TestCase):
         self.raob = RAOBget()
 
         # Set requested station to default values
-        self.option=options()
+        self.option = options()
 
         self.raob.set_type(self.option)
         self.raob.set_region(self.option)
