@@ -49,10 +49,10 @@ class RAOBget:
         self.request['month'] = args.month
 
     def set_begin(self, args):
-        self.request['begin'] = args.begin
+        self.request['begin'] = args.bday+args.bhr
 
     def set_end(self, args):
-        self.request['end'] = args.end
+        self.request['end'] = args.eday+args.ehr
 
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
@@ -120,10 +120,16 @@ def main(args):
                         help='Year to request data ')
     parser.add_argument('--month', type=str, default='05',
                         help='Month to request data ')
-    parser.add_argument('--begin', type=str, default='2812',
-                        help='Begin day and hour (ddhh) to request data ')
-    parser.add_argument('--end', type=str, default='2812',
-                        help='End day and hour (ddhh) to request data ')
+    parser.add_argument('--bday', type=str, default='28',
+                        help='Begin day (dd) to request data ')
+    parser.add_argument('--bhr', type=str, default='12',
+                        choices=['00', '12'],
+                        help='Begin hour (hh) to request data ')
+    parser.add_argument('--eday', type=str, default='28',
+                        help='End day (dd) to request data ')
+    parser.add_argument('--ehr', type=str, default='12',
+                        choices=['00', '12'],
+                        help='End hour (hh) to request data ')
     parser.add_argument('--stnm', type=str, default='72672',
                         help='Station number for which to request data ')
     (args) = parser.parse_args()

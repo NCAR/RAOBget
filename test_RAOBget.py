@@ -10,8 +10,10 @@ class options():
     raobtype = 'TEXT:LIST'
     year = "2019"
     month = "05"
-    begin = "2812"
-    end = "2812"
+    bday = "28"
+    bhr = "12"
+    eday = "28"
+    ehr = "12"
     stnm = "72672"
 
 
