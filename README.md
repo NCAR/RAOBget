@@ -5,8 +5,7 @@ Wyoming Radiosonde Archive by building URLs like:
 
  * To download TEXT:LIST data:
 ```
-http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST&
-#       YEAR=2019&MONTH=05&FROM=2812&TO=2812&STNM=72672
+http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST&YEAR=2019&MONTH=05&FROM=2812&TO=2812&STNM=72672
 ```
  * To download GIF:SKEWT images:
 ```

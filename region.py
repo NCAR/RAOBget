@@ -11,7 +11,7 @@
 ###############################################################################
 
 RAOBregion = {
-    # Region name       : URL region identifier
+    # Region name: URL region identifier
     'North America': "naconf",
     'South America': "samer",
     'South Pacific': "pac",
