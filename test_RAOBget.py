@@ -14,7 +14,7 @@ class TestRAOBstation_list(unittest.TestCase):
         outfile = self.raob.retrieve_textlist()
 
         # Compare retrieved text file to control file
-        ctrlfile = "726722019052812.ctrl"
+        ctrlfile = "data/726722019052812.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
