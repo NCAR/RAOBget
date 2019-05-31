@@ -121,15 +121,15 @@ def main(args):
     parser.add_argument('--month', type=str, default='05',
                         help='Month to request data ')
     parser.add_argument('--bday', type=str, default='28',
-                        help='Begin day (dd) to request data ')
+                        help='Begin day (dd) to request data UTC')
     parser.add_argument('--bhr', type=str, default='12',
                         choices=['00', '12'],
-                        help='Begin hour (hh) to request data ')
+                        help='Begin hour (hh) to request data UTC')
     parser.add_argument('--eday', type=str, default='28',
-                        help='End day (dd) to request data ')
+                        help='End day (dd) to request data UTC')
     parser.add_argument('--ehr', type=str, default='12',
                         choices=['00', '12'],
-                        help='End hour (hh) to request data ')
+                        help='End hour (hh) to request data UTC')
     parser.add_argument('--stnm', type=str, default='72672',
                         help='Station number for which to request data ')
     (args) = parser.parse_args()
