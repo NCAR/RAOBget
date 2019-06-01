@@ -2,6 +2,7 @@
 import unittest
 
 from RAOBget import RAOBget
+from textlist import RAOBtextlist
 
 
 # Set default values for testing that match test data.
@@ -36,14 +37,17 @@ class TestRAOBstation_list(unittest.TestCase):
 
     def test_TEXT_LIST(self):
 
+        textlist = RAOBtextlist()
+
         ctrlurl = "http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&" + \
                   "TYPE=TEXT%3ALIST&YEAR=2019&MONTH=05&FROM=2812&TO=2812&" + \
                   "STNM=72672"
 
-        url = self.raob.get_url_textlist()
+        request = self.raob.get_request()
+        url = textlist.get_url_textlist(request)
         self.assertEqual(url, ctrlurl)
 
-        outfile = self.raob.retrieve_textlist()
+        outfile = textlist.retrieve_textlist(request)
 
         # Compare retrieved text file to control file
         ctrlfile = "data/726722019052812.ctrl"

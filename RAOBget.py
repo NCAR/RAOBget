@@ -8,13 +8,10 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
-import os
 import sys
-import wget
 import argparse
 
-from region import RAOBregion
-from type import RAOBtype
+from textlist import RAOBtextlist
 
 RAOBrequest = {  # Default station used in testing. Will be overwritten with
                  # requested station in normal usage.
@@ -33,8 +30,6 @@ class RAOBget:
     def __init__(self):
 
         self.request = RAOBrequest  # dictionary to hold all URL components
-        self.region = RAOBregion    # Instance of region dictionary
-        self.type = RAOBtype    # Instance of data/imagery type dictionary
 
     def set_region(self, args):
         self.request['region'] = args.region
@@ -57,55 +52,21 @@ class RAOBget:
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
 
-    def set_outfile_textlist(self):
+    def get_request(self):
 
-        # Build output filename
-        self.outfile = self.request['stnm'] + self.request['year'] + \
-                self.request['month'] + self.request['begin'] + ".txt"
+        return(self.request)
 
-    def get_outfile_textlist(self):
-        return(self.outfile)
+    def retrieve(self):
 
-    def get_url_textlist(self):
-
-        url = "http://weather.uwyo.edu/cgi-bin/sounding?"
-        url += "region=" + self.region[self.request['region']]
-        url += "&TYPE=" + self.type[self.request['raobtype']]
-        url += "&YEAR=" + self.request['year']
-        url += "&MONTH=" + self.request['month']
-        url += "&FROM=" + self.request['begin']
-        url += "&TO=" + self.request['end']
-        url += "&STNM=" + self.request['stnm']
-        print(url)
-
-        return(url)
-
-    def retrieve_textlist(self):
-
-        url = self.get_url_textlist()
-
-        # Check if filename already exists. wget will fail if it does.
-        # Since they don't change, only download new ones.
-        self.set_outfile_textlist()
-        outfile = self.get_outfile_textlist()
-
-        if not os.path.isfile(outfile):
-            # Check if online - if not, exit gracefully
-            # TBD
-            # if (offline):
-            #    system("cp data/726722019052812.ctrl 726722019052812.txt")
-
-            # Get requested URL. I can't recall what wget returns
-            # as filename.
-            filename = wget.download(url, outfile)
-            print("\n", filename)
-
-        return(self.get_outfile_textlist())
+        if (self.request['raobtype'] == 'TEXT:LIST'):
+            textlist = RAOBtextlist()
+            textlist.retrieve_textlist(self.request)
+        else:
+            print('RAOB type '+self.request['raobtype']+' not implemented yet')
+            exit(1)
 
 
-def main(args):
-
-    # Parse command line arguments
+def parse():
     parser = argparse.ArgumentParser(
             description="Script to download various formats of RAOB " +
                         "data/imagery from the University of Wyoming " +
@@ -132,7 +93,15 @@ def main(args):
                         help='End hour (hh) to request data UTC')
     parser.add_argument('--stnm', type=str, default='72672',
                         help='Station number for which to request data ')
-    (args) = parser.parse_args()
+    args = parser.parse_args()
+
+    return(args)
+
+
+def main(args):
+
+    # Parse command line arguments
+    args = parse()
 
     raob = RAOBget()
 
@@ -145,7 +114,8 @@ def main(args):
     raob.set_end(args)
     raob.set_stnm(args)
 
-    raob.retrieve_textlist()
+    # Retrieve requested data/imagery
+    raob.retrieve()
 
 
 if __name__ == "__main__":
