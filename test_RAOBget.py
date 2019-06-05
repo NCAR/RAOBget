@@ -16,9 +16,11 @@ class options():
     eday = "28"
     ehr = "12"
     stnm = "72672"
+    rsl = ""
+    test = False
 
 
-class TestRAOBstation_list(unittest.TestCase):
+class TestRAOBget(unittest.TestCase):
 
     def setUp(self):
 
@@ -27,13 +29,19 @@ class TestRAOBstation_list(unittest.TestCase):
         # Set requested station to default values
         self.option = options()
 
-        self.raob.set_type(self.option)
-        self.raob.set_region(self.option)
-        self.raob.set_year(self.option)
-        self.raob.set_month(self.option)
-        self.raob.set_begin(self.option)
-        self.raob.set_end(self.option)
+        self.raob.set_prov(self.option)
         self.raob.set_stnm(self.option)
+
+    def test_RAOB_set(self):
+        request = self.raob.get_request()
+        self.assertEqual(request['region'], self.option.region)
+        self.assertEqual(request['raobtype'], self.option.raobtype)
+        self.assertEqual(request['year'], self.option.year)
+        self.assertEqual(request['month'], self.option.month)
+        self.assertEqual(request['begin'],
+                         self.option.bday + self.option.bhr)
+        self.assertEqual(request['end'], self.option.eday + self.option.ehr)
+        self.assertEqual(request['stnm'], self.option.stnm)
 
     def test_TEXT_LIST(self):
 
@@ -67,6 +75,16 @@ class TestRAOBstation_list(unittest.TestCase):
                             " differ ")
         ctrl.close()
         out.close()
+
+    def test_rsl(self):
+        ctrlstnlist = ['89611', 'ASLH', 'DNR', 'GJT', 'LKN', 'NCRG', 'NFFN',
+                       'NKX', 'NSTU', 'NWWN', 'NZNV', 'NZPP', 'NZRN', 'NZWP',
+                       'NZHK', 'NZLD', 'OAK', 'PHLI', 'PHTO', 'PKMJ', 'PTKK',
+                       'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
+                       'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
+        self.option.rsl = "data/DEEPWAVE.RSL"
+        stnlist = self.raob.read_rsl(self.option)
+        self.assertListEqual(stnlist, ctrlstnlist)
 
 
 if __name__ == "__main__":
