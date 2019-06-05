@@ -8,6 +8,7 @@
 ###############################################################################
 import os
 import wget
+import urllib.request
 
 from region import RAOBregion
 from type import RAOBtype
@@ -55,13 +56,70 @@ class RAOBtextlist:
 
         if not os.path.isfile(outfile):
             # Check if online - if not, exit gracefully
-            # TBD
-            # if (offline):
-            #    system("cp data/726722019052812.ctrl 726722019052812.txt")
+            try:
+                urllib.request.urlopen(url)
+            except Exception as e:
+                print("Can't connect to weather.uwyo.edu")
+                print(str(e))
+                exit(1)
 
             # Get requested URL. I can't recall what wget returns
             # as filename.
             filename = wget.download(url, outfile)
-            print("\n", filename)
+            self.strip_html()
+            print("\nRetrieved ", filename)
 
         return(self.get_outfile_textlist())
+
+    def strip_html(self):
+
+        # Strip unneeded HTML from the retrieved data.
+        # The VB6 MTP sofware strips part of the HTML from the downloaded RAOB
+        # file. We are preserving this format here for backward compatibility
+        # so RAOBman VB code will still work.
+
+        out = open(self.outfile)
+        temp = open(self.outfile + '.temp', 'w')
+
+        # Loop over RAOBS in file
+        line = out.readline()
+        while line != '':
+            if (line.rstrip() == '<HTML>'):  # Beginning of new RAOB
+                # Add double quote before <HTML> on first line
+                temp.write('"' + line)
+            else:
+                print("ERROR: RAOB textlist file " + self.outfile +
+                      " does not begin with <HTML>")
+                print(line.rstrip())
+                exit(1)
+
+            # Remove <TITLE>, <LINK>, and <BODY> lines
+            while line[0:4] != '<H2>' and line != '':
+                line = out.readline()
+
+            # Search for SECOND </PRE>, keep everything before and including it
+            while line[0:6] != '</PRE>' and line != '':
+                temp.write(line)
+                line = out.readline()
+
+            # Print the line with the first </PRE>
+            temp.write(line)
+            line = out.readline()
+
+            # Print until, and including, the line with the second </PRE>
+            while line[0:6] != '</PRE>' and line != '':
+                temp.write(line)
+                line = out.readline()
+
+            temp.write(line)
+            line = out.readline()
+
+            # Remove everything until next <HTML> or until end of file.
+            while line != '<HTML>' and line != '':  # not new RAOB and not EOF
+                line = out.readline()
+
+        out.close()
+        temp.close()
+
+        # move temp back to outfile
+        os.rename(self.outfile + '.temp', 'final/' + self.outfile)

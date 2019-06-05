@@ -58,6 +58,16 @@ class TestRAOBstation_list(unittest.TestCase):
         ctrl.close()
         out.close()
 
+        # Compare files with HTML stripped
+        ctrlfile = "data/726722019052812.ctrl.final"
+        finalfile = "final/" + outfile
+        with open(ctrlfile) as ctrl, open(finalfile) as out:
+            self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
+                            "files " + ctrlfile + " and " + finalfile +
+                            " differ ")
+        ctrl.close()
+        out.close()
+
 
 if __name__ == "__main__":
 
