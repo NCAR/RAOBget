@@ -24,14 +24,15 @@ class RAOBtextlist:
     def get_url_textlist(self, request):
 
         url = "http://weather.uwyo.edu/cgi-bin/sounding?"
-        url += "region=" + self.region[request['region']]
+        if (request['region'] != ''):
+            url += "region=" + self.region[request['region']]
         url += "&TYPE=" + self.type[request['raobtype']]
         url += "&YEAR=" + request['year']
         url += "&MONTH=" + request['month']
         url += "&FROM=" + request['begin']
         url += "&TO=" + request['end']
         url += "&STNM=" + request['stnm']
-        print(url)
+        # print(url)
 
         return(url)
 
@@ -54,24 +55,32 @@ class RAOBtextlist:
         self.set_outfile_textlist(request)
         outfile = self.get_outfile_textlist()
 
-        if not os.path.isfile(outfile):
-            # Check if online - if not, exit gracefully
-            try:
-                urllib.request.urlopen(url)
-            except Exception as e:
-                print("Can't connect to weather.uwyo.edu")
-                print(str(e))
-                exit(1)
+        # Add if test just copy from data dir logic here
+        if request['test'] is True:
+            print(request['test'])
+            os.system('cp data/726722019052812.txt .')
+        else:
 
-            # Get requested URL. I can't recall what wget returns
-            # as filename.
-            filename = wget.download(url, outfile)
-            self.strip_html()
-            print("\nRetrieved ", filename)
+            if os.path.isfile(outfile):
+                print("Already downloaded file with name " + outfile +
+                      ". Remove this file to re-download.")
+            else:
+                # Check if online - if not, exit gracefully
+                try:
+                    urllib.request.urlopen(url)
+                except Exception as e:
+                    print("Can't connect to weather.uwyo.edu. Use option " +
+                          "--test for testing with offline sample data files.")
+                    print(str(e))
+                    exit(1)
+
+                # Get requested URL.
+                wget.download(url, outfile)
+                self.strip_html(request)
 
         return(self.get_outfile_textlist())
 
-    def strip_html(self):
+    def strip_html(self, request):
 
         # Strip unneeded HTML from the retrieved data.
         # The VB6 MTP sofware strips part of the HTML from the downloaded RAOB
@@ -87,11 +96,19 @@ class RAOBtextlist:
             if (line.rstrip() == '<HTML>'):  # Beginning of new RAOB
                 # Add double quote before <HTML> on first line
                 temp.write('"' + line)
+            elif (line.rstrip() == '<BODY BGCOLOR=white>'):
+                # read next line and check.
+                line = out.readline()
+                if "Can't get" in line:
+                    print("ERROR: Can't download data for station " +
+                          request['stnm'])
+                    os.system('rm ' + self.outfile + '.temp')
+                    return()
             else:
                 print("ERROR: RAOB textlist file " + self.outfile +
                       " does not begin with <HTML>")
                 print(line.rstrip())
-                exit(1)
+                return()
 
             # Remove <TITLE>, <LINK>, and <BODY> lines
             while line[0:4] != '<H2>' and line != '':
@@ -123,3 +140,4 @@ class RAOBtextlist:
 
         # move temp back to outfile
         os.rename(self.outfile + '.temp', 'final/' + self.outfile)
+        print("\nRetrieved ", self.outfile)
