@@ -57,7 +57,7 @@ class TestRAOBget(unittest.TestCase):
         url = textlist.get_url_textlist(request)
         self.assertEqual(url, ctrlurl)
 
-        outfile = textlist.retrieve_textlist(request)
+        outfile = textlist.retrieve(request)
 
         return(outfile)
 

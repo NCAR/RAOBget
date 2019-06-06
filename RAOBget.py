@@ -11,7 +11,9 @@
 import sys
 import argparse
 
+from datetime import datetime
 from textlist import RAOBtextlist
+from gifskewt import RAOBgifskewt
 
 RAOBrequest = {  # Default station used in testing. Will be overwritten with
                  # requested station in normal usage.
@@ -26,6 +28,8 @@ RAOBrequest = {  # Default station used in testing. Will be overwritten with
                          # data for
         'test': False,   # Run in test/dev mode
         'mtp': False,    # MTP-specific processing
+        'now': False,    # Set requested date/time to current time,
+                         # i.e. retrieve current RAOB.
         }
 
 
@@ -41,17 +45,17 @@ class RAOBget:
     def set_type(self, args):
         self.request['raobtype'] = args.raobtype
 
-    def set_year(self, args):
-        self.request['year'] = args.year
+    def set_year(self, year):
+        self.request['year'] = year
 
-    def set_month(self, args):
-        self.request['month'] = args.month
+    def set_month(self, month):
+        self.request['month'] = month
 
-    def set_begin(self, args):
-        self.request['begin'] = args.bday+args.bhr
+    def set_begin(self, bday, bhr):
+        self.request['begin'] = bday+bhr
 
-    def set_end(self, args):
-        self.request['end'] = args.eday+args.ehr
+    def set_end(self, eday, ehr):
+        self.request['end'] = eday+ehr
 
     def set_test(self, args):
         self.request['test'] = args.test
@@ -59,18 +63,23 @@ class RAOBget:
     def set_mtp(self, args):
         self.request['mtp'] = args.mtp
 
+    def set_now(self, args):
+        self.request['now'] = args.now
+
+
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
 
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
         self.set_region(args)
         self.set_type(args)
-        self.set_year(args)
-        self.set_month(args)
-        self.set_begin(args)
-        self.set_end(args)
+        self.set_year(args.year)
+        self.set_month(args.month)
+        self.set_begin(args.bday, args.bhr)
+        self.set_end(args.eday, args.ehr)
         self.set_test(args)
         self.set_mtp(args)
+        self.set_now(args)
 
     def read_rsl(self, args):
         rsl = open(args.rsl)
@@ -82,11 +91,31 @@ class RAOBget:
 
         return(self.request)
 
+    def set_time(self):
+        time = datetime.utcnow()
+        self.set_year(str(time.year))
+        self.set_month('{:02d}'.format(time.month))
+        if time.hour > 0 and time.hour <=12:
+            hour = 0
+        else:
+            hour = 12
+
+        self.set_begin('{:02d}'.format(time.day), '{:02d}'.format(hour))
+        self.set_end('{:02d}'.format(time.day), '{:02d}'.format(hour))
+
     def retrieve(self):
+
+        # If option --now is set, set year, month, begin, and end to current
+        # date/time
+        if self.request['now'] is True:
+            self.set_time()
 
         if (self.request['raobtype'] == 'TEXT:LIST'):
             textlist = RAOBtextlist()
-            textlist.retrieve_textlist(self.request)
+            textlist.retrieve(self.request)
+        elif (self.request['raobtype'] == 'GIF:SKEWT'):
+            gifskewt = RAOBgifskewt()
+            gifskewt.retrieve(self.request)
         else:
             print('RAOB type '+self.request['raobtype']+' not implemented yet')
             exit(1)
@@ -123,13 +152,15 @@ def parse():
     parser.add_argument('--rsl', type=str, default='',
                         help='RSL file from which to read list of stations' +
                         'to request')
-    parser.add_argument('--test', type=bool, default=False,
+    parser.add_argument('--test', action="store_true",
                         help='Run in testing mode using local sample data ' +
                         'file 726722019052812.txt. Used for offline dev')
-    parser.add_argument('--mtp', type=bool, default=False,
+    parser.add_argument('--mtp', action="store_true",
                         help='Download one RAOB per file, reformat HTML, ' +
                         'and rename file to match MTP requirements. In mtp ' +
                         'mode begin and end times must be the same.')
+    parser.add_argument('--now', action="store_true",
+                        help='Set requested date/time to current date/time')
     args = parser.parse_args()
 
     return(args)
