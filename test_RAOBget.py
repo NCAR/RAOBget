@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 import unittest
+import os
 
 from RAOBget import RAOBget
 from textlist import RAOBtextlist
@@ -18,6 +19,7 @@ class options():
     stnm = "72672"
     rsl = ""
     test = False
+    mtp = False
 
 
 class TestRAOBget(unittest.TestCase):
@@ -43,7 +45,7 @@ class TestRAOBget(unittest.TestCase):
         self.assertEqual(request['end'], self.option.eday + self.option.ehr)
         self.assertEqual(request['stnm'], self.option.stnm)
 
-    def test_TEXT_LIST(self):
+    def get_data(self):
 
         textlist = RAOBtextlist()
 
@@ -57,8 +59,19 @@ class TestRAOBget(unittest.TestCase):
 
         outfile = textlist.retrieve_textlist(request)
 
+        return(outfile)
+
+    def test_TEXT_LIST(self):
+
+        # Remove files if we downloaded them before
+        if os.path.isfile("7267220190528122812.txt"):
+            os.system('rm 7267220190528122812.txt')
+
+        outfile = self.get_data()
+        print("\n" + outfile)
+
         # Compare retrieved text file to control file
-        ctrlfile = "data/726722019052812.ctrl"
+        ctrlfile = "data/7267220190528122812.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
@@ -66,12 +79,23 @@ class TestRAOBget(unittest.TestCase):
         ctrl.close()
         out.close()
 
+    def test_mtp(self):
+
+        # Remove files if we downloaded them before
+        if os.path.isfile("726722019052812.txt"):
+            os.system('rm 726722019052812.txt')
+
+        self.option.mtp = True
+        self.raob.set_prov(self.option)
+
+        outfile = self.get_data()
+
         # Compare files with HTML stripped
-        ctrlfile = "data/726722019052812.ctrl.final"
-        finalfile = "final/" + outfile
-        with open(ctrlfile) as ctrl, open(finalfile) as out:
+        ctrlfile = "data/726722019052812.ctrl.mtp"
+        mtpfile = "mtp/" + outfile
+        with open(ctrlfile) as ctrl, open(mtpfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
-                            "files " + ctrlfile + " and " + finalfile +
+                            "files " + ctrlfile + " and " + mtpfile +
                             " differ ")
         ctrl.close()
         out.close()
@@ -85,6 +109,16 @@ class TestRAOBget(unittest.TestCase):
         self.option.rsl = "data/DEEPWAVE.RSL"
         stnlist = self.raob.read_rsl(self.option)
         self.assertListEqual(stnlist, ctrlstnlist)
+
+    def tearDown(self):
+
+        # Remove downloaded file since it's just for testing
+        if os.path.isfile("7267220190528122812.txt"):
+            os.system('rm 7267220190528122812.txt')
+        if os.path.isfile("726722019052812.txt"):
+            os.system('rm 726722019052812.txt')
+        if os.path.isfile("mtp/726722019052812.txt"):
+            os.system('rm mtp/726722019052812.txt')
 
 
 if __name__ == "__main__":

@@ -25,6 +25,7 @@ RAOBrequest = {  # Default station used in testing. Will be overwritten with
         'rsl': "",       # Name of file containing list of stations to retrieve
                          # data for
         'test': False,   # Run in test/dev mode
+        'mtp': False,    # MTP-specific processing
         }
 
 
@@ -55,6 +56,9 @@ class RAOBget:
     def set_test(self, args):
         self.request['test'] = args.test
 
+    def set_mtp(self, args):
+        self.request['mtp'] = args.mtp
+
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
 
@@ -66,6 +70,7 @@ class RAOBget:
         self.set_begin(args)
         self.set_end(args)
         self.set_test(args)
+        self.set_mtp(args)
 
     def read_rsl(self, args):
         rsl = open(args.rsl)
@@ -118,9 +123,13 @@ def parse():
     parser.add_argument('--rsl', type=str, default='',
                         help='RSL file from which to read list of stations' +
                         'to request')
-    parser.add_argument('--test', type=str, default='False',
+    parser.add_argument('--test', type=bool, default=False,
                         help='Run in testing mode using local sample data ' +
                         'file 726722019052812.txt. Used for offline dev')
+    parser.add_argument('--mtp', type=bool, default=False,
+                        help='Download one RAOB per file, reformat HTML, ' +
+                        'and rename file to match MTP requirements. In mtp ' +
+                        'mode begin and end times must be the same.')
     args = parser.parse_args()
 
     return(args)
