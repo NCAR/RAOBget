@@ -66,7 +66,6 @@ class RAOBget:
     def set_now(self, args):
         self.request['now'] = args.now
 
-
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
 
@@ -95,7 +94,7 @@ class RAOBget:
         time = datetime.utcnow()
         self.set_year(str(time.year))
         self.set_month('{:02d}'.format(time.month))
-        if time.hour > 0 and time.hour <=12:
+        if time.hour > 0 and time.hour <= 12:
             hour = 0
         else:
             hour = 12
