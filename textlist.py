@@ -25,6 +25,7 @@ class RAOBtextlist:
         if request['mtp'] is True:
             mtp.test_dates(request)
 
+        request['raobtype'] = "TEXT:LIST"
         url = self.rwget.get_url(request)
 
         return(url)

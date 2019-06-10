@@ -7,6 +7,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+import re
 from rwget import RAOBwget
 
 
@@ -25,12 +26,36 @@ class RAOBgifskewt:
 
         return(self.outfile_html)
 
+    def get_url(self, request):
+        request['raobtype'] = "GIF:SKEWT"
+        return(self.rwget.get_url(request))
+
+    def get_prod(self, request):
+
+        # Open the HTML file and read in the <TITLE> line
+        out = open(self.get_outfile_html())
+        line = out.readline()
+        while '<TITLE>' not in line:
+            line = out.readline()
+        if '<TITLE>' in line:
+            m = re.search(request['stnm']+' (.*) [Sounding|Observations]',
+                          line)
+            if m:
+                prod = m.group(1).replace(" ", "_")
+            else:
+                print("Couldn't find product name. Setting to temp")
+                prod = "temp"
+
+        out.close()
+
+        return(prod)
+
     def set_outfile_gif(self, request):
         platform = "SkewT"
-        # Get prod from where??? - maybe from the HTML file?
-        prod = "test"
+
         self.outfile_gif = "upperair." + platform + request['year'] + \
-            request['month'] + request['begin'] + "." + prod + ".gif"
+            request['month'] + request['begin'] + "." + \
+            self.get_prod(request) + ".gif"
 
     def get_outfile_gif(self):
 
@@ -43,7 +68,6 @@ class RAOBgifskewt:
         url += request['month']
         url += request['begin'] + "."
         url += request['stnm'] + ".skewt.parc.gif"
-        print(url)
 
         return(url)
 
@@ -55,7 +79,7 @@ class RAOBgifskewt:
         # website. The second request downloads the gif image.
 
         # Create first request URL from request metadata
-        url = self.rwget.get_url(request)
+        url = self.get_url(request)
 
         # Create output filename from request metadata
         self.set_outfile_html(request)

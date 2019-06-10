@@ -4,6 +4,7 @@ import os
 
 from RAOBget import RAOBget
 from textlist import RAOBtextlist
+from gifskewt import RAOBgifskewt
 
 
 # Set default values for testing that match test data.
@@ -20,6 +21,7 @@ class options():
     rsl = ""
     test = False
     mtp = False
+    now = False
 
 
 class TestRAOBget(unittest.TestCase):
@@ -72,6 +74,52 @@ class TestRAOBget(unittest.TestCase):
 
         # Compare retrieved text file to control file
         ctrlfile = "data/7267220190528122812.ctrl"
+        with open(ctrlfile) as ctrl, open(outfile) as out:
+            self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
+                            "files " + ctrlfile + " and " + outfile +
+                            " differ ")
+        ctrl.close()
+        out.close()
+
+    def get_skewt(self):
+
+        gifskewt = RAOBgifskewt()
+
+        request = self.raob.get_request()
+
+        # Test request for HTML file
+        ctrlurl = "http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&" + \
+                  "TYPE=GIF%3ASKEWT&YEAR=2019&MONTH=05&FROM=2812&TO=2812&" + \
+                  "STNM=72672"
+        url = gifskewt.get_url(request)
+        self.assertEqual(url, ctrlurl)
+
+        # Test request for GIF image
+        ctrlurl = "http://weather.uwyo.edu/upperair/images/" + \
+                  "2019052812.72672.skewt.parc.gif"
+        url = gifskewt.get_gif_url(request)
+        self.assertEqual(url, ctrlurl)
+
+        # Get the data (html and gif image)
+        gifskewt.retrieve(request)
+
+        outfile = gifskewt.get_outfile_html()
+
+        return(outfile)
+
+    def test_GIF_SKEWT(self):
+
+        # Remove files if we downloaded them before
+        if os.path.isfile("7267220190528122812.html"):
+            os.system('rm 7267220190528122812.html')
+
+        if os.path.isfile("upperair.SkewT2019052812.RIW_Riverton.gif"):
+            os.system('rm upperair.SkewT2019052812.RIW_Riverton.gif')
+
+        outfile = self.get_skewt()
+
+        # Compare retrieved html file to control file
+        ctrlfile = "data/7267220190528122812.html.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
