@@ -16,7 +16,7 @@ To run the code, use the command:
 
  * python3 RAOBget.py
 
-The -h option gives a list of paramters you can pass to the code, like requested station id and dates.
+The -h option gives a list of parameters you can pass to the code, like requested station id and dates.
 
 To manually run all unittests:
 ```
