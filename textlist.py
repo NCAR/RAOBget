@@ -18,7 +18,7 @@ class RAOBtextlist:
 
         self.rwget = RAOBwget()
 
-    def get_url_textlist(self, request):
+    def get_url(self, request):
 
         # In MTP mode, confirm begin and end are equal so will only get one
         # RAOB per file.
@@ -30,7 +30,7 @@ class RAOBtextlist:
 
         return(url)
 
-    def set_outfile_textlist(self, request):
+    def set_outfile(self, request):
 
         # Build output filename
         if request['mtp'] is True:
@@ -40,18 +40,18 @@ class RAOBtextlist:
                 request['month'] + request['begin'] + request['end'] + \
                 ".txt"
 
-    def get_outfile_textlist(self):
+    def get_outfile(self):
 
         return(self.outfile)
 
     def retrieve(self, request):
 
         # Create request URL from request metadata
-        url = self.get_url_textlist(request)
+        url = self.get_url(request)
 
         # Create output filename from request metadata
-        self.set_outfile_textlist(request)
-        outfile = self.get_outfile_textlist()
+        self.set_outfile(request)
+        outfile = self.get_outfile()
 
         # If in test mode, copy file from data dir to simulate download...
         if request['test'] is True:
@@ -67,6 +67,6 @@ class RAOBtextlist:
             status = self.rwget.get_data(url, outfile)
 
             if request['mtp'] is True and status:
-                mtp.strip_html(request, self.outfile)
+                mtp.strip_html(request, outfile)
 
-        return(self.get_outfile_textlist())
+        return(outfile)
