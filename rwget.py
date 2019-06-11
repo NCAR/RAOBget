@@ -8,7 +8,6 @@
 ###############################################################################
 import os
 import urllib.request
-import wget
 
 from region import RAOBregion
 from type import RAOBtype
@@ -56,7 +55,7 @@ class RAOBwget:
                 exit(1)
 
             # Get requested URL.
-            wget.download(url, outfile)
+            urllib.request.urlretrieve(url, outfile)
             print("\nRetrieved ", outfile)
 
             return(True)  # Downloaded new data
