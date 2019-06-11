@@ -28,6 +28,7 @@ RAOBrequest = {  # Default station used in testing. Will be overwritten with
                          # data for
         'test': False,   # Run in test/dev mode
         'mtp': False,    # MTP-specific processing
+        'catalog': False,# catalog-specific processing
         'now': False,    # Set requested date/time to current time,
                          # i.e. retrieve current RAOB.
         }
@@ -63,6 +64,9 @@ class RAOBget:
     def set_mtp(self, args):
         self.request['mtp'] = args.mtp
 
+    def set_catalog(self, args):
+        self.request['catalog'] = args.catalog
+
     def set_now(self, args):
         self.request['now'] = args.now
 
@@ -78,6 +82,7 @@ class RAOBget:
         self.set_end(args.eday, args.ehr)
         self.set_test(args)
         self.set_mtp(args)
+        self.set_catalog(args)
         self.set_now(args)
 
     def read_rsl(self, args):
@@ -158,6 +163,9 @@ def parse():
                         help='Download one RAOB per file, reformat HTML, ' +
                         'and rename file to match MTP requirements. In mtp ' +
                         'mode begin and end times must be the same.')
+    parser.add_argument('--catalog', action="store_true",
+                        help='Download gif images for catalog use. Rename ' +
+                        'to match catalog filename requirements.')
     parser.add_argument('--now', action="store_true",
                         help='Set requested date/time to current date/time')
     args = parser.parse_args()

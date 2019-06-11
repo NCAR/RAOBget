@@ -8,6 +8,8 @@
 ###############################################################################
 import os
 import re
+import catalog
+
 from rwget import RAOBwget
 
 
@@ -98,7 +100,13 @@ class RAOBgifskewt:
 
         # Create output filename from request metadata
         self.set_outfile_gif(request)
+        outfile = self.get_outfile_gif()
 
-        self.rwget.get_data(url, self.get_outfile_gif())
+        # Download gif image
+        status = self.rwget.get_data(url, outfile)
+
+        # If running in catalog mode, ftp files to catalog dir
+        if request['catalog'] is True and status:
+            catalog.to_ftp(outfile)
 
         return(self.get_outfile_gif())

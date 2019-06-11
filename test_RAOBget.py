@@ -21,6 +21,7 @@ class options():
     rsl = ""
     test = False
     mtp = False
+    catalog = False
     now = False
 
 
@@ -56,7 +57,7 @@ class TestRAOBget(unittest.TestCase):
                   "STNM=72672"
 
         request = self.raob.get_request()
-        url = textlist.get_url_textlist(request)
+        url = textlist.get_url(request)
         self.assertEqual(url, ctrlurl)
 
         outfile = textlist.retrieve(request)
