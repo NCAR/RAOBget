@@ -1,0 +1,1 @@
+This dir needs to exist for test_mtp to work. It is where final downloaded sounding data modified for MTP use are stored.
