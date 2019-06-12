@@ -16,7 +16,6 @@ from raobtype import RAOBtype
 class RAOBwget:
 
     def __init__(self):
-
         """
         Initialize instances of the region dictionary and data/imagery type
         dictionary. These are used to convert the user-supplied commandline
@@ -52,7 +51,6 @@ class RAOBwget:
         return(url)
 
     def get_data(self, url, outfile):
-
         """
         Send the generated URL to the uwyo website and receive back a file
         containing the requested data or imagery.
@@ -86,6 +84,25 @@ class RAOBwget:
 
             # Get requested URL.
             urllib.request.urlretrieve(url, outfile)
+
+            # Test if file contains good data
+            out = open(outfile)
+            line = out.readline()
+            while line != '':
+                if "Can't get" in line:
+                    print('ERROR: Website says "' + line.rstrip() + '"')
+                    os.system('rm ' + outfile)
+                    out.close()
+                    return(False)
+                elif 'Sorry, unable to generate' in line:
+                    print(line.rstrip() + ". Retrieved file only contains" +
+                          " error message - gif was got generated.")
+                    os.system('rm ' + outfile)
+                    return(False)
+                else:
+                    line = out.readline()
+
+            out.close()
             print("\nRetrieved ", outfile)
 
             return(True)  # Downloaded new data

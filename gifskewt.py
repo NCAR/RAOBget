@@ -13,7 +13,7 @@ import catalog
 from rwget import RAOBwget
 
 
-class RAOBgifskewt:
+class RAOBgifskewt():
 
     def __init__(self):
 
@@ -93,20 +93,23 @@ class RAOBgifskewt:
 
         # ...else download data
         else:
-            self.rwget.get_data(url, self.get_outfile_html())
+            status = self.rwget.get_data(url, self.get_outfile_html())
 
-        # Now download the gif image directly
-        url = self.get_gif_url(request)
+        # If site returned good html file and thus generated gif
+        if status:
 
-        # Create output filename from request metadata
-        self.set_outfile_gif(request)
-        outfile = self.get_outfile_gif()
+            # Download the gif image directly
+            url = self.get_gif_url(request)
 
-        # Download gif image
-        status = self.rwget.get_data(url, outfile)
+            # Create output filename from request metadata
+            self.set_outfile_gif(request)
+            outfile = self.get_outfile_gif()
 
-        # If running in catalog mode, ftp files to catalog dir
-        if request['catalog'] is True and status:
-            catalog.to_ftp(outfile)
+            # Download gif image
+            status = self.rwget.get_data(url, outfile)
 
-        return(self.get_outfile_gif())
+            # If running in catalog mode, ftp files to catalog dir
+            if request['catalog'] is True and status:
+                catalog.to_ftp(outfile)
+
+            return(self.get_outfile_gif())

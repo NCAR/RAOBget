@@ -15,28 +15,31 @@ from datetime import datetime
 from textlist import RAOBtextlist
 from gifskewt import RAOBgifskewt
 
-RAOBrequest = {  # Default station used in testing. Will be overwritten with
-                 # requested station in normal usage.
-        'region': '',    # Region identifier
-        'raobtype': '',  # Retreived data/imagery type indentifier
-        'year': "",      # Year to retrieve data for
-        'month': "",     # Month to retrieve data for
-        'begin': "",     # Begin day/hour (ddhh) to retrieve data for
-        'end': "",       # End day/hour (ddhh) to retrieve data for
-        'stnm': "",      # Station number to retrieve data for
-        'rsl': "",       # Name of file containing list of stations to retrieve
-                         # data for
-        'test': False,   # Run in test/dev mode
-        'mtp': False,    # MTP-specific processing
-        'catalog': False,# catalog-specific processing
-        'now': False,    # Set requested date/time to current time,
-                         # i.e. retrieve current RAOB.
-        }
 
-
-class RAOBget:
+class RAOBget():
 
     def __init__(self):
+        """
+        Initialize a RAOBrequest dictionary to hold request metadata
+        """
+
+        RAOBrequest = {  # Default station used in testing. Will be overwritten
+                         # with requested station in normal usage.
+            'region': '',    # Region identifier
+            'raobtype': '',  # Retreived data/imagery type indentifier
+            'year': "",      # Year to retrieve data for
+            'month': "",     # Month to retrieve data for
+            'begin': "",     # Begin day/hour (ddhh) to retrieve data for
+            'end': "",       # End day/hour (ddhh) to retrieve data for
+            'stnm': "",      # Station number to retrieve data for
+            'rsl': "",       # Name of file containing list of stations to
+                             # retrieve data for
+            'test': False,   # Run in test/dev mode
+            'mtp': False,    # MTP-specific processing
+            'catalog': False,  # catalog-specific processing
+            'now': False,    # Set requested date/time to current time,
+                             # i.e. retrieve current RAOB.
+        }
 
         self.request = RAOBrequest  # dictionary to hold all URL components
 
@@ -74,6 +77,9 @@ class RAOBget:
         self.request['stnm'] = args.stnm
 
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
+        """ Set request from all the metadata specificed on the command line.
+        Calls individual set_ methods for each argument.
+        """
         self.set_region(args)
         self.set_type(args)
         self.set_year(args.year)
@@ -85,17 +91,21 @@ class RAOBget:
         self.set_catalog(args)
         self.set_now(args)
 
-    def read_rsl(self, args):
+    def read_rsl(self, args):  # read RAOB Station List (RSL) file
+        """ Read a optional provided list of raob stations to request data for
+        """
         rsl = open(args.rsl)
         stnlist = rsl.readlines()
         rsl.close()
         return([line.rstrip() for line in stnlist])
 
     def get_request(self):
+        """ Return request metadata dictionary """
 
         return(self.request)
 
-    def set_time(self):
+    def set_time_now(self):
+        """ Set request time to most recent 12 hour (UTC) RAOB """
         time = datetime.utcnow()
         self.set_year(str(time.year))
         self.set_month('{:02d}'.format(time.month))
@@ -108,11 +118,12 @@ class RAOBget:
         self.set_end('{:02d}'.format(time.day), '{:02d}'.format(hour))
 
     def retrieve(self):
+        """ Retrieve data for requested RAOB type """
 
         # If option --now is set, set year, month, begin, and end to current
         # date/time
         if self.request['now'] is True:
-            self.set_time()
+            self.set_time_now()
 
         if (self.request['raobtype'] == 'TEXT:LIST'):
             textlist = RAOBtextlist()
@@ -126,6 +137,7 @@ class RAOBget:
 
 
 def parse():
+    """ Define command line arguments which can be provided"""
     parser = argparse.ArgumentParser(
             description="Script to download various formats of RAOB " +
                         "data/imagery from the University of Wyoming " +

@@ -44,14 +44,6 @@ def strip_html(request, outfile):
         if (line.rstrip() == '<HTML>'):  # Beginning of new RAOB
             # Add double quote before <HTML> on first line
             temp.write('"' + line)
-        elif (line.rstrip() == '<BODY BGCOLOR=white>'):
-            # read next line and check.
-            line = out.readline()
-            if "Can't get" in line:
-                print("ERROR: Can't download data for station " +
-                      request['stnm'])
-                os.system('rm ' + outfile + '.temp')
-                return()
         else:
             print("ERROR: RAOB textlist file " + outfile +
                   " does not begin with <HTML>")

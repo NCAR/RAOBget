@@ -13,10 +13,18 @@ http://weather.uwyo.edu/upperair/images/2019052812.72672.skewt.parc.gif
 ```
 
 To run the code, use the command:
+```
+> python3 RAOBget.py <-h>
+```
+The -h option lists and identifies the parameters you can pass to the code, like requested station id and dates. So for example, **python3 RAOBget.py --raobtype TEXT:LIST --now --stnm DNR** will download the latest 12-hour sounding from Denver/Stapleton.
 
- * python3 RAOBget.py
+### Developer Notes ###
 
-The -h option gives a list of parameters you can pass to the code, like requested station id and dates.
+For complete documentation on each class/method, useful if you need to modify the code, use pydoc to extract embedded documentation from each file:
+```
+> python3 -m pydoc <filename_minus_.py>
+```
+e.g. python3 -m pydoc rwget. 
 
 To manually run all unittests:
 ```

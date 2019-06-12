@@ -12,18 +12,16 @@ import mtp
 from rwget import RAOBwget
 
 
-class RAOBtextlist:
+class RAOBtextlist():
 
     def __init__(self):
 
         self.rwget = RAOBwget()
 
     def get_url(self, request):
-
-        # In MTP mode, confirm begin and end are equal so will only get one
-        # RAOB per file.
-        if request['mtp'] is True:
-            mtp.test_dates(request)
+        """
+        Generate the request URL for a TEXT:LIST request
+        """
 
         request['raobtype'] = "TEXT:LIST"
         url = self.rwget.get_url(request)
@@ -31,8 +29,13 @@ class RAOBtextlist:
         return(url)
 
     def set_outfile(self, request):
+        """
+        Build output filename for TEXT:LIST file. If --mtp option is set will
+        create a filename to meet mtp-specific requirements.
 
-        # Build output filename
+        Parameters:
+            requst: a RAOBrequest dictionary of request metadata
+        """
         if request['mtp'] is True:
             self.outfile = mtp.set_outfile(request)
         else:
@@ -41,10 +44,29 @@ class RAOBtextlist:
                 ".txt"
 
     def get_outfile(self):
+        """
+        Returns:
+            self.outfile: the name of the file to which the received data
+            should be saved
+        """
 
         return(self.outfile)
 
     def retrieve(self, request):
+        """
+        Retrieves the requested data from the U Wyoming archive
+
+        Parameters:
+            request: A dictionary containing the metadata for the
+                     request.
+
+        Returns:
+            outfile: The name of the retrieved file.
+        """
+        # In MTP mode, confirm begin and end are equal so will only get one
+        # RAOB per file.
+        if request['mtp'] is True:
+            mtp.test_dates(request)
 
         # Create request URL from request metadata
         url = self.get_url(request)

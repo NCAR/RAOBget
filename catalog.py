@@ -1,5 +1,5 @@
 ###############################################################################
-# Code specific to downloading GIF:SKEWT images from the University of Wyoming 
+# Code specific to downloading GIF:SKEWT images from the University of Wyoming
 # Radiosonde Archive for import into the EOL field catalog
 #
 # Written in Python 3
@@ -7,6 +7,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+
 
 def to_ftp(outfile):
     # STUB UNTIL I TALK TO SCOT
