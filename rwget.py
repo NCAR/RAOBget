@@ -85,24 +85,26 @@ class RAOBwget:
             # Get requested URL.
             urllib.request.urlretrieve(url, outfile)
 
-            # Test if file contains good data
-            out = open(outfile)
-            line = out.readline()
-            while line != '':
-                if "Can't get" in line:
-                    print('ERROR: Website says "' + line.rstrip() + '"')
-                    os.system('rm ' + outfile)
-                    out.close()
-                    return(False)
-                elif 'Sorry, unable to generate' in line:
-                    print(line.rstrip() + ". Retrieved file only contains" +
-                          " error message - gif was got generated.")
-                    os.system('rm ' + outfile)
-                    return(False)
-                else:
-                    line = out.readline()
+            # Test if text/html file contains good data
+            if "gif" not in outfile:
+                out = open(outfile)
+                line = out.readline()
+                while line != '':
+                    if "Can't get" in line:
+                        print('ERROR: Website says "' + line.rstrip() + '"')
+                        os.system('rm ' + outfile)
+                        out.close()
+                        return(False)
+                    elif 'Sorry, unable to generate' in line:
+                        print(line.rstrip() + ". Retrieved file contains" +
+                              " error message - gif was got generated.")
+                        os.system('rm ' + outfile)
+                        out.close()
+                        return(False)
+                    else:
+                        line = out.readline()
+                out.close()
 
-            out.close()
             print("\nRetrieved ", outfile)
 
             return(True)  # Downloaded new data
