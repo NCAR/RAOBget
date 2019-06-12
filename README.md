@@ -30,3 +30,13 @@ To manually run all unittests:
 ```
 > python3 -m unittest -v
 ```
+
+A [linter](https://en.wikipedia.org/wiki/Lint_\(software\)) can be another useful tool. I used flake8
+```
+> python3 -m pip install flake8
+> flake8 <path/to/code> or <path/to/file.py>
+```
+e.g
+```
+> flake8 .
+```
