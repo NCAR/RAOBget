@@ -10,17 +10,33 @@ import os
 import urllib.request
 
 from region import RAOBregion
-from type import RAOBtype
+from raobtype import RAOBtype
 
 
 class RAOBwget:
 
     def __init__(self):
 
+        """
+        Initialize instances of the region dictionary and data/imagery type
+        dictionary. These are used to convert the user-supplied commandline
+        arguments to the specific format needed in the URL
+        """
+
         self.region = RAOBregion    # Instance of region dictionary
         self.type = RAOBtype    # Instance of data/imagery type dictionary
 
     def get_url(self, request):
+        """
+        Create the URL string from the request metadata that will be used
+        to retrieve the data from the uwyo archive
+
+        Parameters:
+            request: a RAOBrequest dictionary of request metadata
+
+        Returns:
+            url: the generated URL
+        """
 
         url = "http://weather.uwyo.edu/cgi-bin/sounding?"
         if (request['region'] != ''):
@@ -36,6 +52,20 @@ class RAOBwget:
         return(url)
 
     def get_data(self, url, outfile):
+
+        """
+        Send the generated URL to the uwyo website and receive back a file
+        containing the requested data or imagery.
+
+        Parameters:
+            url: the url containing the request
+            outfile: the name of the file to which the received data should be
+                     saved
+
+        Returns:
+            boolean: True/False success indicator
+
+        """
 
         # Check if filename already exists. wget will fail if it does.
         if os.path.isfile(outfile):
