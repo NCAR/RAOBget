@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from stationlist import RAOBstation_list
+from lib.stationlist import RAOBstation_list
 
 
 class TestRAOBstation_list(unittest.TestCase):

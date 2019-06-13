@@ -7,9 +7,9 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
-import mtp
 
-from rwget import RAOBwget
+import userlib.mtp
+from lib.rwget import RAOBwget
 
 
 class RAOBtextlist():
@@ -37,7 +37,7 @@ class RAOBtextlist():
             requst: a RAOBrequest dictionary of request metadata
         """
         if request['mtp'] is True:
-            self.outfile = mtp.set_outfile(request)
+            self.outfile = userlib.mtp.set_outfile(request)
         else:
             self.outfile = request['stnm'] + request['year'] + \
                 request['month'] + request['begin'] + request['end'] + \
@@ -66,7 +66,7 @@ class RAOBtextlist():
         # In MTP mode, confirm begin and end are equal so will only get one
         # RAOB per file.
         if request['mtp'] is True:
-            mtp.test_dates(request)
+            userlib.mtp.test_dates(request)
 
         # Create request URL from request metadata
         url = self.get_url(request)
@@ -89,6 +89,6 @@ class RAOBtextlist():
             status = self.rwget.get_data(url, outfile)
 
             if request['mtp'] is True and status:
-                mtp.strip_html(request, outfile)
+                userlib.mtp.strip_html(request, outfile)
 
         return(outfile)

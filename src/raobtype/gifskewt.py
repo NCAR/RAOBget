@@ -8,9 +8,9 @@
 ###############################################################################
 import os
 import re
-import catalog
 
-from rwget import RAOBwget
+import userlib.catalog
+from lib.rwget import RAOBwget
 
 
 class RAOBgifskewt():
@@ -110,6 +110,6 @@ class RAOBgifskewt():
 
             # If running in catalog mode, ftp files to catalog dir
             if request['catalog'] is True and status:
-                catalog.to_ftp(outfile)
+                userlib.catalog.to_ftp(outfile)
 
             return(self.get_outfile_gif())
