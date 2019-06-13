@@ -24,9 +24,9 @@ The -h option lists and identifies the parameters you can pass to the code, like
 For complete documentation on each class/method, useful if you need to modify the code, use pydoc to extract embedded documentation from each file:
 ```
 > cd src
-> python3 -m pydoc <filename_minus_.py>
+> python3 -m pydoc <filename>
 ```
-e.g. python3 -m pydoc rwget. 
+e.g. python3 -m pydoc lib/rwget.py 
 
 To manually run all unittests:
 ```
