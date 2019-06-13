@@ -77,7 +77,7 @@ class RAOBstation_list:
 
 
 if __name__ == "__main__":
-    station_list_file = "station-query.html"
+    station_list_file = "../config/station-query.html"
 
     stationList = RAOBstation_list()
     stationList.read(station_list_file)

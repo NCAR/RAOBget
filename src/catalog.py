@@ -13,7 +13,7 @@ def to_ftp(outfile):
     # STUB UNTIL I TALK TO SCOT
     # ftp_server = "catalog.eol.ucar.edu"
     # ftp_dir = "/net/iftp2/pub/incoming/catalog/relampago"
-    ftp_dir = "ftp"
+    ftp_dir = "../ftp"
 
     # Move downloaded image to dest file in ftp_dir
     os.rename(outfile, ftp_dir + "/" + outfile)

@@ -27,7 +27,7 @@ class TestRAOBstation_list(unittest.TestCase):
 
         }
 
-        self.station_list_file = "station-query.html"
+        self.station_list_file = "../config/station-query.html"
         assert(os.path.isfile(self.station_list_file))
 
         self.stationList = RAOBstation_list()

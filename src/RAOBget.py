@@ -12,8 +12,8 @@ import sys
 import argparse
 
 from datetime import datetime
-from textlist import RAOBtextlist
-from gifskewt import RAOBgifskewt
+from raobtype.textlist import RAOBtextlist
+from raobtype.gifskewt import RAOBgifskewt
 
 
 class RAOBget():

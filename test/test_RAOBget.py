@@ -3,8 +3,8 @@ import unittest
 import os
 
 from RAOBget import RAOBget
-from textlist import RAOBtextlist
-from gifskewt import RAOBgifskewt
+from raobtype.textlist import RAOBtextlist
+from raobtype.gifskewt import RAOBgifskewt
 
 
 # Set default values for testing that match test data.
@@ -74,7 +74,7 @@ class TestRAOBget(unittest.TestCase):
         print("\n" + outfile)
 
         # Compare retrieved text file to control file
-        ctrlfile = "data/7267220190528122812.ctrl"
+        ctrlfile = "../test/data/7267220190528122812.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
@@ -120,7 +120,7 @@ class TestRAOBget(unittest.TestCase):
         outfile = self.get_skewt()
 
         # Compare retrieved html file to control file
-        ctrlfile = "data/7267220190528122812.html.ctrl"
+        ctrlfile = "../test/data/7267220190528122812.html.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
@@ -140,8 +140,8 @@ class TestRAOBget(unittest.TestCase):
         outfile = self.get_data()
 
         # Compare files with HTML stripped
-        ctrlfile = "data/726722019052812.ctrl.mtp"
-        mtpfile = "mtp/" + outfile
+        ctrlfile = "../test/data/726722019052812.ctrl.mtp"
+        mtpfile = "../mtp/" + outfile
         with open(ctrlfile) as ctrl, open(mtpfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + mtpfile +
@@ -155,7 +155,7 @@ class TestRAOBget(unittest.TestCase):
                        'NZHK', 'NZLD', 'OAK', 'PHLI', 'PHTO', 'PKMJ', 'PTKK',
                        'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
-        self.option.rsl = "data/DEEPWAVE.RSL"
+        self.option.rsl = "../config/DEEPWAVE.RSL"
         stnlist = self.raob.read_rsl(self.option)
         self.assertListEqual(stnlist, ctrlstnlist)
 

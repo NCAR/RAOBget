@@ -9,8 +9,8 @@
 import os
 import urllib.request
 
-from region import RAOBregion
-from raobtype import RAOBtype
+from util.region import RAOBregion
+from raobtype.raobtype import RAOBtype
 
 
 class RAOBwget:
