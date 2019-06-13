@@ -5,6 +5,7 @@ import os
 from RAOBget import RAOBget
 from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
+from lib.rsl import RSL
 
 
 # Set default values for testing that match test data.
@@ -34,11 +35,11 @@ class TestRAOBget(unittest.TestCase):
         # Set requested station to default values
         self.option = options()
 
-        self.raob.set_prov(self.option)
-        self.raob.set_stnm(self.option)
+        self.raob.request.set_prov(self.option)
+        self.raob.request.set_stnm(self.option)
 
     def test_RAOB_set(self):
-        request = self.raob.get_request()
+        request = self.raob.request.get_request()
         self.assertEqual(request['region'], self.option.region)
         self.assertEqual(request['raobtype'], self.option.raobtype)
         self.assertEqual(request['year'], self.option.year)
@@ -56,7 +57,7 @@ class TestRAOBget(unittest.TestCase):
                   "TYPE=TEXT%3ALIST&YEAR=2019&MONTH=05&FROM=2812&TO=2812&" + \
                   "STNM=72672"
 
-        request = self.raob.get_request()
+        request = self.raob.request.get_request()
         url = textlist.get_url(request)
         self.assertEqual(url, ctrlurl)
 
@@ -86,7 +87,7 @@ class TestRAOBget(unittest.TestCase):
 
         gifskewt = RAOBgifskewt()
 
-        request = self.raob.get_request()
+        request = self.raob.request.get_request()
 
         # Test request for HTML file
         ctrlurl = "http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&" + \
@@ -135,7 +136,7 @@ class TestRAOBget(unittest.TestCase):
             os.system('rm 726722019052812.txt')
 
         self.option.mtp = True
-        self.raob.set_prov(self.option)
+        self.raob.request.set_prov(self.option)
 
         outfile = self.get_data()
 
@@ -156,7 +157,8 @@ class TestRAOBget(unittest.TestCase):
                        'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
         self.option.rsl = "../config/DEEPWAVE.RSL"
-        stnlist = self.raob.read_rsl(self.option)
+        rsl = RSL()
+        stnlist = rsl.read_rsl(self.option)
         self.assertListEqual(stnlist, ctrlstnlist)
 
     def tearDown(self):

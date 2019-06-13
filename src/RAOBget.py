@@ -11,9 +11,10 @@
 import sys
 import argparse
 
-from datetime import datetime
 from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
+from lib.raobdata import RAOBdata
+from lib.rsl import RSL
 
 
 class RAOBget():
@@ -23,116 +24,25 @@ class RAOBget():
         Initialize a RAOBrequest dictionary to hold request metadata
         """
 
-        RAOBrequest = {  # Default station used in testing. Will be overwritten
-                         # with requested station in normal usage.
-            'region': '',    # Region identifier
-            'raobtype': '',  # Retreived data/imagery type indentifier
-            'year': "",      # Year to retrieve data for
-            'month': "",     # Month to retrieve data for
-            'begin': "",     # Begin day/hour (ddhh) to retrieve data for
-            'end': "",       # End day/hour (ddhh) to retrieve data for
-            'stnm': "",      # Station number to retrieve data for
-            'rsl': "",       # Name of file containing list of stations to
-                             # retrieve data for
-            'test': False,   # Run in test/dev mode
-            'mtp': False,    # MTP-specific processing
-            'catalog': False,  # catalog-specific processing
-            'now': False,    # Set requested date/time to current time,
-                             # i.e. retrieve current RAOB.
-        }
-
-        self.request = RAOBrequest  # dictionary to hold all URL components
-
-    def set_region(self, args):
-        self.request['region'] = args.region
-
-    def set_type(self, args):
-        self.request['raobtype'] = args.raobtype
-
-    def set_year(self, year):
-        self.request['year'] = year
-
-    def set_month(self, month):
-        self.request['month'] = month
-
-    def set_begin(self, bday, bhr):
-        self.request['begin'] = bday+bhr
-
-    def set_end(self, eday, ehr):
-        self.request['end'] = eday+ehr
-
-    def set_test(self, args):
-        self.request['test'] = args.test
-
-    def set_mtp(self, args):
-        self.request['mtp'] = args.mtp
-
-    def set_catalog(self, args):
-        self.request['catalog'] = args.catalog
-
-    def set_now(self, args):
-        self.request['now'] = args.now
-
-    def set_stnm(self, args):
-        self.request['stnm'] = args.stnm
-
-    def set_prov(self, args):  # Set provenance of RAOB to retrieve
-        """ Set request from all the metadata specificed on the command line.
-        Calls individual set_ methods for each argument.
-        """
-        self.set_region(args)
-        self.set_type(args)
-        self.set_year(args.year)
-        self.set_month(args.month)
-        self.set_begin(args.bday, args.bhr)
-        self.set_end(args.eday, args.ehr)
-        self.set_test(args)
-        self.set_mtp(args)
-        self.set_catalog(args)
-        self.set_now(args)
-
-    def read_rsl(self, args):  # read RAOB Station List (RSL) file
-        """ Read a optional provided list of raob stations to request data for
-        """
-        rsl = open(args.rsl)
-        stnlist = rsl.readlines()
-        rsl.close()
-        return([line.rstrip() for line in stnlist])
-
-    def get_request(self):
-        """ Return request metadata dictionary """
-
-        return(self.request)
-
-    def set_time_now(self):
-        """ Set request time to most recent 12 hour (UTC) RAOB """
-        time = datetime.utcnow()
-        self.set_year(str(time.year))
-        self.set_month('{:02d}'.format(time.month))
-        if time.hour > 0 and time.hour <= 12:
-            hour = 0
-        else:
-            hour = 12
-
-        self.set_begin('{:02d}'.format(time.day), '{:02d}'.format(hour))
-        self.set_end('{:02d}'.format(time.day), '{:02d}'.format(hour))
+        self.request = RAOBdata()  # dictionary to hold all URL components
 
     def retrieve(self):
         """ Retrieve data for requested RAOB type """
 
         # If option --now is set, set year, month, begin, and end to current
         # date/time
-        if self.request['now'] is True:
-            self.set_time_now()
+        request = self.request.get_request()
+        if request['now'] is True:
+            self.request.set_time_now()
 
-        if (self.request['raobtype'] == 'TEXT:LIST'):
+        if (request['raobtype'] == 'TEXT:LIST'):
             textlist = RAOBtextlist()
-            textlist.retrieve(self.request)
-        elif (self.request['raobtype'] == 'GIF:SKEWT'):
+            textlist.retrieve(request)
+        elif (request['raobtype'] == 'GIF:SKEWT'):
             gifskewt = RAOBgifskewt()
-            gifskewt.retrieve(self.request)
+            gifskewt.retrieve(request)
         else:
-            print('RAOB type '+self.request['raobtype']+' not implemented yet')
+            print('RAOB type '+request['raobtype']+' not implemented yet')
             exit(1)
 
 
@@ -185,7 +95,7 @@ def parse():
     return(args)
 
 
-def main(args):
+def main():
 
     # Parse command line arguments
     args = parse()
@@ -194,21 +104,22 @@ def main(args):
     raob = RAOBget()
 
     # Set requested region, type, and date to values requested via command line
-    raob.set_prov(args)
+    raob.request.set_prov(args)
 
     # Did user request a single station via --stnm, or a list of stations
     # via an RSL file
     if (args.rsl == ''):
-        raob.set_stnm(args)
+        raob.request.set_stnm(args)
         raob.retrieve()  # Retrieve requested data/imagery for a single station
     else:
-        stnlist = raob.read_rsl(args)
+        rsl = RSL()
+        stnlist = rsl.read_rsl(args)
         for stn in stnlist:  # Loop through a list of stations
             args.stnm = stn
-            raob.set_stnm(args)
+            raob.request.set_stnm(args)
             raob.retrieve()
 
 
 if __name__ == "__main__":
 
-    main(sys.argv)
+    main()
