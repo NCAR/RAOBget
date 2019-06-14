@@ -8,7 +8,6 @@
 ###############################################################################
 import os
 import re
-import yaml
 
 import userlib.catalog
 from lib.rwget import RAOBwget
@@ -76,9 +75,9 @@ class RAOBgifskewt():
                     prod = prod.replace(station['id'].rstrip()+"_", "")
 
                 # For international skewts, set the product name to
-                # "Station_Name_CC" where CC is the two letter country code. For
-                # US stations use "Station_Name_ST" where ST it the two letter
-                # state code.
+                # "Station_Name_CC" where CC is the two letter country code.
+                # For US stations use "Station_Name_ST" where ST it the two
+                # letter state code.
                 if (station['country'] == 'US'):
                     prod += "_" + station['state']
                 else:
