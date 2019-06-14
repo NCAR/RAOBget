@@ -8,9 +8,11 @@
 ###############################################################################
 import os
 import re
+import yaml
 
 import userlib.catalog
 from lib.rwget import RAOBwget
+from lib.stationlist import RAOBstation_list
 
 
 class RAOBgifskewt():
@@ -32,7 +34,27 @@ class RAOBgifskewt():
         request['raobtype'] = "GIF:SKEWT"
         return(self.rwget.get_url(request))
 
+    def get_station_info(self, stnm):
+        """ Read in the station metadata for the given station id/number """
+        station_list_file = '../config/snstns.tbl'
+        stationList = RAOBstation_list()
+        stationList.read(station_list_file)
+        if stnm.isdigit():
+            station = stationList.get_by_stnm(stnm)
+        else:
+            station = stationList.get_by_id(stnm)
+
+        # Should only get back one, unique station. If not, warn user
+        if (len(station) != 1):
+            print("WARNING: Found more than one station matching " + stnm)
+            for i in range(len(station)):
+                print(station[i])
+            print("Returning first station found")
+
+        return(station[0])
+
     def get_prod(self, request):
+        """ Build the product name required by the field catalog """
 
         # Open the HTML file and read in the <TITLE> line
         out = open(self.get_outfile_html())
@@ -40,12 +62,30 @@ class RAOBgifskewt():
         while '<TITLE>' not in line:
             line = out.readline()
         if '<TITLE>' in line:
-            m = re.search(request['stnm']+' (.*) [Sounding|Observations]',
+            m = re.search(request['stnm']+' (.*) [Sounding]',
                           line)
             if m:
                 prod = m.group(1).replace(" ", "_")
+
+                # Get station metadata for use in reformatting product name
+                station = self.get_station_info(request['stnm'])
+
+                # If we found the station by the number, then the id will still
+                # be in the title. Remove it.
+                if station['id'].rstrip() in prod:
+                    prod = prod.replace(station['id'].rstrip()+"_", "")
+
+                # For international skewts, set the product name to
+                # "Station_Name_CC" where CC is the two letter country code. For
+                # US stations use "Station_Name_ST" where ST it the two letter
+                # state code.
+                if (station['country'] == 'US'):
+                    prod += "_" + station['state']
+                else:
+                    prod += "_" + station['country']
+
             else:
-                print("Couldn't find product name. Setting to temp")
+                print("WARNING: Couldn't find product name. Setting to temp")
                 prod = "temp"
 
         out.close()
@@ -55,8 +95,8 @@ class RAOBgifskewt():
     def set_outfile_gif(self, request):
         platform = "SkewT"
 
-        self.outfile_gif = "upperair." + platform + request['year'] + \
-            request['month'] + request['begin'] + "." + \
+        self.outfile_gif = "upperair." + platform + '.' + request['year'] + \
+            request['month'] + request['begin'] + "00." + \
             self.get_prod(request) + ".gif"
 
     def get_outfile_gif(self):
@@ -107,6 +147,10 @@ class RAOBgifskewt():
 
             # Download gif image
             status = self.rwget.get_data(url, outfile)
+
+            # Remove now-irrelevant html file
+            os.system('rm ' + self.get_outfile_html())
+            print('Removed ' + self.get_outfile_html())
 
             # If running in catalog mode, ftp files to catalog dir
             if request['catalog'] is True and status:
