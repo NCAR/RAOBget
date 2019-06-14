@@ -70,8 +70,11 @@ class RAOBdata():
         self.request['stnm'] = args.stnm
 
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
-        """ Set request from all the metadata specificed on the command line.
+        """ 
+        Set request from all the metadata specificed on the command line.
         Calls individual set_ methods for each argument.
+        Doesn't set stnm because that is set in raobget.get to either a
+        single station, or looping over stns from rsl file.
         """
         self.set_region(args)
         self.set_type(args)
