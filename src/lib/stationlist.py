@@ -77,7 +77,12 @@ class RAOBstation_list:
 
 
 if __name__ == "__main__":
-    station_list_file = "../config/station-query.html"
+    # Older GEMPAK list from MJ
+    #station_list_file = "../../config/station-query.html"
+
+    # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses with
+    # the UWyo website.
+    station_list_file = "../../config/snstns.tbl"
 
     stationList = RAOBstation_list()
     stationList.read(station_list_file)
