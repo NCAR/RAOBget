@@ -67,8 +67,7 @@ class RAOBwget:
 
         # Check if filename already exists. wget will fail if it does.
         if os.path.isfile(outfile):
-            print("Already downloaded file with name " + outfile +
-                  ". Remove this file to re-download.")
+            print("Already downloaded file with name " + outfile)
 
             return(False)  # Did not download new data
 

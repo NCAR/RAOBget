@@ -7,6 +7,7 @@ from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
 from lib.rsl import RSL
 from lib.raobroot import getrootdir
+from lib.config import config
 
 
 # Set default values for testing that match test data.
@@ -25,6 +26,7 @@ class options():
     mtp = False
     catalog = False
     now = False
+    config = ""
 
 
 class TestRAOBget(unittest.TestCase):
@@ -153,6 +155,24 @@ class TestRAOBget(unittest.TestCase):
                             " differ ")
         ctrl.close()
         out.close()
+
+    def test_config(self):
+        """ Make sure code checks for correct metadata for ftp status in
+        config file. """
+        configfile = config()
+        configfile.read(getrootdir() + "test/data/config_cp.yml")
+        ftp_status = configfile.get_ftp_status()
+        self.assertFalse(ftp_status)
+        cp_dir = configfile.get_cp_dir()
+        self.assertEqual(cp_dir, '/net/iftp2/pub/incoming/catalog/test')
+
+        configfile.read(getrootdir() + "test/data/config_ftp.yml")
+        ftp_status = configfile.get_ftp_status()
+        self.assertTrue(ftp_status)
+        ftp_server = configfile.get_ftp_server()
+        self.assertEqual(ftp_server, 'catalog.eol.ucar.edu')
+        ftp_dir = configfile.get_ftp_dir()
+        self.assertEqual(ftp_dir, 'pub/incoming/catalog/test')
 
     def test_rsl(self):
         ctrlstnlist = ['89611', 'ASLH', 'DNR', 'GJT', 'LKN', 'NCRG', 'NFFN',

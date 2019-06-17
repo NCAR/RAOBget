@@ -13,6 +13,7 @@ import userlib.catalog
 from lib.rwget import RAOBwget
 from lib.stationlist import RAOBstation_list
 from lib.raobroot import getrootdir
+from lib.config import config
 
 
 class RAOBgifskewt():
@@ -34,19 +35,23 @@ class RAOBgifskewt():
         request['raobtype'] = "GIF:SKEWT"
         return(self.rwget.get_url(request))
 
-    def get_station_info(self, stnm):
+    def get_station_info(self, request):
         """ Read in the station metadata for the given station id/number """
-        station_list_file = getrootdir() + '/config/snstns.tbl'
+        configfile = config()
+        configfile.read(getrootdir() + "/" + request['config'])
+        station_list_file = configfile.get_stnlist_file()
+
         stationList = RAOBstation_list()
         stationList.read(station_list_file)
-        if stnm.isdigit():
-            station = stationList.get_by_stnm(stnm)
+        if request['stnm'].isdigit():
+            station = stationList.get_by_stnm(request['stnm'])
         else:
-            station = stationList.get_by_id(stnm)
+            station = stationList.get_by_id(request['stnm'])
 
         # Should only get back one, unique station. If not, warn user
         if (len(station) != 1):
-            print("WARNING: Found more than one station matching " + stnm)
+            print("WARNING: Found more than one station matching " +
+                  "request['stnm']")
             for i in range(len(station)):
                 print(station[i])
             print("Returning first station found")
@@ -68,7 +73,7 @@ class RAOBgifskewt():
                 prod = m.group(1).replace(" ", "_")
 
                 # Get station metadata for use in reformatting product name
-                station = self.get_station_info(request['stnm'])
+                station = self.get_station_info(request)
 
                 # If we found the station by the number, then the id will still
                 # be in the title. Remove it.
@@ -128,31 +133,37 @@ class RAOBgifskewt():
 
         # If in test mode, copy file from data dir to simulate download...
         if request['test'] is True:
-            os.system('cp data/7267220190528122812.skewt ' +
-                      '7267220190528122812.txt')
+            os.system('cp ' + getrootdir() +
+                      '/test/data/7267220190528122812.html.ctrl' +
+                      ' 7267220190528122812.html')
+            status = False
 
         # ...else download data
         else:
             status = self.rwget.get_data(url, self.get_outfile_html())
 
+        # Download the gif image directly
+        url = self.get_gif_url(request)
+
+        # Create output filename from request metadata
+        self.set_outfile_gif(request)
+        outfile = self.get_outfile_gif()
+
         # If site returned good html file and thus generated gif
         if status:
-
-            # Download the gif image directly
-            url = self.get_gif_url(request)
-
-            # Create output filename from request metadata
-            self.set_outfile_gif(request)
-            outfile = self.get_outfile_gif()
-
             # Download gif image
             status = self.rwget.get_data(url, outfile)
 
-            # If running in catalog mode, ftp files to catalog dir
-            if request['catalog'] is True and status:
-                userlib.catalog.to_ftp(outfile)
+        else:
+            os.system('cp ' + getrootdir() + '/test/data/' +
+                      'upperair.SkewT.201905280000.Riverton_WY.gif.ctrl' +
+                      ' upperair.SkewT.201905280000.Riverton_WY.gif')
 
-            return(self.get_outfile_gif())
+        # If running in catalog mode, ftp files to catalog dir
+        if request['catalog'] is True and status:
+            userlib.catalog.to_ftp(outfile, request)
+
+        return(self.get_outfile_gif())
 
     def cleanup(self):
 

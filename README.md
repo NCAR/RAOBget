@@ -19,6 +19,10 @@ To run the code, use the command:
 ```
 The -h option lists and identifies the parameters you can pass to the code, like requested station id and dates. So for example, **python3 RAOBget.py --raobtype TEXT:LIST --now --stnm DNR** will download the latest 12-hour sounding from Denver/Stapleton.
 
+### To run on a mac ###
+
+ * pip3 install PyYAML
+
 ### Developer Notes ###
 
 For complete documentation on each class/method, useful if you need to modify the code, use pydoc to extract embedded documentation from each file:

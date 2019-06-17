@@ -8,7 +8,6 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
-import sys
 import argparse
 
 from raobtype.textlist import RAOBtextlist
@@ -41,6 +40,7 @@ class RAOBget():
         elif (request['raobtype'] == 'GIF:SKEWT'):
             gifskewt = RAOBgifskewt()
             gifskewt.retrieve(request)
+            gifskewt.cleanup()
         else:
             print('RAOB type '+request['raobtype']+' not implemented yet')
             exit(1)
@@ -78,6 +78,9 @@ class RAOBget():
         parser.add_argument('--rsl', type=str, default='',
                             help='RSL file from which to read list of ' +
                             'stations to request')
+        parser.add_argument('--config', type=str, default='',
+                            help='Path to YAML config file. Required if ' +
+                            '--catalog set')
         parser.add_argument('--test', action="store_true",
                             help='Run in testing mode using local sample ' +
                             'data file 726722019052812.txt. Used for offline' +
@@ -88,9 +91,11 @@ class RAOBget():
                             'mtp mode begin and end times must be the same.')
         parser.add_argument('--catalog', action="store_true",
                             help='Download gif images for catalog use. ' +
-                            'Rename to match catalog filename requirements.')
+                            'Rename to match catalog filename requirements.' +
+                            ' Requires that --config be set.')
         parser.add_argument('--now', action="store_true",
-                            help='Set requested date/time to current date/time')
+                            help='Set requested date/time to current ' +
+                            'date/time')
         args = parser.parse_args()
 
         return(args)

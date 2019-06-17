@@ -27,6 +27,7 @@ class RAOBdata():
             'stnm': "",      # Station number to retrieve data for
             'rsl': "",       # Name of file containing list of stations to
                              # retrieve data for
+            'config': "",    # Name of config file
             'test': False,   # Run in test/dev mode
             'mtp': False,    # MTP-specific processing
             'catalog': False,  # catalog-specific processing
@@ -69,8 +70,11 @@ class RAOBdata():
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
 
+    def set_config(self, args):
+        self.request['config'] = args.config
+
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
-        """ 
+        """
         Set request from all the metadata specificed on the command line.
         Calls individual set_ methods for each argument.
         Doesn't set stnm because that is set in raobget.get to either a
@@ -85,6 +89,10 @@ class RAOBdata():
         self.set_test(args)
         self.set_mtp(args)
         self.set_catalog(args)
+        if args.catalog is True and args.config == '':
+            print("ERROR: --config option required if --catalog is set")
+            exit(1)
+        self.set_config(args)
         self.set_now(args)
 
     def get_request(self):

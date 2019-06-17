@@ -7,15 +7,39 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+from ftplib import FTP
+from lib.config import config
+from lib.raobroot import getrootdir
 
 
-def to_ftp(outfile):
-    # STUB UNTIL I TALK TO SCOT
-    # ftp_server = "catalog.eol.ucar.edu"
-    # ftp_dir = "/net/iftp2/pub/incoming/catalog/relampago"
-    ftp_dir = "../ftp"
+def to_ftp(outfile, request):
 
-    # Move downloaded image to dest file in ftp_dir
-    os.rename(outfile, ftp_dir + "/" + outfile)
+    # Get the user specified ftp status and dirs from the YAML config file
+    # given on the command line
+    configfile = config()
+    configfile.read(getrootdir() + "/" + request['config'])
+    ftp_status = configfile.get_ftp_status()
+    print(ftp_status)
 
-    # if ftp_server, connect and put new file to server
+    if ftp_status == "True":  # USER IS REQUESTING FTP TO FTP SERVER AND DIR
+        ftp_server = configfile.get_ftp_server()
+        ftp_dir = configfile.get_ftp_dir()
+
+        # Connect to server and put new file
+        # ftp = FTP(ftp_server,'USERNAME','PASSWORD')
+        try:
+            ftp = FTP(ftp_server, 'anonymous', '')
+            ftp.cwd(ftp_dir)
+            f = open(outfile, 'rb')
+            ftp.storbinary(f'STOR ' + outfile, f)
+            ftp.quit()
+            print("FTPd " + outfile + " to " + ftp_server + "/" + ftp_dir)
+        except Exception:
+            print("ERROR: FTP transfer failed for file " + outfile)
+
+    else:
+
+        cp_dir = configfile.get_cp_dir()
+
+        # Move downloaded image to dest file in ftp_dir
+        os.system("cp " + outfile + " " + cp_dir + "/" + outfile)
