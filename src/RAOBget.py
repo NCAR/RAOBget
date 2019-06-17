@@ -7,6 +7,7 @@
 ###############################################################################
 from lib.raobget import RAOBget
 
+
 def main():
 
     # Instantiate RAOB class

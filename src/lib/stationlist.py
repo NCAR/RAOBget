@@ -78,7 +78,7 @@ class RAOBstation_list:
 
 if __name__ == "__main__":
     # Older GEMPAK list from MJ
-    #station_list_file = "../../config/station-query.html"
+    # station_list_file = "../../config/station-query.html"
 
     # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses with
     # the UWyo website.
