@@ -12,6 +12,7 @@ import re
 import userlib.catalog
 from lib.rwget import RAOBwget
 from lib.stationlist import RAOBstation_list
+from lib.raobroot import getrootdir
 
 
 class RAOBgifskewt():
@@ -35,7 +36,7 @@ class RAOBgifskewt():
 
     def get_station_info(self, stnm):
         """ Read in the station metadata for the given station id/number """
-        station_list_file = '../config/snstns.tbl'
+        station_list_file = getrootdir() + '/config/snstns.tbl'
         stationList = RAOBstation_list()
         stationList.read(station_list_file)
         if stnm.isdigit():
@@ -147,12 +148,14 @@ class RAOBgifskewt():
             # Download gif image
             status = self.rwget.get_data(url, outfile)
 
-            # Remove now-irrelevant html file
-            os.system('rm ' + self.get_outfile_html())
-            print('Removed ' + self.get_outfile_html())
-
             # If running in catalog mode, ftp files to catalog dir
             if request['catalog'] is True and status:
                 userlib.catalog.to_ftp(outfile)
 
             return(self.get_outfile_gif())
+
+    def cleanup(self):
+
+        # Remove now-irrelevant html file
+        os.system('rm ' + self.get_outfile_html())
+        print('Removed ' + self.get_outfile_html())

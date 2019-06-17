@@ -2,13 +2,14 @@ import unittest
 import os
 
 from lib.stationlist import RAOBstation_list
+from lib.raobroot import getrootdir
 
 
 class TestRAOBstation_list(unittest.TestCase):
 
     def setUp(self):
 
-        self.stnlist1 = "../config/station-query.html"
+        self.stnlist1 = getrootdir() + "/config/station-query.html"
         # stations from station-query.html
         self.stn1 = {
             '01003': {
@@ -33,7 +34,7 @@ class TestRAOBstation_list(unittest.TestCase):
                 'lat': ' 3912', 'lon': '-10853', 'elev': ' 1475'},
         }
 
-        self.stnlist2 = "../config/snstns.tbl"
+        self.stnlist2 = getrootdir() + "/config/snstns.tbl"
         # stations from snstns.tbl
         self.stn2 = {
             'GJT':  {
@@ -47,7 +48,7 @@ class TestRAOBstation_list(unittest.TestCase):
                 'state': 'CO', 'country': 'US',
                 'lat': ' 3911', 'lon': '-10853', 'elev': ' 1475'},
         }
-        
+
     def get_stns(self):
 
         assert(os.path.isfile(self.station_list_file))

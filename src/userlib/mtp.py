@@ -10,6 +10,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+from lib.raobroot import getrootdir
 
 
 def test_dates(request):
@@ -88,4 +89,4 @@ def strip_html(request, outfile):
     temp.close()
 
     # move temp back to outfile
-    os.rename(outfile + '.temp', '../mtp/' + outfile)
+    os.rename(outfile + '.temp', getrootdir() + '/mtp/' + outfile)

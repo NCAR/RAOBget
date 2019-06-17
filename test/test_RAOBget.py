@@ -6,6 +6,7 @@ from RAOBget import RAOBget
 from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
 from lib.rsl import RSL
+from lib.raobroot import getrootdir
 
 
 # Set default values for testing that match test data.
@@ -75,7 +76,7 @@ class TestRAOBget(unittest.TestCase):
         print("\n" + outfile)
 
         # Compare retrieved text file to control file
-        ctrlfile = "../test/data/7267220190528122812.ctrl"
+        ctrlfile = getrootdir() + "/test/data/7267220190528122812.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
@@ -85,7 +86,7 @@ class TestRAOBget(unittest.TestCase):
 
     def get_skewt(self):
 
-        gifskewt = RAOBgifskewt()
+        self.gifskewt = RAOBgifskewt()
 
         request = self.raob.request.get_request()
 
@@ -93,19 +94,19 @@ class TestRAOBget(unittest.TestCase):
         ctrlurl = "http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&" + \
                   "TYPE=GIF%3ASKEWT&YEAR=2019&MONTH=05&FROM=2812&TO=2812&" + \
                   "STNM=72672"
-        url = gifskewt.get_url(request)
+        url = self.gifskewt.get_url(request)
         self.assertEqual(url, ctrlurl)
 
         # Test request for GIF image
         ctrlurl = "http://weather.uwyo.edu/upperair/images/" + \
                   "2019052812.72672.skewt.parc.gif"
-        url = gifskewt.get_gif_url(request)
+        url = self.gifskewt.get_gif_url(request)
         self.assertEqual(url, ctrlurl)
 
         # Get the data (html and gif image)
-        gifskewt.retrieve(request)
+        self.gifskewt.retrieve(request)
 
-        outfile = gifskewt.get_outfile_html()
+        outfile = self.gifskewt.get_outfile_html()
 
         return(outfile)
 
@@ -121,13 +122,16 @@ class TestRAOBget(unittest.TestCase):
         outfile = self.get_skewt()
 
         # Compare retrieved html file to control file
-        ctrlfile = "../test/data/7267220190528122812.html.ctrl"
+        ctrlfile = getrootdir() + "/test/data/7267220190528122812.html.ctrl"
         with open(ctrlfile) as ctrl, open(outfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + outfile +
                             " differ ")
         ctrl.close()
         out.close()
+
+        # Remove HTML file
+        self.gifskewt.cleanup()
 
     def test_mtp(self):
 
@@ -141,8 +145,8 @@ class TestRAOBget(unittest.TestCase):
         outfile = self.get_data()
 
         # Compare files with HTML stripped
-        ctrlfile = "../test/data/726722019052812.ctrl.mtp"
-        mtpfile = "../mtp/" + outfile
+        ctrlfile = getrootdir() + "/test/data/726722019052812.ctrl.mtp"
+        mtpfile = getrootdir() + "/mtp/" + outfile
         with open(ctrlfile) as ctrl, open(mtpfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + mtpfile +
@@ -156,7 +160,7 @@ class TestRAOBget(unittest.TestCase):
                        'NZHK', 'NZLD', 'OAK', 'PHLI', 'PHTO', 'PKMJ', 'PTKK',
                        'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
-        self.option.rsl = "../config/DEEPWAVE.RSL"
+        self.option.rsl = getrootdir() + "/config/DEEPWAVE.RSL"
         rsl = RSL()
         stnlist = rsl.read_rsl(self.option)
         self.assertListEqual(stnlist, ctrlstnlist)
