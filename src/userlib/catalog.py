@@ -19,9 +19,8 @@ def to_ftp(outfile, request):
     configfile = config()
     configfile.read(getrootdir() + "/" + request['config'])
     ftp_status = configfile.get_ftp_status()
-    print(ftp_status)
 
-    if ftp_status == "True":  # USER IS REQUESTING FTP TO FTP SERVER AND DIR
+    if ftp_status is True:  # USER IS REQUESTING FTP TO FTP SERVER AND DIR
         ftp_server = configfile.get_ftp_server()
         ftp_dir = configfile.get_ftp_dir()
 

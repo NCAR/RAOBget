@@ -63,14 +63,6 @@ class RAOBtextlist():
         Returns:
             outfile: The name of the retrieved file.
         """
-        # In MTP mode, confirm begin and end are equal so will only get one
-        # RAOB per file.
-        if request['mtp'] is True:
-            userlib.mtp.test_dates(request)
-
-        # Create request URL from request metadata
-        url = self.get_url(request)
-
         # Create output filename from request metadata
         self.set_outfile(request)
         outfile = self.get_outfile()
@@ -85,6 +77,8 @@ class RAOBtextlist():
 
         # ...else download data
         else:
+            # Create request URL from request metadata
+            url = self.get_url(request)
 
             status = self.rwget.get_data(url, outfile)
 

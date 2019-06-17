@@ -25,6 +25,7 @@ class RAOBdata():
             'begin': "",     # Begin day/hour (ddhh) to retrieve data for
             'end': "",       # End day/hour (ddhh) to retrieve data for
             'stnm': "",      # Station number to retrieve data for
+            'freq': "12",    # Freq to look for RAOBs. Default is every 12 hrs
             'rsl': "",       # Name of file containing list of stations to
                              # retrieve data for
             'config': "",    # Name of config file
@@ -70,6 +71,9 @@ class RAOBdata():
     def set_stnm(self, args):
         self.request['stnm'] = args.stnm
 
+    def set_freq(self, args):
+        self.request['freq'] = args.freq
+
     def set_config(self, args):
         self.request['config'] = args.config
 
@@ -86,6 +90,7 @@ class RAOBdata():
         self.set_month(args.month)
         self.set_begin(args.bday, args.bhr)
         self.set_end(args.eday, args.ehr)
+        self.set_freq(args)
         self.set_test(args)
         self.set_mtp(args)
         self.set_catalog(args)
@@ -101,14 +106,14 @@ class RAOBdata():
         return(self.request)
 
     def set_time_now(self):
-        """ Set request time to most recent 12 hour (UTC) RAOB """
+        """ Set request time to most recent 12 hour (UTC) RAOB unless freq is
+        set higher. """
         time = datetime.utcnow()
         self.set_year(str(time.year))
         self.set_month('{:02d}'.format(time.month))
-        if time.hour > 0 and time.hour <= 12:
-            hour = 0
-        else:
-            hour = 12
+        for hr in range(0, 24, int(self.request['freq'])):
+            if time.hour > hr and time.hour <= hr+int(self.request['freq']):
+                hour = hr
 
         self.set_begin('{:02d}'.format(time.day), '{:02d}'.format(hour))
         self.set_end('{:02d}'.format(time.day), '{:02d}'.format(hour))

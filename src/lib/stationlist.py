@@ -29,13 +29,23 @@ class RAOBstation_list:
         self.station = RAOBstation
         self.station_list = []
 
+        # Older GEMPAK list from MJ
+        # station_list_file = "../../config/station-query.html"
+
+        # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses with
+        # the UWyo website.
+        self.station_list_file = "../../config/snstns.tbl"
+
     def read(self, station_list_file):
 
-        # Make sure station_list_file exists
-        if not os.path.isfile(station_list_file):
-            print("ERROR: station list file " + station_list_file +
-                  " doesn't exist")
-            exit(1)
+        if station_list_file == "":
+            station_list_file = self.station_list_file
+        else:
+            # Make sure station_list_file exists
+            if not os.path.isfile(station_list_file):
+                print("ERROR: station list file " + station_list_file +
+                      " doesn't exist")
+                exit(1)
 
         infile = open(station_list_file)
         for line in infile:
@@ -77,12 +87,6 @@ class RAOBstation_list:
 
 
 if __name__ == "__main__":
-    # Older GEMPAK list from MJ
-    # station_list_file = "../../config/station-query.html"
-
-    # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses with
-    # the UWyo website.
-    station_list_file = "../../config/snstns.tbl"
 
     stationList = RAOBstation_list()
-    stationList.read(station_list_file)
+    stationList.read(stationList.station_list_file)

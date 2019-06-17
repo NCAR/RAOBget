@@ -19,6 +19,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import os
 import yaml
 from lib.raobroot import getrootdir
 
@@ -26,12 +27,15 @@ from lib.raobroot import getrootdir
 class config():
 
     def read(self, yamlfile):
-        infile = open(yamlfile)
-        self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
-        # for key, value in self.projConfig.items():
-        #     print(key + ": " + str(value))
+        if not os.path.isdir(yamlfile):
+            infile = open(yamlfile)
+            self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
+            # for key, value in self.projConfig.items():
+            #     print(key + ": " + str(value))
 
-        infile.close()
+            infile.close()
+        else:
+            self.projConfig = {'station_list_file': 'config/snstns.tbl'}
 
     def get_stnlist_file(self):
         if 'station_list_file' in self.projConfig.keys():
@@ -43,7 +47,10 @@ class config():
 
     def get_ftp_status(self):
         if 'ftp' in self.projConfig.keys():
-            return(self.projConfig['ftp'])
+            if self.projConfig['ftp'] == "False":
+                return(False)
+            if self.projConfig['ftp'] == "True":
+                return(True)
         else:
             print("ERROR: ftp status not defined. " +
                   "Add 'ftp: True/False' to  config file and rerun.")

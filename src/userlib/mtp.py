@@ -13,15 +13,6 @@ import os
 from lib.raobroot import getrootdir
 
 
-def test_dates(request):
-    # The MTP VB6 requires only one RAOB per file. Enforce this by requiring
-    # begin and end to be equal.
-    if request['begin'] != request['end']:
-        print("ERROR: Begin and end day/hour must be equal in MTP mode")
-        print("begin = " + request['begin'] + "; end = " + request['end'])
-        exit(1)
-
-
 def set_outfile(request):
     # The MTP VB6 code requires that only the begin date be given in the RAOB
     # filename.

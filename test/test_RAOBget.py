@@ -26,7 +26,8 @@ class options():
     mtp = False
     catalog = False
     now = False
-    config = ""
+    config = "test/data/config_cp.yml"
+    freq = "12"
 
 
 class TestRAOBget(unittest.TestCase):
@@ -160,13 +161,13 @@ class TestRAOBget(unittest.TestCase):
         """ Make sure code checks for correct metadata for ftp status in
         config file. """
         configfile = config()
-        configfile.read(getrootdir() + "test/data/config_cp.yml")
+        configfile.read(getrootdir() + "/test/data/config_cp.yml")
         ftp_status = configfile.get_ftp_status()
         self.assertFalse(ftp_status)
         cp_dir = configfile.get_cp_dir()
         self.assertEqual(cp_dir, '/net/iftp2/pub/incoming/catalog/test')
 
-        configfile.read(getrootdir() + "test/data/config_ftp.yml")
+        configfile.read(getrootdir() + "/test/data/config_ftp.yml")
         ftp_status = configfile.get_ftp_status()
         self.assertTrue(ftp_status)
         ftp_server = configfile.get_ftp_server()
@@ -180,7 +181,7 @@ class TestRAOBget(unittest.TestCase):
                        'NZHK', 'NZLD', 'OAK', 'PHLI', 'PHTO', 'PKMJ', 'PTKK',
                        'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
-        self.option.rsl = getrootdir() + "/config/DEEPWAVE.RSL"
+        self.option.rsl = getrootdir() + "/config/project.RSL"
         rsl = RSL()
         stnlist = rsl.read_rsl(self.option)
         self.assertListEqual(stnlist, ctrlstnlist)
