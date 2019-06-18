@@ -44,7 +44,11 @@ class RAOBget():
         parser = argparse.ArgumentParser(
             description="Script to download various formats of RAOB " +
                         "data/imagery from the University of Wyoming " +
-                        "Radiosonde Archive")
+                        "Radiosonde Archive. For NCAR/EOL field catalog use " +
+                        "the command: \n\npython3 RAOBget.py --catalog --now" +
+                        " --config config/project.yml --raobtype GIF:SKEWT " +
+                        "[--stnm <station number> or --rsl " +
+                        "<station_list_file>]")
         parser.add_argument('--region', type=str, default='',
                             help='Region for which to download sonde info. ' +
                             'Not required. Download will fail if region does' +
