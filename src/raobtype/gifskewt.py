@@ -142,28 +142,29 @@ class RAOBgifskewt():
         else:
             status = self.rwget.get_data(url, self.get_outfile_html())
 
-        # Download the gif image directly
-        url = self.get_gif_url(request)
-
-        # Create output filename from request metadata
-        self.set_outfile_gif(request)
-        outfile = self.get_outfile_gif()
-
         # If site returned good html file and thus generated gif
         if status:
+            # Download the gif image directly
+            url = self.get_gif_url(request)
+
+            # Create output filename from request metadata
+            self.set_outfile_gif(request)
+            outfile = self.get_outfile_gif()
+
             # Download gif image
             status = self.rwget.get_data(url, outfile)
 
         else:
-            os.system('cp ' + getrootdir() + '/test/data/' +
-                      'upperair.SkewT.201905280000.Riverton_WY.gif.ctrl' +
-                      ' upperair.SkewT.201905280000.Riverton_WY.gif')
+            if request['test'] is True:
+                os.system('cp ' + getrootdir() + '/test/data/' +
+                          'upperair.SkewT.201905280000.Riverton_WY.gif.ctrl' +
+                          ' upperair.SkewT.201905280000.Riverton_WY.gif')
 
         # If running in catalog mode, ftp files to catalog dir
         if request['catalog'] is True and status:
             userlib.catalog.to_ftp(outfile, request)
 
-        return(self.get_outfile_gif())
+        return()
 
     def cleanup(self):
 
