@@ -19,6 +19,14 @@ To run the code, use the command:
 ```
 The -h option lists and identifies the parameters you can pass to the code, like requested station id and dates. So for example, **python3 RAOBget.py --raobtype TEXT:LIST --now --stnm DNR** will download the latest 12-hour sounding from Denver/Stapleton.
 
+For use with the NCAR/EOL field catalog, use the command:
+**python3 RAOBget.py --catalog --now --config config/project.yml --raobtype GIF:SKEWT [--stnm <station number> or --rsl <station_list_file>]**
+(In the future, could easily add raobtype and stnm or rsl to the config file.)
+
+For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata (UNDER DEVELOPMENT):
+**python3 RAOBget.py --gui**
+
+
 ### To run on a mac ###
 
  * pip3 install PyYAML
