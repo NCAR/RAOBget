@@ -32,8 +32,8 @@ class RAOBstation_list:
         # Older GEMPAK list from MJ
         # station_list_file = "../../config/station-query.html"
 
-        # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses with
-        # the UWyo website.
+        # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses
+        # with the UWyo website.
         self.station_list_file = "../../config/snstns.tbl"
 
     def read(self, station_list_file):
