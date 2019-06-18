@@ -21,12 +21,14 @@ The -h option lists and identifies the parameters you can pass to the code, like
 
 For use with the NCAR/EOL field catalog, use the command:
 ```
-**python3 RAOBget.py --catalog --now --config config/project.yml --raobtype GIF:SKEWT [--stnm <station number> or --rsl <station_list_file>] --freq <[3,6,12]>**
+python3 RAOBget.py --catalog --now --config config/project.yml --raobtype GIF:SKEWT [--stnm <station number> or --rsl <station_list_file>] --freq <[3,6,12]>
 ```
 (In the future, could easily add raobtype and stnm or rsl to the config file.)
 
 For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata (UNDER DEVELOPMENT):
-**python3 RAOBget.py --gui**
+```
+python3 RAOBget.py --gui
+```
 
 
 ### To run on a mac ###
