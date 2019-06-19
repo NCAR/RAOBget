@@ -48,7 +48,7 @@ class RAOBget():
                         "the command: \n\npython3 RAOBget.py --catalog --now" +
                         " --config config/project.yml --raobtype GIF:SKEWT " +
                         "[--stnm <station number> or --rsl " +
-                        "<station_list_file>]")
+                        "<station_list_file>] --freq <[3,6,12]>")
         parser.add_argument('--region', type=str, default='',
                             help='Region for which to download sonde info. ' +
                             'Not required. Download will fail if region does' +
@@ -99,14 +99,19 @@ class RAOBget():
         parser.add_argument('--now', action="store_true",
                             help='Set requested date/time to current ' +
                             'date/time')
+        parser.add_argument('--gui', action="store_true",
+                            help='Start RAOBget in GUI mode')
         args = parser.parse_args()
 
         return(args)
 
-    def get(self):
+    def get_args(self):
         # Parse command line arguments
         args = self.parse()
 
+        return(args)
+
+    def get(self, args):
         # Set requested region, type, and date to values requested via command
         # line
         self.request.set_prov(args)
