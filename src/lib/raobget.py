@@ -166,7 +166,7 @@ class RAOBget():
         # Did user request a single station via --stnm, or a list of stations
         # via an RSL file
         if (args.rsl == ''):
-            self.request.set_stnm(args)
+            self.request.set_stnm(args.stnm)
             # Retrieve requested data/imagery for a single stn
             self.retrieve(request)
         else:
@@ -174,5 +174,5 @@ class RAOBget():
             stnlist = rsl.read_rsl(args)
             for stn in stnlist:  # Loop through a list of stations
                 args.stnm = stn
-                self.request.set_stnm(args)
+                self.request.set_stnm(args.stnm)
                 self.retrieve(request)
