@@ -38,11 +38,11 @@ class RAOBdata():
 
         self.request = RAOBrequest  # dictionary to hold all URL components
 
-    def set_region(self, args):
-        self.request['region'] = args.region
+    def set_region(self, region):
+        self.request['region'] = region
 
-    def set_type(self, args):
-        self.request['raobtype'] = args.raobtype
+    def set_type(self, raobtype):
+        self.request['raobtype'] = raobtype
 
     def set_year(self, year):
         self.request['year'] = year
@@ -56,26 +56,26 @@ class RAOBdata():
     def set_end(self, eday, ehr):
         self.request['end'] = eday+ehr
 
-    def set_test(self, args):
-        self.request['test'] = args.test
+    def set_test(self, test):
+        self.request['test'] = test
 
-    def set_mtp(self, args):
-        self.request['mtp'] = args.mtp
+    def set_mtp(self, mtp):
+        self.request['mtp'] = mtp
 
-    def set_catalog(self, args):
-        self.request['catalog'] = args.catalog
+    def set_catalog(self, catalog):
+        self.request['catalog'] = catalog
 
-    def set_now(self, args):
-        self.request['now'] = args.now
+    def set_now(self, now):
+        self.request['now'] = now
 
-    def set_stnm(self, args):
-        self.request['stnm'] = args.stnm
+    def set_stnm(self, stnm):
+        self.request['stnm'] = stnm
 
-    def set_freq(self, args):
-        self.request['freq'] = args.freq
+    def set_freq(self, freq):
+        self.request['freq'] = freq
 
-    def set_config(self, args):
-        self.request['config'] = args.config
+    def set_config(self, config):
+        self.request['config'] = config
 
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
         """
@@ -84,21 +84,21 @@ class RAOBdata():
         Doesn't set stnm because that is set in raobget.get to either a
         single station, or looping over stns from rsl file.
         """
-        self.set_region(args)
-        self.set_type(args)
+        self.set_region(args.region)
+        self.set_type(args.raobtype)
         self.set_year(args.year)
         self.set_month(args.month)
         self.set_begin(args.bday, args.bhr)
         self.set_end(args.eday, args.ehr)
-        self.set_freq(args)
-        self.set_test(args)
-        self.set_mtp(args)
-        self.set_catalog(args)
+        self.set_freq(args.freq)
+        self.set_test(args.test)
+        self.set_mtp(args.mtp)
+        self.set_catalog(args.catalog)
         if args.catalog is True and args.config == '':
             print("ERROR: --config option required if --catalog is set")
             exit(1)
-        self.set_config(args)
-        self.set_now(args)
+        self.set_config(args.config)
+        self.set_now(args.now)
 
     def get_request(self):
         """ Return request metadata dictionary """
