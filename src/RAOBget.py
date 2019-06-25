@@ -24,7 +24,7 @@ def main():
         app = QApplication([])
 
         # Instantiate the RAOBview GUI
-        viewer = RAOBview()
+        viewer = RAOBview(raob)
         viewer.show()
 
         # Run the application until the user closes it.
