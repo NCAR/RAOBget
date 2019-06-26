@@ -75,11 +75,14 @@ class RAOBwget:
             # Check if online - if not, exit gracefully
             try:
                 urllib.request.urlopen(url)
-            except Exception as e:
+            except (HTTPerror, URLerror) as e:
                 print("Can't connect to weather.uwyo.edu. Use option " +
                       "--test for testing with offline sample data files.")
                 print(str(e))
                 exit(1)
+            except socket.timeout as e:
+                print("There was an error:")
+                print(str(e))
 
             # Get requested URL.
             urllib.request.urlretrieve(url, outfile)
