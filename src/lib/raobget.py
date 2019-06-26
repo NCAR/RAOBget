@@ -14,6 +14,7 @@ from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
 from lib.raobdata import RAOBdata
 from lib.rsl import RSL
+from lib.messageHandler import printmsg
 
 
 class RAOBget():
@@ -24,20 +25,6 @@ class RAOBget():
         """
 
         self.request = RAOBdata()  # dictionary to hold all URL components
-
-    def retrieve(self, request):
-        """ Retrieve data for requested RAOB type """
-
-        if (request['raobtype'] == 'TEXT:LIST'):
-            textlist = RAOBtextlist()
-            textlist.retrieve(request)
-        elif (request['raobtype'] == 'GIF:SKEWT'):
-            gifskewt = RAOBgifskewt()
-            gifskewt.retrieve(request)
-            gifskewt.cleanup()
-        else:
-            print('RAOB type '+request['raobtype']+' not implemented yet')
-            exit(1)
 
     def parse(self):
         """ Define command line arguments which can be provided"""
@@ -111,10 +98,22 @@ class RAOBget():
 
         return(args)
 
-    def get(self, args):
+    def set_args(self, args):
         # Set requested region, type, and date to values requested via command
         # line
         self.request.set_prov(args)
+
+    def get(self, args, log=""):
+        """ Method to retrieve RAOBS
+
+        Parameters:
+            args: a dictionary of command line arguments/defaults
+
+        Returns:
+            N/A
+
+        """
+        self.log = log             # pointer to GUI log, if running in GUI mode
 
         # If option --now is set, set year, month, begin, and end to current
         # date/time
@@ -124,15 +123,15 @@ class RAOBget():
 
         # If user has requested more than one RAOB, loop over the requested
         # frequency
-        print("Getting RAOBs from:" + request['year'] + request['month'] +
-              request['begin'] + " to " + request['year'] + request['month'] +
-              request['end'])
+        printmsg(log, "Getting RAOBs from: " + request['year'] +
+                 request['month'] + request['begin'] + " to " +
+                 request['year'] + request['month'] + request['end'])
         if request['begin'] == request['end']:
             self.stn_loop(args, request)
         else:
             if request['end'] < request['begin']:
-                print("ERROR: Requested end time must be >= requested begin" +
-                      "time")
+                printmsg(log, "ERROR: Requested end time must be >= " +
+                         "requested begin time")
             else:
                 # Get RAOBs for first day requested
                 day = args.bday
@@ -140,7 +139,8 @@ class RAOBget():
                     # get RAOBs
                     self.request.set_begin(day, '{:02d}'.format(hr))
                     self.request.set_end(day, '{:02d}'.format(hr))
-                    # print("Day 1:",request['begin'] + ' - ' + request['end'])
+                    # printmsg(log, "Day 1:",request['begin'] + ' - ' +
+                    #          request['end'])
                     self.stn_loop(args, request)
                 # Get RAOBs for second to second-to-last day
                 for day in range(int(args.bday) + 1, int(args.eday)):
@@ -150,7 +150,8 @@ class RAOBget():
                                                '{:02d}'.format(hr))
                         self.request.set_end('{:02d}'.format(day),
                                              '{:02d}'.format(hr))
-                        # print(request['begin'] + ' - ' + request['end'])
+                        # printmsg(log, request['begin'] + ' - ' +
+                        #          request['end'])
                         self.stn_loop(args, request)
                 # Get RAOBs for last day requested
                 day = args.eday
@@ -158,15 +159,15 @@ class RAOBget():
                     # get RAOBs
                     self.request.set_begin(day, '{:02d}'.format(hr))
                     self.request.set_end(day, '{:02d}'.format(hr))
-                    # print("Last:" + request['begin'] + ' - ' +
-                    # request['end'])
+                    # printmsg(log, "Last:" + request['begin'] + ' - ' +
+                    #          request['end'])
                     self.stn_loop(args, request)
 
     def stn_loop(self, args, request):
         # Did user request a single station via --stnm, or a list of stations
         # via an RSL file
         if (args.rsl == ''):
-            self.request.set_stnm(args.stnm)
+            # Stnm already set
             # Retrieve requested data/imagery for a single stn
             self.retrieve(request)
         else:
@@ -176,3 +177,17 @@ class RAOBget():
                 args.stnm = stn
                 self.request.set_stnm(args.stnm)
                 self.retrieve(request)
+
+    def retrieve(self, request):
+        """ Retrieve data for requested RAOB type """
+
+        if (request['raobtype'] == 'TEXT:LIST'):
+            textlist = RAOBtextlist(self.log)
+            textlist.retrieve(request, self.log)
+        elif (request['raobtype'] == 'GIF:SKEWT'):
+            gifskewt = RAOBgifskewt(self.log)
+            gifskewt.retrieve(request, self.log)
+            gifskewt.cleanup()
+        else:
+            printmsg(self.log, 'RAOB type ' + request['raobtype'] +
+                     ' not implemented yet')

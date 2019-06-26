@@ -14,34 +14,45 @@ from lib.rwget import RAOBwget
 from lib.stationlist import RAOBstation_list
 from lib.raobroot import getrootdir
 from lib.config import config
+from lib.messageHandler import printmsg
 
 
 class RAOBgifskewt():
 
-    def __init__(self):
+    def __init__(self, log=""):
 
-        self.rwget = RAOBwget()
+        self.log = log
+        self.rwget = RAOBwget(log)
 
     def set_outfile_html(self, request):
+        """ Build output filename for GIF:SKEWT data file. """
         self.outfile_html = request['stnm'] + request['year'] + \
             request['month'] + request['begin'] + request['end'] + \
             ".html"
 
     def get_outfile_html(self):
+        """
+        Returns:
+            self.outfile_html: the name of the file to which the received data
+            should be saved
+        """
 
         return(self.outfile_html)
 
     def get_url(self, request):
+        """
+        Generate the request URL for a GIF:SKEWT request
+        """
         request['raobtype'] = "GIF:SKEWT"
-        return(self.rwget.get_url(request))
+        return(self.rwget.get_url(request, self.log))
 
     def get_station_info(self, request):
         """ Read in the station metadata for the given station id/number """
-        configfile = config()
+        configfile = config(self.log)
         configfile.read(getrootdir() + "/" + request['config'])
         station_list_file = configfile.get_stnlist_file()
 
-        stationList = RAOBstation_list()
+        stationList = RAOBstation_list(self.log)
         stationList.read(station_list_file)
         if request['stnm'].isdigit():
             station = stationList.get_by_stnm(request['stnm'])
@@ -50,11 +61,11 @@ class RAOBgifskewt():
 
         # Should only get back one, unique station. If not, warn user
         if (len(station) != 1):
-            print("WARNING: Found more than one station matching " +
-                  "request['stnm']")
+            printmsg(self.log, "WARNING: Found more than one station " +
+                     "matching request['stnm']")
             for i in range(len(station)):
-                print(station[i])
-            print("Returning first station found")
+                printmsg(self.log, station[i])
+            printmsg(self.log, "Returning first station found")
 
         return(station[0])
 
@@ -90,7 +101,8 @@ class RAOBgifskewt():
                     prod += "_" + station['country']
 
             else:
-                print("WARNING: Couldn't find product name. Setting to temp")
+                printmsg(self.log, "WARNING: Couldn't find product name. " +
+                         "Setting to temp")
                 prod = "temp"
 
         out.close()
@@ -98,6 +110,12 @@ class RAOBgifskewt():
         return(prod)
 
     def set_outfile_gif(self, request):
+        """
+        Build output filename for GIF:SKEWT image.
+
+        Parameters:
+            request: a RAOBrequest dictionary of request metadata
+        """
         platform = "SkewT"
 
         self.outfile_gif = "upperair." + platform + '.' + request['year'] + \
@@ -105,6 +123,11 @@ class RAOBgifskewt():
             self.get_prod(request) + ".gif"
 
     def get_outfile_gif(self):
+        """
+        Returns:
+            self.outfile_gif: the name of the file to which the received image
+            should be saved
+        """
 
         return(self.outfile_gif)
 
@@ -118,7 +141,17 @@ class RAOBgifskewt():
 
         return(url)
 
-    def retrieve(self, request):
+    def retrieve(self, request, log=""):
+        """
+        Retrieves the requested data from the U Wyoming archive
+
+        Parameters:
+            request: A dictionary containing the metadata for the
+                     request.
+
+        Returns:
+            outfile: The name of the retrieved file.
+        """
 
         # SKEWT's are downloaded in two steps.
         # The first request generates the skewt on the website and downloads an
@@ -162,12 +195,12 @@ class RAOBgifskewt():
 
         # If running in catalog mode, ftp files to catalog dir
         if request['catalog'] is True and status:
-            userlib.catalog.to_ftp(outfile, request)
+            status = userlib.catalog.to_ftp(outfile, request)
+            printmsg(self.log, status)
 
-        return()
+        return(outfile)
 
     def cleanup(self):
-
-        # Remove now-irrelevant html file
+        """ Remove now-irrelevant html file """
         os.system('rm ' + self.get_outfile_html())
-        print('Removed ' + self.get_outfile_html())
+        printmsg(self.log, 'Removed ' + self.get_outfile_html())

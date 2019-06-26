@@ -10,13 +10,16 @@ import os
 
 import userlib.mtp
 from lib.rwget import RAOBwget
+# from lib.messageHandler import printmsg
+# If want to print status messages, use printmsg(self.log, msg)
 
 
 class RAOBtextlist():
 
-    def __init__(self):
+    def __init__(self, log=""):
 
-        self.rwget = RAOBwget()
+        self.log = log
+        self.rwget = RAOBwget(log)
 
     def get_url(self, request):
         """
@@ -24,7 +27,7 @@ class RAOBtextlist():
         """
 
         request['raobtype'] = "TEXT:LIST"
-        url = self.rwget.get_url(request)
+        url = self.rwget.get_url(request, self.log)
 
         return(url)
 
@@ -34,7 +37,7 @@ class RAOBtextlist():
         create a filename to meet mtp-specific requirements.
 
         Parameters:
-            requst: a RAOBrequest dictionary of request metadata
+            request: a RAOBrequest dictionary of request metadata
         """
         if request['mtp'] is True:
             self.outfile = userlib.mtp.set_outfile(request)
@@ -52,7 +55,7 @@ class RAOBtextlist():
 
         return(self.outfile)
 
-    def retrieve(self, request):
+    def retrieve(self, request, log=""):
         """
         Retrieves the requested data from the U Wyoming archive
 
@@ -63,6 +66,7 @@ class RAOBtextlist():
         Returns:
             outfile: The name of the retrieved file.
         """
+
         # Create output filename from request metadata
         self.set_outfile(request)
         outfile = self.get_outfile()

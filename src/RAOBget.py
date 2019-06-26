@@ -11,17 +11,22 @@ from PyQt5.QtWidgets import QApplication
 
 
 def main():
+    """ Instantiate a RAOB class and call in either GUI mode or command-line
+        mode """
 
     # Instantiate RAOB class
     raob = RAOBget()
 
     args = raob.get_args()
 
-    if args.gui is True:
+    if args.gui is True:  # Run in GUI mode
         # Every GUI app must have exactly one instance of QApplication. The
         # QApplication class manages the GUI application's control flow and
         # main settings.
         app = QApplication([])
+
+        # Set either the command line or default args as the request
+        raob.set_args(args)
 
         # Instantiate the RAOBview GUI
         viewer = RAOBview(raob)
@@ -30,8 +35,12 @@ def main():
         # Run the application until the user closes it.
         app.exec_()
 
-    else:
+    else:  # Run in command line mode
 
+        # Set either the command line or default args as the request
+        raob.set_args(args)
+
+        # Call method to retrieve raobs
         raob.get(args)
 
 

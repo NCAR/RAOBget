@@ -86,6 +86,7 @@ class RAOBdata():
         """
         self.set_region(args.region)
         self.set_type(args.raobtype)
+        self.set_stnm(args.stnm)
         self.set_year(args.year)
         self.set_month(args.month)
         self.set_begin(args.bday, args.bhr)

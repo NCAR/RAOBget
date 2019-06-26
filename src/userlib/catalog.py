@@ -13,6 +13,9 @@ from lib.raobroot import getrootdir
 
 
 def to_ftp(outfile, request):
+    """
+    return: status messages
+    """
 
     # Get the user specified ftp status and dirs from the YAML config file
     # given on the command line
@@ -32,9 +35,9 @@ def to_ftp(outfile, request):
             f = open(outfile, 'rb')
             ftp.storbinary(f'STOR ' + outfile, f)
             ftp.quit()
-            print("FTPd " + outfile + " to " + ftp_server + "/" + ftp_dir)
+            return("FTPd " + outfile + " to " + ftp_server + "/" + ftp_dir)
         except Exception:
-            print("ERROR: FTP transfer failed for file " + outfile)
+            return("ERROR: FTP transfer failed for file " + outfile)
 
     else:
 
@@ -42,3 +45,4 @@ def to_ftp(outfile, request):
 
         # Move downloaded image to dest file in ftp_dir
         os.system("cp " + outfile + " " + cp_dir + "/" + outfile)
+        return("copied " + outfile + " to " + cp_dir)

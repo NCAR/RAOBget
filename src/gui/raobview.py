@@ -9,6 +9,8 @@
 from PyQt5.QtWidgets import QMainWindow, QAction
 from gui.raobwidget import Widget
 from gui.fileselector import FileSelector
+# from lib.messageHandler import printmsg
+# If want to print status messages, use printmsg(self.log, msg)
 
 
 class RAOBview(QMainWindow):
@@ -82,7 +84,6 @@ class RAOBview(QMainWindow):
 
     def loadConfig(self):
         """ Actions to take when the 'Load config' menu item is selected """
-        print("Implement LOAD action here")
         # This has to be self.editor (not just editor) to avoid garbage
         # collection or the GUIconfig window won't appear.
 
@@ -91,4 +92,6 @@ class RAOBview(QMainWindow):
 
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """
-        print("Implement SAVE action here")
+
+        # Call dialog box to edit the configuration
+        self.editor = FileSelector()

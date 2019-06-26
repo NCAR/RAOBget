@@ -7,6 +7,7 @@
 ###############################################################################
 from PyQt5.QtWidgets import QGridLayout, QLabel, QGroupBox, QComboBox, \
      QLineEdit, QPushButton
+from lib.messageHandler import printmsg
 
 
 class GUIconfig():
@@ -62,10 +63,10 @@ class GUIconfig():
         """ Save the selected mode to the metadata dictionary """
         if text == "MTP":
             self.raob.request.set_mtp(True)
-            self.widget.setMessage(self.log, "Mode set to MTP")
+            printmsg(self.log, "Mode set to MTP")
         if text == "GUI":
             self.raob.request.set_catalog(True)
-            self.widget.setMessage(self.log, "Mode set to Catalog")
+            printmsg(self.log, "Mode set to Catalog")
 
     def createFreq(self, box, row):
         """ Create and place the frequency dropdown """
@@ -81,7 +82,7 @@ class GUIconfig():
     def setFreq(self, text):
         """ Save the selected reporting frequency to the metadata dictionary"""
         self.raob.request.set_freq(text)
-        self.widget.setMessage(self.log, "Freq set to " + text)
+        printmsg(self.log, "Freq set to " + text)
 
     def createType(self, box, row):
         """ Create and place the type dropdown """
@@ -96,7 +97,7 @@ class GUIconfig():
     def setType(self, text):
         """ Save the selected type to the metadata dictionary"""
         self.raob.request.set_type(text)
-        self.widget.setMessage(self.log, "RAOB type set to " + text)
+        printmsg(self.log, "RAOB type set to " + text)
 
     def createLoadStn(self, box, row):
         """ Create the Load station list button """
@@ -109,7 +110,7 @@ class GUIconfig():
 
     def loadStnlist(self):
         """ Call dialog box to load a station list """
-        print("Load a station list")
+        printmsg(self.log, "Need to implement load a station list")
 
     def createCreateStnlist(self, box, row):
         """ Create the Create station list button """
@@ -123,7 +124,7 @@ class GUIconfig():
 
     def createStnlist(self):
         """ Call dialog box to create a station list """
-        print("Create a station list")
+        printmsg(self.log, "Need to implement create a station list")
 
     def createStnm(self, box, row):
         """ Create the Stnm text input field """
@@ -139,4 +140,4 @@ class GUIconfig():
     def setStnm(self):
         textboxValue = self.stnm.text()
         self.raob.request.set_stnm(textboxValue)
-        self.widget.setMessage(self.log, "Station set to " + textboxValue)
+        printmsg(self.log, "Station set to " + textboxValue)

@@ -10,6 +10,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+from lib.messageHandler import printmsg
 
 RAOBstation = {
         'id': "",           # 8-character station identifier
@@ -25,9 +26,10 @@ RAOBstation = {
 
 class RAOBstation_list:
 
-    def __init__(self):
+    def __init__(self, log=""):
         self.station = RAOBstation
         self.station_list = []
+        self.log = log
 
         # Older GEMPAK list from MJ
         # station_list_file = "../../config/station-query.html"
@@ -43,8 +45,8 @@ class RAOBstation_list:
         else:
             # Make sure station_list_file exists
             if not os.path.isfile(station_list_file):
-                print("ERROR: station list file " + station_list_file +
-                      " doesn't exist")
+                printmsg(self.log, "ERROR: station list file " +
+                         station_list_file + " doesn't exist")
                 exit(1)
 
         infile = open(station_list_file)
@@ -66,7 +68,7 @@ class RAOBstation_list:
                 # Copy dictionary into array (so get a copy, not a pointer)
                 self.station_list.append(self.station.copy())
 
-                # print(line.rstrip().split())
+                # printmsg(self.log, line.rstrip().split())
 
         infile.close()
 

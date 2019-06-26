@@ -40,7 +40,7 @@ class TestRAOBget(unittest.TestCase):
         self.option = options()
 
         self.raob.request.set_prov(self.option)
-        self.raob.request.set_stnm(self.option)
+        self.raob.request.set_stnm(self.option.stnm)
 
     def test_RAOB_set(self):
         request = self.raob.request.get_request()

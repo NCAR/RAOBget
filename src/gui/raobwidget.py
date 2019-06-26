@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QLabel, QPushButton, QGridLayout, QWidget, \
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from gui.configedit import GUIconfig
+from lib.messageHandler import printmsg
 
 
 class Widget(QWidget):
@@ -20,6 +21,9 @@ class Widget(QWidget):
         self.initWidget(raob)
 
     def initWidget(self, raob):
+        # Make raob accessible throughout this file
+        self.raob = raob
+
         # Configure layout
         # Add widgets to layout. Params are:
         # (widget, fromRow, fromColumn, rowSpan=1, columnSpan=1)
@@ -68,13 +72,12 @@ class Widget(QWidget):
         log.setReadOnly(True)
         layout.addWidget(log, 1, 0, 1, 3)
         log.setFrameStyle(QFrame.Panel | QFrame.Sunken)
-        log.appendPlainText("Status messages will appear here")
+        printmsg(log, "Status messages will appear here")
         log.show()
         return(log)
 
-    def setMessage(self, log, text):
-        log.appendPlainText(text)
-
     def clickRetrieve(self):
         """ Actions to take when the 'Begin retrieval' button is selected """
-        self.setMessage(self.log, "Begin retrieval")
+        printmsg(self.log, "Begin retrieval")
+        printmsg(self.log, str(self.raob.request.get_request()))
+        self.raob.get(self.raob.get_args(), self.log)

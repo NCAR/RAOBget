@@ -22,16 +22,20 @@
 import os
 import yaml
 from lib.raobroot import getrootdir
+from lib.messageHandler import printmsg
 
 
 class config():
+
+    def __init__(self, log=""):
+        self.log = log       # pointer to GUI log, if extant
 
     def read(self, yamlfile):
         if not os.path.isdir(yamlfile):
             infile = open(yamlfile)
             self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
             # for key, value in self.projConfig.items():
-            #     print(key + ": " + str(value))
+            #     printmsg(self.log, key + ": " + str(value))
 
             infile.close()
         else:
@@ -41,8 +45,9 @@ class config():
         if 'station_list_file' in self.projConfig.keys():
             return(getrootdir() + "/" + self.projConfig['station_list_file'])
         else:
-            print("ERROR: station list metadata file not defined. " +
-                  "Add 'station_list_file: path' to  config file and rerun.")
+            printmsg(self.log, "ERROR: station list metadata file not " +
+                     "defined. Add 'station_list_file: path' to  config file" +
+                     "and rerun.")
             exit(1)
 
     def get_ftp_status(self):
@@ -52,30 +57,30 @@ class config():
             if self.projConfig['ftp'] == "True":
                 return(True)
         else:
-            print("ERROR: ftp status not defined. " +
-                  "Add 'ftp: True/False' to  config file and rerun.")
+            printmsg(self.log, "ERROR: ftp status not defined. " +
+                     "Add 'ftp: True/False' to  config file and rerun.")
             exit(1)
 
     def get_cp_dir(self):
         if 'cp_dir' in self.projConfig.keys():
             return(self.projConfig['cp_dir'])
         else:
-            print("ERROR: Directory to cp files to not defined. " +
-                  "Add 'cp_dir: path' to  config file and rerun.")
+            printmsg(self.log, "ERROR: Directory to cp files to not defined." +
+                     " Add 'cp_dir: path' to  config file and rerun.")
             exit(1)
 
     def get_ftp_server(self):
         if 'ftp_server' in self.projConfig.keys():
             return(self.projConfig['ftp_server'])
         else:
-            print("ERROR: ftp server not defined. " +
-                  "Add 'ftp_server: path' to  config file and rerun.")
+            printmsg(self.log, "ERROR: ftp server not defined. " +
+                     "Add 'ftp_server: path' to  config file and rerun.")
             exit(1)
 
     def get_ftp_dir(self):
         if 'ftp_dir' in self.projConfig.keys():
             return(self.projConfig['ftp_dir'])
         else:
-            print("ERROR: Directory to ftp files to not defined. " +
-                  "Add 'ftp_dir: path' to  config file and rerun.")
+            printmsg(self.log, "ERROR: Directory to ftp files to not " +
+                     "defined. Add 'ftp_dir: path' to  config file and rerun.")
             exit(1)

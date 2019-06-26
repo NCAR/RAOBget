@@ -8,14 +8,17 @@
 ###############################################################################
 import os
 import urllib.request
+import socket
 
+from urllib.error import HTTPError, URLError
 from util.region import RAOBregion
 from raobtype.raobtype import RAOBtype
+from lib.messageHandler import printmsg
 
 
 class RAOBwget:
 
-    def __init__(self):
+    def __init__(self, log=""):
         """
         Initialize instances of the region dictionary and data/imagery type
         dictionary. These are used to convert the user-supplied commandline
@@ -24,8 +27,9 @@ class RAOBwget:
 
         self.region = RAOBregion    # Instance of region dictionary
         self.type = RAOBtype    # Instance of data/imagery type dictionary
+        self.log = log
 
-    def get_url(self, request):
+    def get_url(self, request, log=""):
         """
         Create the URL string from the request metadata that will be used
         to retrieve the data from the uwyo archive
@@ -46,7 +50,7 @@ class RAOBwget:
         url += "&FROM=" + request['begin']
         url += "&TO=" + request['end']
         url += "&STNM=" + request['stnm']
-        # print(url)
+        # printmsg(log, url)
 
         return(url)
 
@@ -67,7 +71,7 @@ class RAOBwget:
 
         # Check if filename already exists. wget will fail if it does.
         if os.path.isfile(outfile):
-            print("Already downloaded file with name " + outfile)
+            printmsg(self.log, "Already downloaded file with name " + outfile)
 
             return(False)  # Did not download new data
 
@@ -75,14 +79,15 @@ class RAOBwget:
             # Check if online - if not, exit gracefully
             try:
                 urllib.request.urlopen(url)
-            except (HTTPerror, URLerror) as e:
-                print("Can't connect to weather.uwyo.edu. Use option " +
-                      "--test for testing with offline sample data files.")
-                print(str(e))
+            except (HTTPError, URLError) as e:
+                printmsg(self.log, "Can't connect to weather.uwyo.edu. Use " +
+                         "option --test for testing with offline sample data" +
+                         " files.")
+                printmsg(self.log, str(e))
                 exit(1)
             except socket.timeout as e:
-                print("There was an error:")
-                print(str(e))
+                printmsg(self.log, "There was an error:")
+                printmsg(self.log, str(e))
 
             # Get requested URL.
             urllib.request.urlretrieve(url, outfile)
@@ -93,13 +98,15 @@ class RAOBwget:
                 line = out.readline()
                 while line != '':
                     if "Can't get" in line:
-                        print('ERROR: Website says "' + line.rstrip() + '"')
+                        printmsg(self.log, 'ERROR: Website says "' +
+                                 line.rstrip() + '"')
                         os.system('rm ' + outfile)
                         out.close()
                         return(False)
                     elif 'Sorry, unable to generate' in line:
-                        print(line.rstrip() + ". Retrieved file contains" +
-                              " error message - gif was got generated.")
+                        printmsg(self.log, line.rstrip() + ". Retrieved file" +
+                                 " contains error message - gif was got " +
+                                 "generated")
                         os.system('rm ' + outfile)
                         out.close()
                         return(False)
@@ -107,6 +114,6 @@ class RAOBwget:
                         line = out.readline()
                 out.close()
 
-            print("\nRetrieved ", outfile)
+            printmsg(self.log, "Retrieved " + outfile)
 
             return(True)  # Downloaded new data
