@@ -88,8 +88,8 @@ class RAOBview(QMainWindow):
         # This has to be self.editor (not just editor) to avoid garbage
         # collection or the GUIconfig window won't appear.
 
-        # Call dialog box to edit the configuration
-        self.editor = FileSelector()
+        # Call dialog box to load the configuration
+        self.loader = FileSelector()
 
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """
