@@ -6,6 +6,8 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QPlainTextEdit, \
+     QPushButton
 
 
 class FileSelector(QMainWindow):
@@ -33,10 +35,9 @@ class FileSelector(QMainWindow):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.show()
 
-    def createMenuBar(self):
-        """ Create the menu bar and add options and dropdowns """
-        # A Menu bar will show menus at the top of the QMainWindow
-        menubar = self.menuBar()
+        # Set central widget. A QMainWindow must have a central widget.
+        self.widget = Widget()
+        self.setCentralWidget(self.widget)
 
 
 class Widget(QWidget):
@@ -48,12 +49,42 @@ class Widget(QWidget):
         # (widget, fromRow, fromColumn, rowSpan=1, columnSpan=1)
         layout = QGridLayout(self)
 
-        # Add an image window to hold the skewt
-        self.createImageWindow(layout)
+        # Copy layout of other RAF file selection dialog windows
 
-    def createImageWindow(self, layout):
-        """ Add an image window to hold the Skewt image """
-        image = QLabel()
-        layout.addWidget(image, 0, 0, 1, 3)
-        image.setWindowTitle("RAOB Skewt")
-        image.show()
+        lbl = QLabel("Filter")
+        layout.addWidget(lbl, 0, 0, 1, 4)
+
+        filtertext = QLineEdit()
+        filtertext.setToolTip("Enter a regex path to look for file")
+        layout.addWidget(filtertext, 1, 0, 1, 4)
+
+        lbl = QLabel("Directories")
+        layout.addWidget(lbl, 2, 0, 1, 2)
+        lbl = QLabel("Files")
+        layout.addWidget(lbl, 2, 2, 1, 2)
+
+        selector = QPlainTextEdit()
+        selector.setReadOnly(True) # Can I still highlight and choose?
+        layout.addWidget(selector, 3 , 0, 1, 2)
+        selector = QPlainTextEdit()
+        selector.setReadOnly(True) # Can I still highlight and choose?
+        layout.addWidget(selector, 3 , 2, 1, 2)
+
+        lbl = QLabel("Enter file name:")
+        layout.addWidget(lbl, 4, 0, 1, 4)
+
+        filtertext = QLineEdit()
+        filtertext.setToolTip("Enter a file to look for")
+        layout.addWidget(filtertext, 5, 0, 1, 4)
+
+        ok = QPushButton("OK")
+        layout.addWidget(ok, 6, 0, 1, 1)
+
+        fileFilter = QPushButton("Filter")
+        layout.addWidget(fileFilter, 6, 1, 1, 1)
+
+        cancel = QPushButton("Cancel")
+        layout.addWidget(cancel, 6, 2, 1, 1)
+
+        fileHelp = QPushButton("Help")
+        layout.addWidget(fileHelp, 6, 3, 1, 1)

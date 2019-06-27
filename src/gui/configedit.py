@@ -10,6 +10,7 @@ import re
 from PyQt5.QtWidgets import QGridLayout, QLabel, QGroupBox, QComboBox, \
      QLineEdit, QPushButton
 from lib.messageHandler import printmsg
+from gui.fileselector import FileSelector
 
 
 class GUIconfig():
@@ -137,7 +138,9 @@ class GUIconfig():
 
     def loadStnlist(self):
         """ Call dialog box to load a station list """
-        printmsg(self.log, "Need to implement load a station list")
+
+        # Call dialog box to load a station list
+        self.loader = FileSelector()
 
     def createCreateStnlist(self, box, row):
         """ Create the Create station list button """
