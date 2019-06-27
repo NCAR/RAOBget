@@ -60,6 +60,9 @@ class RAOBget():
                             choices=['00', '03', '06', '09',
                                      '12', '15', '18', '21'],
                             help='End hour (hh) to request data UTC')
+        parser.add_argument('--now', action="store_true",
+                            help='Set requested date/time to current ' +
+                            'date/time')
         parser.add_argument('--stnm', type=str, default='72672',
                             help='Station number for which to request data...')
         parser.add_argument('--freq', type=str, default='12',
@@ -83,9 +86,6 @@ class RAOBget():
                             help='Download gif images for catalog use. ' +
                             'Rename to match catalog filename requirements.' +
                             ' Requires that --config be set.')
-        parser.add_argument('--now', action="store_true",
-                            help='Set requested date/time to current ' +
-                            'date/time')
         parser.add_argument('--gui', action="store_true",
                             help='Start RAOBget in GUI mode')
         args = parser.parse_args()
