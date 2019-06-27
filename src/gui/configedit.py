@@ -88,7 +88,7 @@ class GUIconfig():
         if text == "MTP":
             self.raob.request.set_mtp(True)
             printmsg(self.log, "Mode set to MTP")
-        if text == "GUI":
+        if text == "CATALOG":
             self.raob.request.set_catalog(True)
             printmsg(self.log, "Mode set to Catalog")
 

@@ -19,7 +19,7 @@ def printmsg(log, msg):
         print(msg)
     else:
         text_format = QTextCharFormat()
-        error = re.compile(r'[ERROR]', re.IGNORECASE)
+        error = re.compile(r'ERROR', re.IGNORECASE)
         if error.match(msg):
             text_format.setForeground(QBrush(QColor('red')))
             log.setCurrentCharFormat(text_format)
