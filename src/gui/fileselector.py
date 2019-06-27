@@ -5,9 +5,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
-from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLabel, QWidget
-from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QPlainTextEdit, \
-     QPushButton
+from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLabel, QWidget, \
+     QLineEdit, QPlainTextEdit, QPushButton
 
 
 class FileSelector(QMainWindow):
@@ -36,14 +35,20 @@ class FileSelector(QMainWindow):
         self.show()
 
         # Set central widget. A QMainWindow must have a central widget.
-        self.widget = Widget()
+        # Pass the MainWindow to the Widget so we can close the main window
+        # from the widget when the cancel button is selected.
+        self.widget = Widget(self)
         self.setCentralWidget(self.widget)
 
 
 class Widget(QWidget):
 
-    def __init__(self):
+    def __init__(self, window):
         super().__init__()
+
+        # Save the parent window as self.window
+        self.window = window
+
         # Configure layout
         # Add widgets to layout. Params are:
         # (widget, fromRow, fromColumn, rowSpan=1, columnSpan=1)
@@ -57,6 +62,7 @@ class Widget(QWidget):
         filtertext = QLineEdit()
         filtertext.setToolTip("Enter a regex path to look for file")
         layout.addWidget(filtertext, 1, 0, 1, 4)
+        # filterpath = filtertext.text()
 
         lbl = QLabel("Directories")
         layout.addWidget(lbl, 2, 0, 1, 2)
@@ -64,27 +70,40 @@ class Widget(QWidget):
         layout.addWidget(lbl, 2, 2, 1, 2)
 
         selector = QPlainTextEdit()
-        selector.setReadOnly(True) # Can I still highlight and choose?
-        layout.addWidget(selector, 3 , 0, 1, 2)
+        selector.setReadOnly(True)  # Can I still highlight and choose?
+        layout.addWidget(selector, 3, 0, 1, 2)
         selector = QPlainTextEdit()
-        selector.setReadOnly(True) # Can I still highlight and choose?
-        layout.addWidget(selector, 3 , 2, 1, 2)
+        selector.setReadOnly(True)  # Can I still highlight and choose?
+        layout.addWidget(selector, 3, 2, 1, 2)
 
         lbl = QLabel("Enter file name:")
         layout.addWidget(lbl, 4, 0, 1, 4)
 
-        filtertext = QLineEdit()
-        filtertext.setToolTip("Enter a file to look for")
-        layout.addWidget(filtertext, 5, 0, 1, 4)
+        self.filetext = QLineEdit()
+        self.filetext.setToolTip("Enter a file to look for")
+        layout.addWidget(self.filetext, 5, 0, 1, 4)
 
         ok = QPushButton("OK")
         layout.addWidget(ok, 6, 0, 1, 1)
+        ok.clicked.connect(self.set_filename)
 
         fileFilter = QPushButton("Filter")
         layout.addWidget(fileFilter, 6, 1, 1, 1)
+        fileFilter.clicked.connect(self.filterList)
 
         cancel = QPushButton("Cancel")
         layout.addWidget(cancel, 6, 2, 1, 1)
+        cancel.clicked.connect(self.cancel)
 
         fileHelp = QPushButton("Help")
+        fileHelp.setDisabled(True)
         layout.addWidget(fileHelp, 6, 3, 1, 1)
+
+    def filterList(self):
+        print("Need to code filtering list")
+
+    def set_filename(self):
+        print("Filename set to " + self.filetext.text())
+
+    def cancel(self):
+        self.window.close()
