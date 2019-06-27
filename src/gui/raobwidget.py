@@ -8,9 +8,11 @@
 from PyQt5.QtWidgets import QLabel, QPushButton, QGridLayout, QWidget, \
      QFrame, QPlainTextEdit
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
+# from PyQt5.QtCore import Qt
 from gui.configedit import GUIconfig
 from lib.messageHandler import printmsg
+# from PIL import Image
+# from resizeimage import resizeimage
 
 
 class Widget(QWidget):
@@ -44,7 +46,7 @@ class Widget(QWidget):
 
     def createRetrieveButton(self, layout):
         retrieve = QPushButton("Retrieve RAOBs")
-        layout.addWidget(retrieve, 2, 2)
+        layout.addWidget(retrieve, 2, 0)
         retrieve.clicked.connect(self.clickRetrieve)
         retrieve.setToolTip('Click to start downloading RAOBs')
         retrieve.show()
@@ -54,16 +56,19 @@ class Widget(QWidget):
         image = QLabel()
         layout.addWidget(image, 0, 1, 1, 2)
         pixmap = self.getImage()
-        pixmap_resized = pixmap.scaled(800, 640, Qt.KeepAspectRatio)
-        image.setPixmap(pixmap_resized)
-
+        # This was an attempt to resize from [800,640] to [600,480]. Image
+        # quality is unacceptably low. gif's don't resize well.
+        # pixmap_resized = pixmap.scaled(600, 480, Qt.KeepAspectRatio)
+        # image.setPixmap(pixmap_resized)
+        image.setPixmap(pixmap)
         image.show()
 
-    def getImage(self):
-        """ Stub - will eventually return the image associated with the latest
-        downloaded RAOB data """
+    def getImage(self, gifimage='./gui/message.gif'):
+        """ Return the image associated with the latest downloaded RAOB data.
+        Defaults to usage message on initialization.
+        """
         self.pixmap = \
-            QPixmap('../ftp/upperair.SkewT.201905280000.Riverton_WY.gif')
+            QPixmap(gifimage)
         return(self.pixmap)
 
     def createLogMessageWindow(self, layout):
@@ -72,7 +77,7 @@ class Widget(QWidget):
         log.setReadOnly(True)
         layout.addWidget(log, 1, 0, 1, 3)
         log.setFrameStyle(QFrame.Panel | QFrame.Sunken)
-        printmsg(log, "Status messages will appear here")
+        printmsg(log, "Status and error messages will appear here")
         log.show()
         return(log)
 

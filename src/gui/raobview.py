@@ -32,7 +32,8 @@ class RAOBview(QMainWindow):
     def initUI(self, raob):
         """ Create the GUI """
         # Set window title
-        self.setWindowTitle('RAOBget')
+        self.setWindowTitle('RAOBget - a utility to download soundings from ' +
+                            'the University of Wyoming sounding archive')
 
         # Set where GUI will appear on screen (x locn, y locn, width, ht)
         self.setGeometry(self.left, self.top, self.width, self.height)

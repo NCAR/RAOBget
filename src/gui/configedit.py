@@ -5,6 +5,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import re
+
 from PyQt5.QtWidgets import QGridLayout, QLabel, QGroupBox, QComboBox, \
      QLineEdit, QPushButton
 from lib.messageHandler import printmsg
@@ -27,22 +29,43 @@ class GUIconfig():
 
         # Create a grid layout for inside the configuration box
         box = QGridLayout()
-        self.createMode(box, 0)  # Create and place the mode dropdown
-        self.createFreq(box, 1)  # Create and place the frequency dropdown
-        self.createType(box, 2)  # Create and place the type dropdown
+        lbl = QLabel("Set mode to MTP or CATALOG to format and name " +
+                     "files as required by these specific applications.")
+        lbl.setWordWrap(True)
+        box.addWidget(lbl, 0, 0, 1, 2)
+        self.createMode(box, 1)  # Create and place the mode dropdown
+        self.createFreq(box, 2)  # Create and place the frequency dropdown
+        self.createType(box, 3)  # Create and place the type dropdown
 
         # Create and place the station list layout in the configuration box
         station = QGroupBox("Station selection")
-        box.addWidget(station, 3, 0, 1, 2)
+        box.addWidget(station, 4, 0, 1, 2)
         stnbox = QGridLayout()
-        self.createStnm(stnbox, 0)
-        self.createLoadStn(stnbox, 1)
-        self.createCreateStnlist(stnbox, 2)
+        # Usage info to users
+        lbl = QLabel("Enter a single station to download, interactively " +
+                     "create a list of stations to download from a recent" +
+                     " GEMPAK station list, or load an existing station list")
+        lbl.setWordWrap(True)
+        stnbox.addWidget(lbl, 0, 0, 1, 3)
+        self.createStnm(stnbox, 1)
+        self.createLoadStn(stnbox, 2)
+        self.createCreateStnlist(stnbox, 3)
         station.setLayout(stnbox)
 
         # Create and place the time period selection box inside the config box
         time = QGroupBox("Time Period selection")
-        box.addWidget(time, 4, 0, 1, 2)
+        box.addWidget(time, 5, 0, 1, 2)
+        timebox = QGridLayout()
+        # Usage info to users
+        lbl = QLabel("The Wyoming interface only allows downloading a month " +
+                     "of data at a time so begin and end year and month must" +
+                     " be the same.")
+        lbl.setWordWrap(True)
+        timebox.addWidget(lbl, 0, 0, 1, 3)
+        self.createBtime(timebox, 1)
+        self.createEtime(timebox, 2)
+        self.createNow(timebox, 3)
+        time.setLayout(timebox)
 
         # Place the grid layout in the configration box
         editor.setLayout(box)
@@ -77,6 +100,8 @@ class GUIconfig():
         comboBox.addItem("6")
         comboBox.addItem("12")
         comboBox.activated[str].connect(self.setFreq)
+        comboBox.setToolTip('Set the frequency to attempt to download data.' +
+                            ' Less frequent data will still be downloaded')
         box.addWidget(comboBox, row, 1)
 
     def setFreq(self, text):
@@ -92,6 +117,8 @@ class GUIconfig():
         comboBox.addItem("TEXT:LIST")
         comboBox.addItem("GIF:SKEWT")
         comboBox.activated[str].connect(self.setType)
+        comboBox.setToolTip('Choose to either download data in text format,' +
+                            ' or download SkewT plots as gif images.')
         box.addWidget(comboBox, row, 1)
 
     def setType(self, text):
@@ -131,13 +158,135 @@ class GUIconfig():
         lbl = QLabel("Station ID")
         box.addWidget(lbl, row, 0)
         self.stnm = QLineEdit()
-        self.stnm.setToolTip("Enter char or numeric id of station to download")
+        self.stnm.setToolTip("Enter char or numeric id of station to " +
+                             "download and click 'Set'")
         box.addWidget(self.stnm, row, 1)
-        use = QPushButton("Use")
+        use = QPushButton("Set")
         use.clicked.connect(self.setStnm)
         box.addWidget(use, row, 2)
 
     def setStnm(self):
+        """ Set the station to the value entered in the input field
+
+        NEED TO ADD DATA VALIDATION HERE
+        """
         textboxValue = self.stnm.text()
         self.raob.request.set_stnm(textboxValue)
         printmsg(self.log, "Station set to " + textboxValue)
+
+    def createBtime(self, box, row):
+        """ Create the begin time input field """
+        lbl = QLabel("Begin time")
+        box.addWidget(lbl, row, 0)
+        self.btime = QLineEdit('yyyymmddhh')
+        # Set the color of the suggested text to grey
+        self.btime.setStyleSheet("color: grey")
+        self.btime.setToolTip("Enter the beginning of the timerange to " +
+                              "download (YYYYMMDDHH) and click 'Set'")
+        box.addWidget(self.btime, row, 1)
+        use = QPushButton("Set")
+        use.clicked.connect(self.setBtime)
+        box.addWidget(use, row, 2)
+
+    def setBtime(self):
+        """ Set the beginning of the time range to download """
+
+        # Now that user has entered text, set the color of the text to black
+        self.btime.setStyleSheet("color: black")
+        textboxvalue = self.btime.text()
+
+        # Validate entered data
+        time = re.compile(r'[12][0-9][0-9][0-9][0-1][0-9][0-3][0-9][0-9][0-9]')
+        if not time.match(textboxvalue):
+            printmsg(self.log, "ERROR in entered begin time: " + textboxvalue +
+                     ".  Entered time must be a 4-digit year followed by a " +
+                     "2-digit month, a 2-digit day, and a 2-digit hour, e.g." +
+                     "2019051012 for noon May 10th, 2019")
+            printmsg(self.log, "Begin date/time not set. Please reenter and " +
+                     "click 'Set'")
+        else:
+            # Parse entered date into year, month, day, hr and assign to
+            # request metadata
+            year = textboxvalue[0:4]
+            self.raob.request.set_year(year)
+
+            month = textboxvalue[4:6]
+            self.raob.request.set_month(month)
+
+            day = textboxvalue[6:8]
+            hr = textboxvalue[8:10]
+            self.raob.request.set_begin(day, hr)
+            printmsg(self.log, "year set to " + year + ", month set to " +
+                     month + ", begin (ddhh) set to " + day + hr)
+
+    def createEtime(self, box, row):
+        """ Create the end time input field """
+        lbl = QLabel("End time")
+        box.addWidget(lbl, row, 0)
+        self.etime = QLineEdit('yyyymmddhh')
+        # Set the color of the suggested text to grey
+        self.etime.setStyleSheet("color: grey")
+        self.etime.setToolTip("Enter the ending of the timerange to " +
+                              "download (YYYYMMDDHH) and click 'Set'")
+        box.addWidget(self.etime, row, 1)
+        use = QPushButton("Set")
+        use.clicked.connect(self.setEtime)
+        box.addWidget(use, row, 2)
+
+    def setEtime(self):
+        """ Set the ending of the time range to download """
+
+        # Now that user has entered text, set the color of the text to black
+        self.btime.setStyleSheet("color: black")
+        textboxvalue = self.etime.text()
+
+        # Validate entered data
+        time = re.compile(r'[12][0-9][0-9][0-9][0-1][0-9][0-3][0-9][0-9][0-9]')
+        if not time.match(textboxvalue):
+            printmsg(self.log, "ERROR in entered end time: " + textboxvalue +
+                     ".  Entered time must be a 4-digit year followed by a " +
+                     "2-digit month, a 2-digit day, and a 2-digit hour, e.g." +
+                     "2019051012 for noon May 10th, 2019")
+            printmsg(self.log, "Begin date/time not set. Please reenter and " +
+                     "click 'Set'")
+        else:
+            # Site can only download one month at a time, so begin and end
+            # year and month must be the same.
+            year = textboxvalue[0:4]
+            if self.request['year'] != year:
+                printmsg(self.log, "Begin and end year and month must match" +
+                         " Please reenter and click 'Set'")
+                return()
+
+            month = textboxvalue[4:6]
+            if self.request['month'] != month:
+                printmsg(self.log, "Begin and end year and month must match" +
+                         " Please reenter and click 'Set'")
+                return()
+
+            # End date must be greater than begin date
+            day = textboxvalue[6:8]
+            hr = textboxvalue[8:10]
+            if self.request['begin'] > str(day) + str(hr):
+                printmsg(self.log, "End day/hr must be after begin day/hr" +
+                         " Please reenter and click 'Set'")
+                return()
+
+            # Parse entered date into end day, hr and assign to
+            # request metadata
+            self.raob.request.set_end(day, hr)
+            printmsg(self.log, "End (ddhh) set to " + day + hr)
+
+    def createNow(self, box, row):
+        """ Create a button to set time to now """
+        lbl = QLabel("-or-")
+        box.addWidget(lbl, row, 0)
+        create = QPushButton("Return most recent RAOB")
+        create.clicked.connect(self.Now)
+        create.setToolTip('Set the time to download to now. Returns most ' +
+                          'recent RAOB for selected station')
+        box.addWidget(create, row, 1, 1, 2)
+
+    def Now(self):
+        self.raob.request.set_now(True)
+        printmsg(self.log, "Time to retrieve set to now")
