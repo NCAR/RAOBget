@@ -25,6 +25,10 @@ python3 RAOBget.py --catalog --now --config config/project.yml --raobtype GIF:SK
 ```
 (In the future, could easily add raobtype and stnm or rsl to the config file.)
 
+**To run on barolo, you need to use /opt/local/anaconda3/bin/python3.7 as
+this is the only place PyQt5 is installed. Even if you are not using the
+GUI mode, the code will look for the PyQt5 library and fail.**
+
 For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata (UNDER DEVELOPMENT):
 ```
 python3 RAOBget.py --gui
