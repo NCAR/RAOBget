@@ -17,16 +17,17 @@ def main():
     # Instantiate RAOB class
     raob = RAOBget()
 
+    # Get arguments from command line
     args = raob.get_args()
+
+    # Set either the command line or default args as the request
+    raob.set_args(args)
 
     if args.gui is True:  # Run in GUI mode
         # Every GUI app must have exactly one instance of QApplication. The
         # QApplication class manages the GUI application's control flow and
         # main settings.
         app = QApplication([])
-
-        # Set either the command line or default args as the request
-        raob.set_args(args)
 
         # Instantiate the RAOBview GUI
         viewer = RAOBview(raob)
@@ -36,9 +37,6 @@ def main():
         app.exec_()
 
     else:  # Run in command line mode
-
-        # Set either the command line or default args as the request
-        raob.set_args(args)
 
         # Call method to retrieve raobs
         raob.get(args)
