@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QGridLayout, QLabel, QGroupBox, QComboBox, \
      QLineEdit, QPushButton
 from lib.messageHandler import printmsg
 from gui.fileselector import FileSelector
+# If want to print status messages, use printmsg(self.log, msg)
 
 
 class GUIconfig():
@@ -139,8 +140,8 @@ class GUIconfig():
     def loadStnlist(self):
         """ Call dialog box to load a station list """
 
-        # Call dialog box to load a station list
-        self.loader = FileSelector()
+        # Call dialog box to load a raob station list (rsl) file
+        self.loader = FileSelector("rsl")
 
     def createCreateStnlist(self, box, row):
         """ Create the Create station list button """

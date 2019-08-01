@@ -1,5 +1,4 @@
 ###############################################################################
-#
 # Code to display a GUI front-end to RAOBget
 #
 # Written in Python 3
@@ -9,14 +8,13 @@
 from PyQt5.QtWidgets import QMainWindow, QAction
 from gui.raobwidget import Widget
 from gui.fileselector import FileSelector
-# from lib.messageHandler import printmsg
-# If want to print status messages, use printmsg(self.log, msg)
 
 
 class RAOBview(QMainWindow):
 
     def __init__(self, raob):
         """ Set the initial GUI window size here """
+
         # The QMainWindow class provides a main application window
         QMainWindow.__init__(self)
 
@@ -89,10 +87,10 @@ class RAOBview(QMainWindow):
         # collection or the GUIconfig window won't appear.
 
         # Call dialog box to load the configuration
-        self.loader = FileSelector()
+        self.loader = FileSelector("config")
 
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """
+        print("Need to implement save a configuration file")
 
         # Call dialog box to edit the configuration
-        self.editor = FileSelector()
