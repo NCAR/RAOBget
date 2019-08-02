@@ -8,6 +8,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import os
 import argparse
 
 from raobtype.textlist import RAOBtextlist
@@ -115,9 +116,11 @@ class RAOBget():
         """
         self.log = log             # pointer to GUI log, if running in GUI mode
 
+        # Get the request metadata from the dictionary
+        request = self.request.get_request()
+
         # If option --now is set, set year, month, begin, and end to current
         # date/time
-        request = self.request.get_request()
         if request['now'] is True:
             self.request.set_time_now()
 
@@ -127,7 +130,7 @@ class RAOBget():
                  request['month'] + request['begin'] + " to " +
                  request['year'] + request['month'] + request['end'])
         if request['begin'] == request['end']:
-            self.stn_loop(args, request)
+            self.stn_loop(request)
         else:
             if request['end'] < request['begin']:
                 printmsg(log, "ERROR: Requested end time must be >= " +
@@ -141,7 +144,7 @@ class RAOBget():
                     self.request.set_end(day, '{:02d}'.format(hr))
                     # printmsg(log, "Day 1:",request['begin'] + ' - ' +
                     #          request['end'])
-                    self.stn_loop(args, request)
+                    self.stn_loop(request)
                 # Get RAOBs for second to second-to-last day
                 for day in range(int(args.bday) + 1, int(args.eday)):
                     for hr in range(0, 24, int(request['freq'])):
@@ -152,7 +155,7 @@ class RAOBget():
                                              '{:02d}'.format(hr))
                         # printmsg(log, request['begin'] + ' - ' +
                         #          request['end'])
-                        self.stn_loop(args, request)
+                        self.stn_loop(request)
                 # Get RAOBs for last day requested
                 day = args.eday
                 for hr in range(0, int(args.ehr)+1, int(request['freq'])):
@@ -161,22 +164,33 @@ class RAOBget():
                     self.request.set_end(day, '{:02d}'.format(hr))
                     # printmsg(log, "Last:" + request['begin'] + ' - ' +
                     #          request['end'])
-                    self.stn_loop(args, request)
+                    self.stn_loop(request)
 
-    def stn_loop(self, args, request):
+    def test_rsl(self, rslfile):
+        if os.path.exists(rslfile):
+            return(True)
+        else:
+            return(False)
+
+    def stn_loop(self, request):
         # Did user request a single station via --stnm, or a list of stations
         # via an RSL file
-        if (args.rsl == ''):
+        if (request['rsl'] == ''):
             # Stnm already set
             # Retrieve requested data/imagery for a single stn
             self.retrieve(request)
         else:
-            rsl = RSL()
-            stnlist = rsl.read_rsl(args)
-            for stn in stnlist:  # Loop through a list of stations
-                args.stnm = stn
-                self.request.set_stnm(args.stnm)
-                self.retrieve(request)
+            if self.test_rsl(request['rsl']):
+                rsl = RSL()
+                stnlist = rsl.read_rsl(request['rsl'])
+                for stn in stnlist:  # Loop through a list of stations
+                    request['stnm'] = stn
+                    self.request.set_stnm(request['stnm'])
+                    self.retrieve(request)
+            else:
+                printmsg(self.log, 'File ' + request['rsl'] + ' does not ' +
+                         'exist. Check for typo and rerun.')
+                exit(1)
 
     def retrieve(self, request):
         """ Retrieve data for requested RAOB type """

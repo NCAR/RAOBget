@@ -7,7 +7,6 @@
 ###############################################################################
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from lib.raobroot import getrootdir
-from lib.filemanager import FileManager
 
 
 class FileSelector(QMainWindow):
@@ -27,16 +26,7 @@ class FileSelector(QMainWindow):
                   " been coded. Contact SE for code changes.")
 
         # Create the GUI
-        filename = self.initDialog(rootdir, filefilter)
-
-        filemgr = FileManager()
-        if (filetype == "config"):
-            filemgr.readYMLfile(filename)
-        elif (filetype == "rsl"):
-            filemgr.readRSLfile(filename)
-        else:
-            print("Software engineer goofed - called filetype that hasn't" +
-                  " been coded. Contact SE for code changes.")
+        self.filename = self.initDialog(rootdir, filefilter)
 
     def initDialog(self, rootdir, filefilter):
         """ Instantiate the file dialog """
@@ -54,3 +44,6 @@ class FileSelector(QMainWindow):
                                                   options=options)
 
         return(filename)
+
+    def get_rslfile(self):
+        return(self.filename)

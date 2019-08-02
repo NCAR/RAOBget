@@ -183,8 +183,12 @@ class TestRAOBget(unittest.TestCase):
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
         self.option.rsl = getrootdir() + "/config/project.RSL"
         rsl = RSL()
-        stnlist = rsl.read_rsl(self.option)
+        stnlist = rsl.read_rsl(self.option.rsl)
         self.assertListEqual(stnlist, ctrlstnlist)
+
+    def test_rsl_missing(self):
+        self.option.rsl = getrootdir() + "/config/missing.RSL"
+        self.assertFalse(self.raob.test_rsl(self.option.rsl))
 
     def tearDown(self):
 

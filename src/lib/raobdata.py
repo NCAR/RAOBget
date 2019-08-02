@@ -71,6 +71,12 @@ class RAOBdata():
     def set_stnm(self, stnm):
         self.request['stnm'] = stnm
 
+    def set_rsl(self, rsl):
+        self.request['rsl'] = rsl
+
+    def get_rsl(self, rsl):
+        return(self.request['rsl'])
+
     def set_freq(self, freq):
         self.request['freq'] = freq
 
@@ -87,6 +93,7 @@ class RAOBdata():
         self.set_region(args.region)
         self.set_type(args.raobtype)
         self.set_stnm(args.stnm)
+        self.set_rsl(args.rsl)
         self.set_year(args.year)
         self.set_month(args.month)
         self.set_begin(args.bday, args.bhr)

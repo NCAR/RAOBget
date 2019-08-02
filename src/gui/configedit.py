@@ -140,8 +140,12 @@ class GUIconfig():
     def loadStnlist(self):
         """ Call dialog box to load a station list """
 
-        # Call dialog box to load a raob station list (rsl) file
+        # Call dialog box to select a raob station list (rsl) file
+        # Once selected, code will loop through contents
         self.loader = FileSelector("rsl")
+        self.raob.request.set_rsl(self.loader.get_rslfile())
+        printmsg(self.log, "Station list set to " +
+                 self.raob.request.get_rsl(self))
 
     def createCreateStnlist(self, box, row):
         """ Create the Create station list button """
