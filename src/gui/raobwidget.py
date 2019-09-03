@@ -44,6 +44,10 @@ class Widget(QWidget):
         # Add a button to begin retrieving RAOBs
         self.createRetrieveButton(layout)
 
+    def get_log(self):
+        """ Return a pointer to the log message window """
+        return(self.log)
+
     def createRetrieveButton(self, layout):
         retrieve = QPushButton("Retrieve RAOBs")
         layout.addWidget(retrieve, 2, 0)
