@@ -143,9 +143,9 @@ class GUIconfig():
         # Call dialog box to select a raob station list (rsl) file
         # Once selected, code will loop through contents
         self.loader = FileSelector("rsl")
-        self.raob.request.set_rsl(self.loader.get_rslfile())
+        self.raob.request.set_rsl(self.loader.get_file())
         printmsg(self.log, "Station list set to " +
-                 self.raob.request.get_rsl(self))
+                 self.raob.request.get_rsl())
 
     def createCreateStnlist(self, box, row):
         """ Create the Create station list button """
@@ -181,6 +181,10 @@ class GUIconfig():
         textboxValue = self.stnm.text()
         self.raob.request.set_stnm(textboxValue)
         printmsg(self.log, "Station set to " + textboxValue)
+
+        # Since just manually set a station, need to set rsl to '' or
+        # any defined rsl file will override user station selection
+        self.raob.request.set_rsl('')
 
     def createBtime(self, box, row):
         """ Create the begin time input field """
