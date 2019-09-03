@@ -14,6 +14,7 @@ import argparse
 from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
 from lib.raobdata import RAOBdata
+from lib.raobroot import getrootdir
 from lib.rsl import RSL
 from lib.messageHandler import printmsg
 from lib.config import config
@@ -191,9 +192,10 @@ class RAOBget():
             # Retrieve requested data/imagery for a single stn
             self.retrieve()
         else:
-            if self.test_rsl(self.request.get_rsl()):
+            rslfile = getrootdir() + "/" + self.request.get_rsl()
+            if self.test_rsl(rslfile):
                 rsl = RSL()
-                stnlist = rsl.read_rsl(self.request.get_rsl())
+                stnlist = rsl.read_rsl(rslfile)
                 for stn in stnlist:  # Loop through a list of stations
                     self.request.set_stnm(stn)
                     self.retrieve()

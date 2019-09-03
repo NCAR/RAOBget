@@ -43,5 +43,5 @@ def to_ftp(outfile, request):
         cp_dir = configfile.get_cp_dir()
 
         # Move downloaded image to dest file in ftp_dir
-        os.system("cp " + outfile + " " + cp_dir + "/" + outfile)
-        return("copied " + outfile + " to " + cp_dir)
+        os.system("mv " + outfile + " " + cp_dir + "/" + outfile)
+        return("moved " + outfile + " to " + cp_dir)

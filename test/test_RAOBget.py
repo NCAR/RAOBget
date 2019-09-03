@@ -182,7 +182,7 @@ class TestRAOBget(unittest.TestCase):
                        'NZHK', 'NZLD', 'OAK', 'PHLI', 'PHTO', 'PKMJ', 'PTKK',
                        'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
-        self.option.rsl = getrootdir() + "/config/project.RSL"
+        self.option.rsl = getrootdir() + "/config/sample.RSL"
         rsl = RSL()
         stnlist = rsl.read_rsl(self.option.rsl)
         self.assertListEqual(stnlist, ctrlstnlist)
