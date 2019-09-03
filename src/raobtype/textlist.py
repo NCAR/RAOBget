@@ -26,7 +26,7 @@ class RAOBtextlist():
         Generate the request URL for a TEXT:LIST request
         """
 
-        request['raobtype'] = "TEXT:LIST"
+        request.set_type("TEXT:LIST")
         url = self.rwget.get_url(request, self.log)
 
         return(url)
@@ -39,12 +39,12 @@ class RAOBtextlist():
         Parameters:
             request: a RAOBrequest dictionary of request metadata
         """
-        if request['mtp'] is True:
+        if request.get_mtp() is True:
             self.outfile = userlib.mtp.set_outfile(request)
         else:
-            self.outfile = request['stnm'] + request['year'] + \
-                request['month'] + request['begin'] + request['end'] + \
-                ".txt"
+            self.outfile = request.get_stnm() + request.get_year() + \
+                request.get_month() + request.get_begin() + request.get_end() \
+                + ".txt"
 
     def get_outfile(self):
         """
@@ -72,8 +72,8 @@ class RAOBtextlist():
         outfile = self.get_outfile()
 
         # If in test mode, copy file from data dir to simulate download...
-        if request['test'] is True:
-            if request['mtp'] is True:
+        if request.get_test() is True:
+            if request.get_mtp() is True:
                 os.system('cp data/726722019052812.ctrl 726722019052812.txt')
             else:
                 os.system('cp data/7267220190528122812.ctrl ' +
@@ -86,7 +86,7 @@ class RAOBtextlist():
 
             status = self.rwget.get_data(url, outfile)
 
-            if request['mtp'] is True and status:
+            if request.get_mtp() is True and status:
                 userlib.mtp.strip_html(request, outfile)
 
         return(outfile)

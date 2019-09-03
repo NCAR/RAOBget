@@ -16,8 +16,8 @@ from lib.raobroot import getrootdir
 def set_outfile(request):
     # The MTP VB6 code requires that only the begin date be given in the RAOB
     # filename.
-    return(getrootdir() + '/mtp/' + request['stnm'] + request['year'] +
-           request['month'] + request['begin'] + ".txt")
+    return(getrootdir() + '/mtp/' + request.get_stnm() + request.get_year() +
+           request.get_month() + request.get_begin() + ".txt")
 
 
 def strip_html(request, outfile):
@@ -63,7 +63,7 @@ def strip_html(request, outfile):
                 if obstime[0:8] not in outfile:
                     print("\nObs time " + obstime + " and filename " +
                           outfile + " don't match. Fixing...\n")
-                    outfile = request['stnm'] + "20" + \
+                    outfile = request.get_stnm() + "20" + \
                         obstime[0:8] + ".txt"
                     print("New filename is " + outfile)
             temp.write(line)

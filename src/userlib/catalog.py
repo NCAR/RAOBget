@@ -9,7 +9,6 @@
 import os
 from ftplib import FTP
 from lib.config import config
-from lib.raobroot import getrootdir
 
 
 def to_ftp(outfile, request):
@@ -20,7 +19,7 @@ def to_ftp(outfile, request):
     # Get the user specified ftp status and dirs from the YAML config file
     # given on the command line
     configfile = config()
-    configfile.read(getrootdir() + "/" + request['config'])
+    configfile.read(request)
     ftp_status = configfile.get_ftp_status()
 
     if ftp_status is True:  # USER IS REQUESTING FTP TO FTP SERVER AND DIR

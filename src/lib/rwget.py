@@ -42,14 +42,14 @@ class RAOBwget:
         """
 
         url = "http://weather.uwyo.edu/cgi-bin/sounding?"
-        if (request['region'] != ''):
-            url += "region=" + self.region[request['region']]
-        url += "&TYPE=" + self.type[request['raobtype']]
-        url += "&YEAR=" + request['year']
-        url += "&MONTH=" + request['month']
-        url += "&FROM=" + request['begin']
-        url += "&TO=" + request['end']
-        url += "&STNM=" + request['stnm']
+        if (request.get_region() != ''):
+            url += "region=" + self.region[request.get_region()]
+        url += "&TYPE=" + self.type[request.get_type()]
+        url += "&YEAR=" + request.get_year()
+        url += "&MONTH=" + request.get_month()
+        url += "&FROM=" + request.get_begin()
+        url += "&TO=" + request.get_end()
+        url += "&STNM=" + request.get_stnm()
         # printmsg(log, url)
 
         return(url)
