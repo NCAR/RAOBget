@@ -1,3 +1,6 @@
+catalog: True
+raobtype: 'GIF:SKEWT'
+now: True
 # List of stations with location, description, etc
 # Give path relative to RAOBget dir
 station_list_file: 'config/snstns.tbl'

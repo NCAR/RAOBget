@@ -1,0 +1,5 @@
+mtp: True
+raobtype: 'TEXT:LIST'
+now: True
+rsl: '/Users/janine/dev/RAOBget/config/project.RSL'
+freq: '12'
