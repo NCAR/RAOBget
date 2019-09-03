@@ -21,9 +21,9 @@ The -h option lists and identifies the parameters you can pass to the code, like
 
 For use with the NCAR/EOL field catalog, use the command:
 ```
-python3 RAOBget.py --catalog --now --config config/project.yml --raobtype GIF:SKEWT [--stnm <station number> or --rsl <station_list_file>] --freq <[3,6,12]>
+python3 RAOBget.py --catalog --now --config config/catalog.yml [--stnm <station number> or --rsl <station_list_file>] --freq <[3,6,12]>
 ```
-(In the future, could easily add raobtype and stnm or rsl to the config file.)
+(or edit the sample config file, config/catalog.yml, and add stnm or rsl keywords)
 
 **NCAR/EOL users: To run on barolo, you need to use /opt/local/anaconda3/bin/python3.7 as
 this is the only place PyQt5 is installed. Even if you are not using the
