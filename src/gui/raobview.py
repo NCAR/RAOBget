@@ -8,12 +8,15 @@
 from PyQt5.QtWidgets import QMainWindow, QAction
 from gui.raobwidget import Widget
 from gui.fileselector import FileSelector
+from lib.config import config
 
 
 class RAOBview(QMainWindow):
 
     def __init__(self, raob):
         """ Set the initial GUI window size here """
+
+        self.raob = raob
 
         # The QMainWindow class provides a main application window
         QMainWindow.__init__(self)
@@ -25,9 +28,9 @@ class RAOBview(QMainWindow):
         self.height = 1000  # Pixel height of window
 
         # Create the GUI
-        self.initUI(raob)
+        self.initUI()
 
-    def initUI(self, raob):
+    def initUI(self):
         """ Create the GUI """
         # Set window title
         self.setWindowTitle('RAOBget - a utility to download soundings from ' +
@@ -39,8 +42,11 @@ class RAOBview(QMainWindow):
         # Set central widget. A QMainWindow must have a central widget. It can
         # also have a menu bar, status bar, toolbars, and dock widgets which
         # appear in a standard layout
-        self.widget = Widget(raob)
+        self.widget = Widget(self.raob)
         self.setCentralWidget(self.widget)
+
+        # Get a pointer to the log message window
+        self.log = self.widget.get_log()
 
         # Configure the menu bar
         self.createMenuBar()
@@ -86,8 +92,13 @@ class RAOBview(QMainWindow):
         # This has to be self.editor (not just editor) to avoid garbage
         # collection or the GUIconfig window won't appear.
 
-        # Call dialog box to load the configuration
+        # Call dialog box to select the configuration file
         self.loader = FileSelector("config")
+
+        # Load the configuration into the raob request
+        self.raob.request.set_config(self.loader.get_file())
+        configfile = config(self.log)
+        configfile.read(self.raob.request)
 
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """
