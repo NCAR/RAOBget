@@ -26,7 +26,7 @@ class options():
     mtp = False
     catalog = False
     now = False
-    config = "test/data/config_cp.yml"
+    config = getrootdir() + "/" + "test/data/config_cp.yml"
     freq = "12"
 
 
@@ -61,7 +61,7 @@ class TestRAOBget(unittest.TestCase):
                   "TYPE=TEXT%3ALIST&YEAR=2019&MONTH=05&FROM=2812&TO=2812&" + \
                   "STNM=72672"
 
-        request = self.raob.request.get_request()
+        request = self.raob.request
         url = textlist.get_url(request)
         self.assertEqual(url, ctrlurl)
 
@@ -91,23 +91,21 @@ class TestRAOBget(unittest.TestCase):
 
         self.gifskewt = RAOBgifskewt()
 
-        request = self.raob.request.get_request()
-
         # Test request for HTML file
         ctrlurl = "http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&" + \
                   "TYPE=GIF%3ASKEWT&YEAR=2019&MONTH=05&FROM=2812&TO=2812&" + \
                   "STNM=72672"
-        url = self.gifskewt.get_url(request)
+        url = self.gifskewt.get_url(self.raob.request)
         self.assertEqual(url, ctrlurl)
 
         # Test request for GIF image
         ctrlurl = "http://weather.uwyo.edu/upperair/images/" + \
                   "2019052812.72672.skewt.parc.gif"
-        url = self.gifskewt.get_gif_url(request)
+        url = self.gifskewt.get_gif_url(self.raob.request)
         self.assertEqual(url, ctrlurl)
 
         # Get the data (html and gif image)
-        self.gifskewt.retrieve(request)
+        self.gifskewt.retrieve(self.raob.request)
 
         outfile = self.gifskewt.get_outfile_html()
 
@@ -149,7 +147,7 @@ class TestRAOBget(unittest.TestCase):
 
         # Compare files with HTML stripped
         ctrlfile = getrootdir() + "/test/data/726722019052812.ctrl.mtp"
-        mtpfile = getrootdir() + "/mtp/" + outfile
+        mtpfile = outfile
         with open(ctrlfile) as ctrl, open(mtpfile) as out:
             self.assertTrue([row1 for row1 in ctrl] == [row for row in out],
                             "files " + ctrlfile + " and " + mtpfile +
@@ -161,13 +159,16 @@ class TestRAOBget(unittest.TestCase):
         """ Make sure code checks for correct metadata for ftp status in
         config file. """
         configfile = config()
-        configfile.read(getrootdir() + "/test/data/config_cp.yml")
+        self.raob.request.set_config(getrootdir() + "/test/data/config_cp.yml")
+        configfile.read(self.raob.request)
         ftp_status = configfile.get_ftp_status()
         self.assertFalse(ftp_status)
         cp_dir = configfile.get_cp_dir()
         self.assertEqual(cp_dir, '/net/iftp2/pub/incoming/catalog/test')
 
-        configfile.read(getrootdir() + "/test/data/config_ftp.yml")
+        self.raob.request.set_config(getrootdir() +
+                                     "/test/data/config_ftp.yml")
+        configfile.read(self.raob.request)
         ftp_status = configfile.get_ftp_status()
         self.assertTrue(ftp_status)
         ftp_server = configfile.get_ftp_server()
