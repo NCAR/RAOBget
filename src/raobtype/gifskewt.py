@@ -91,6 +91,12 @@ class RAOBgifskewt():
                 if station['id'].rstrip() in prod:
                     prod = prod.replace(station['id'].rstrip()+"_", "")
 
+                # I have seen some products with protected shell characters.
+                # Remove them here.
+                prod = prod.replace("(","")  # Remove open parenthesis
+                prod = prod.replace(")","")  # Remove close parenthesis
+                # ... add more as needed here ...
+
                 # For international skewts, set the product name to
                 # "Station_Name_CC" where CC is the two letter country code.
                 # For US stations use "Station_Name_ST" where ST it the two
