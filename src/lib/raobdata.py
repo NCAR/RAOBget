@@ -34,54 +34,107 @@ class RAOBdata():
             'catalog': False,  # catalog-specific processing
             'now': False,    # Set requested date/time to current time,
                              # i.e. retrieve current RAOB.
+            'ftp': False,    # Ftp data to catalog site, or cp to local dir?
+            'ftp_server': "",  # If ftp is True, need ftp_server and ftp_dir
+            'ftp_dir': "",
+            'cp_dir': "",    # If ftp is False, need dir to cp files to
+            'station_list_file': "",  # List of RAOB station locations,
+                             # description, etc. Used to assign metadata to
+                             # retrieved RAOB. Give path relative to RAOBget
+                             # dir.
         }
 
         self.request = RAOBrequest  # dictionary to hold all URL components
 
+    def set_key(self, key, value):
+        self.request[key] = value
+
+    def get_keys(self):
+        return(self.request.keys())
+
     def set_region(self, region):
         self.request['region'] = region
+
+    def get_region(self):
+        return(self.request['region'])
 
     def set_type(self, raobtype):
         self.request['raobtype'] = raobtype
 
+    def get_type(self):
+        return(self.request['raobtype'])
+
     def set_year(self, year):
         self.request['year'] = year
+
+    def get_year(self):
+        return(self.request['year'])
 
     def set_month(self, month):
         self.request['month'] = month
 
+    def get_month(self):
+        return(self.request['month'])
+
     def set_begin(self, bday, bhr):
         self.request['begin'] = bday+bhr
+
+    def get_begin(self):
+        return(self.request['begin'])
 
     def set_end(self, eday, ehr):
         self.request['end'] = eday+ehr
 
+    def get_end(self):
+        return(self.request['end'])
+
     def set_test(self, test):
         self.request['test'] = test
+
+    def get_test(self):
+        return(self.request['test'])
 
     def set_mtp(self, mtp):
         self.request['mtp'] = mtp
 
+    def get_mtp(self):
+        return(self.request['mtp'])
+
     def set_catalog(self, catalog):
         self.request['catalog'] = catalog
+
+    def get_catalog(self):
+        return(self.request['catalog'])
 
     def set_now(self, now):
         self.request['now'] = now
 
+    def get_now(self):
+        return(self.request['now'])
+
     def set_stnm(self, stnm):
         self.request['stnm'] = stnm
+
+    def get_stnm(self):
+        return(self.request['stnm'])
 
     def set_rsl(self, rsl):
         self.request['rsl'] = rsl
 
-    def get_rsl(self, rsl):
+    def get_rsl(self):
         return(self.request['rsl'])
 
     def set_freq(self, freq):
         self.request['freq'] = freq
 
+    def get_freq(self):
+        return(self.request['freq'])
+
     def set_config(self, config):
         self.request['config'] = config
+
+    def get_config(self):
+        return(self.request['config'])
 
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
         """
