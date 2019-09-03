@@ -45,5 +45,5 @@ class FileSelector(QMainWindow):
 
         return(filename)
 
-    def get_rslfile(self):
+    def get_file(self):
         return(self.filename)
