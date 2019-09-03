@@ -30,7 +30,8 @@ class config():
     def __init__(self, log=""):
         self.log = log       # pointer to GUI log, if extant
 
-    def read(self, yamlfile):
+    def read(self, request):
+        yamlfile = request.get_config()
         if not os.path.isdir(yamlfile):
             infile = open(yamlfile)
             self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
@@ -40,6 +41,27 @@ class config():
             infile.close()
         else:
             self.projConfig = {'station_list_file': 'config/snstns.tbl'}
+
+        # Load the configuration into the request
+        self.load(request)
+
+    def load(self, request):
+        for key in self.projConfig.keys():
+            # Vet that key is a valid key in request
+            if key in request.get_keys():
+
+                # Save booleans as booleans
+                if self.projConfig[key] == 'True':
+                    request.set_key(key, True)
+                elif self.projConfig[key] == 'False':
+                    request.set_key(key, False)
+                else:
+                    request.set_key(key, self.projConfig[key])
+
+                printmsg(self.log, key + " set to " + self.projConfig[key])
+            else:
+                printmsg(self.log, "ERROR: key " + key + " in config file is" +
+                         " not a valid key - skipping.")
 
     def get_stnlist_file(self):
         if 'station_list_file' in self.projConfig.keys():
