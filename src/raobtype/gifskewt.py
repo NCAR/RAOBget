@@ -26,8 +26,8 @@ class RAOBgifskewt():
 
     def set_outfile_html(self, request):
         """ Build output filename for GIF:SKEWT data file. """
-        self.outfile_html = request['stnm'] + request['year'] + \
-            request['month'] + request['begin'] + request['end'] + \
+        self.outfile_html = request.get_stnm() + request.get_year() + \
+            request.get_month() + request.get_begin() + request.get_end() + \
             ".html"
 
     def get_outfile_html(self):
@@ -43,21 +43,21 @@ class RAOBgifskewt():
         """
         Generate the request URL for a GIF:SKEWT request
         """
-        request['raobtype'] = "GIF:SKEWT"
+        request.set_type("GIF:SKEWT")
         return(self.rwget.get_url(request, self.log))
 
     def get_station_info(self, request):
         """ Read in the station metadata for the given station id/number """
         configfile = config(self.log)
-        configfile.read(getrootdir() + "/" + request['config'])
+        configfile.read(request)
         station_list_file = configfile.get_stnlist_file()
 
         stationList = RAOBstation_list(self.log)
         stationList.read(station_list_file)
-        if request['stnm'].isdigit():
-            station = stationList.get_by_stnm(request['stnm'])
+        if request.get_stnm().isdigit():
+            station = stationList.get_by_stnm(request.get_stnm())
         else:
-            station = stationList.get_by_id(request['stnm'])
+            station = stationList.get_by_id(request.get_stnm())
 
         # Should only get back one, unique station. If not, warn user
         if (len(station) != 1):
@@ -78,7 +78,7 @@ class RAOBgifskewt():
         while '<TITLE>' not in line:
             line = out.readline()
         if '<TITLE>' in line:
-            m = re.search(request['stnm']+' (.*) [Sounding]',
+            m = re.search(request.get_stnm()+' (.*) [Sounding]',
                           line)
             if m:
                 prod = m.group(1).replace(" ", "_")
@@ -118,8 +118,8 @@ class RAOBgifskewt():
         """
         platform = "SkewT"
 
-        self.outfile_gif = "upperair." + platform + '.' + request['year'] + \
-            request['month'] + request['begin'] + "00." + \
+        self.outfile_gif = "upperair." + platform + '.' + request.get_year() \
+            + request.get_month() + request.get_begin() + "00." + \
             self.get_prod(request) + ".gif"
 
     def get_outfile_gif(self):
@@ -134,10 +134,10 @@ class RAOBgifskewt():
     def get_gif_url(self, request):
 
         url = "http://weather.uwyo.edu/upperair/images/"
-        url += request['year']
-        url += request['month']
-        url += request['begin'] + "."
-        url += request['stnm'] + ".skewt.parc.gif"
+        url += request.get_year()
+        url += request.get_month()
+        url += request.get_begin() + "."
+        url += request.get_stnm() + ".skewt.parc.gif"
 
         return(url)
 
@@ -165,7 +165,7 @@ class RAOBgifskewt():
         self.set_outfile_html(request)
 
         # If in test mode, copy file from data dir to simulate download...
-        if request['test'] is True:
+        if request.get_test() is True:
             os.system('cp ' + getrootdir() +
                       '/test/data/7267220190528122812.html.ctrl' +
                       ' 7267220190528122812.html')
@@ -188,13 +188,14 @@ class RAOBgifskewt():
             status = self.rwget.get_data(url, outfile)
 
         else:
-            if request['test'] is True:
+            if request.get_test() is True:
                 os.system('cp ' + getrootdir() + '/test/data/' +
                           'upperair.SkewT.201905280000.Riverton_WY.gif.ctrl' +
                           ' upperair.SkewT.201905280000.Riverton_WY.gif')
+            outfile = "upperair.SkewT.201905280000.Riverton_WY.gif"
 
         # If running in catalog mode, ftp files to catalog dir
-        if request['catalog'] is True and status:
+        if request.get_catalog() is True and status:
             status = userlib.catalog.to_ftp(outfile, request)
             printmsg(self.log, status)
 
