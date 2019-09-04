@@ -183,6 +183,7 @@ class TestRAOBget(unittest.TestCase):
                        'PTPN', 'REV', 'SLC', 'VBG', 'VEF', 'YBBN', 'YBRK',
                        'YBTL', 'YMHB', 'YMMG', 'YMMQ', 'YMML', 'YSNF', 'YSWM']
         self.option.rsl = getrootdir() + "/config/sample.RSL"
+        self.assertTrue(self.raob.test_rsl(self.option.rsl))
         rsl = RSL()
         stnlist = rsl.read_rsl(self.option.rsl)
         self.assertListEqual(stnlist, ctrlstnlist)
