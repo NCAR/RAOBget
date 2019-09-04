@@ -39,6 +39,7 @@ class FileSelector(QMainWindow):
 
         # getOpenFileName returns the complete path to the selected file, and a
         # string containing the filter used. Ignore the filter return.
+        # If user selects cancel, returns None.
         filename, _ = QFileDialog.getOpenFileName(self, "Select a file",
                                                   rootdir, filefilter,
                                                   options=options)

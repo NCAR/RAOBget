@@ -33,12 +33,17 @@ class config():
     def read(self, request):
         yamlfile = request.get_config()
         if not os.path.isdir(yamlfile):
-            infile = open(yamlfile)
-            self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
-            # for key, value in self.projConfig.items():
-            #     printmsg(self.log, key + ": " + str(value))
-
-            infile.close()
+            if os.path.exists(yamlfile):
+                infile = open(yamlfile)
+                self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
+                # for key, value in self.projConfig.items():
+                #     printmsg(self.log, key + ": " + str(value))
+                infile.close()
+            else:
+                printmsg(self.log, "Config file not selected - can't load")
+                printmsg(self.log, "ERROR: Station set to testing default \
+                         - please select a station")
+                return(False)
         else:
             self.projConfig = {'station_list_file': 'config/snstns.tbl'}
 
