@@ -20,8 +20,12 @@ def printmsg(log, msg):
     else:
         text_format = QTextCharFormat()
         error = re.compile(r'ERROR', re.IGNORECASE)
+        warning = re.compile(r'WARNING', re.IGNORECASE)
         if error.match(msg):
             text_format.setForeground(QBrush(QColor('red')))
+            log.setCurrentCharFormat(text_format)
+        elif warning.match(msg):
+            text_format.setForeground(QBrush(QColor('orange')))
             log.setCurrentCharFormat(text_format)
         else:
             text_format.setForeground(QBrush(QColor('black')))
