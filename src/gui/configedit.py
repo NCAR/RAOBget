@@ -144,8 +144,12 @@ class GUIconfig():
         # Once selected, code will loop through contents
         self.loader = FileSelector("rsl")
         self.raob.request.set_rsl(self.loader.get_file())
-        printmsg(self.log, "Station list set to " +
-                 self.raob.request.get_rsl())
+        if (self.raob.request.get_rsl() == ""):
+            printmsg(self.log, "WARNING: Station list not loaded. Please " +
+                               "select a station/station list.")
+        else:
+            printmsg(self.log, "Station list set to " +
+                     self.raob.request.get_rsl())
 
     def createCreateStnlist(self, box, row):
         """ Create the Create station list button """

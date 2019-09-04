@@ -40,9 +40,7 @@ class config():
                 #     printmsg(self.log, key + ": " + str(value))
                 infile.close()
             else:
-                printmsg(self.log, "Config file not selected - can't load")
-                printmsg(self.log, "ERROR: Station set to testing default \
-                         - please select a station")
+                printmsg(self.log, "WARNING: No config file selected")
                 return(False)
         else:
             self.projConfig = {'station_list_file': 'config/snstns.tbl'}
