@@ -93,7 +93,7 @@ class RAOBview(QMainWindow):
         # collection or the GUIconfig window won't appear.
 
         # Call dialog box to select the configuration file
-        self.loader = FileSelector("config")
+        self.loader = FileSelector("loadConfig")
 
         # Load the configuration into the raob request
         self.raob.request.set_config(self.loader.get_file())
@@ -102,6 +102,11 @@ class RAOBview(QMainWindow):
 
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """
-        print("Need to implement save a configuration file")
 
-        # Call dialog box to edit the configuration
+        # Call dialog box to select the configuration file
+        self.loader = FileSelector("saveConfig")
+
+        # Save the raob request into the configuration file
+        self.raob.request.set_config(self.loader.get_file())
+        configfile = config(self.log)
+        configfile.write(self.raob.request)

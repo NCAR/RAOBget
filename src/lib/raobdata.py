@@ -173,6 +173,10 @@ class RAOBdata():
 
         return(self.request)
 
+    def get_dict(self):
+        """ Return request dictionary contents """
+        return(dict(self.request))
+
     def set_time_now(self):
         """ Set request time to most recent 12 hour (UTC) RAOB unless freq is
         set higher. """

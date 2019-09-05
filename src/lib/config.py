@@ -36,6 +36,21 @@ class config():
     def __init__(self, log=""):
         self.log = log       # pointer to GUI log, if extant
 
+    def write(self, request):
+        """ Write the request metadata to a YAML config file"""
+
+        yamlfile = request.get_config()
+
+        if (yamlfile == ""):
+            printmsg(self.log, "ERROR: File to save config to not defined. " +
+                     "Can't save")
+            return(False)
+
+        with open(yamlfile, 'w') as outfile:
+            yaml.dump(request.get_dict(), outfile)
+
+        printmsg(self.log, "Successfully saved config to " + yamlfile)
+
     def read(self, request):
         """ Read the contents of the YAML file into self.projConfig"""
 
