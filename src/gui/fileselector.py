@@ -5,6 +5,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import re
+
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from lib.raobroot import getrootdir
 
@@ -17,16 +19,43 @@ class FileSelector(QMainWindow):
         super().__init__()
 
         rootdir = getrootdir() + "/config"
-        if (filetype == "config"):
+
+        # Set the file type filter
+        config = re.compile("^.*Config")
+        rsl = re.compile("^.*Rsl")
+
+        if config.match(filetype):
             filefilter = "config files (*.yml, *.YML)"
-        elif (filetype == "rsl"):
+        elif rsl.match(filetype):
             filefilter = "RSL Files (*.rsl, *.RSL)"
         else:
             print("Software engineer goofed - called filetype that hasn't" +
                   " been coded. Contact SE for code changes.")
 
         # Create the GUI
-        self.filename = self.initDialog(rootdir, filefilter)
+        load = re.compile("load")
+        save = re.compile("save")
+        if load.match(filetype):
+            self.filename = self.initDialog(rootdir, filefilter)
+        elif save.match(filetype):
+            self.filename = self.initSaveAs(rootdir, filefilter)
+
+    def initSaveAs(self, rootdir, filefilter):
+        # When use native dialogs, get an error that Class
+        # FIFinderSyncExtensionHost is implemented twice. Googling seems to
+        # indicate this is an incompatability with the latest Mac OS's, so for
+        # now disable Native Dialog
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+
+        # getSaveFileName returns the complete path to the selected file, and a
+        # string containing the filter used. Ignore the filter return.
+        # If user selects cancel, returns None.
+        filename, _ = QFileDialog.getSaveFileName(self, "Select a file",
+                                                  rootdir, filefilter,
+                                                  options=options)
+
+        return(filename)
 
     def initDialog(self, rootdir, filefilter):
         """ Instantiate the file dialog """
