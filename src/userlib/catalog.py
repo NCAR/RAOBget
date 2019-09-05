@@ -11,20 +11,24 @@ from ftplib import FTP
 from lib.config import config
 
 
-def to_ftp(outfile, request):
+def to_ftp(outfile, request, log=""):
     """
     return: status messages
     """
 
     # Get the user specified ftp status and dirs from the YAML config file
     # given on the command line
-    configfile = config()
+    configfile = config(log)
     configfile.read(request)
     ftp_status = configfile.get_ftp_status()
 
     if ftp_status is True:  # USER IS REQUESTING FTP TO FTP SERVER AND DIR
         ftp_server = configfile.get_ftp_server()
+        if ftp_server is None:
+            return("Could not FTP files")
         ftp_dir = configfile.get_ftp_dir()
+        if ftp_dir is None:
+            return("Could not FTP files")
 
         # Connect to server and put new file
         # ftp = FTP(ftp_server,'USERNAME','PASSWORD')
@@ -38,10 +42,15 @@ def to_ftp(outfile, request):
         except Exception:
             return("ERROR: FTP transfer failed for file " + outfile)
 
-    else:
+    elif ftp_status is False:
 
         cp_dir = configfile.get_cp_dir()
+        if cp_dir is None:
+            return("Could not copy files")
 
         # Move downloaded image to dest file in ftp_dir
         os.system("mv " + outfile + " " + cp_dir + "/" + outfile)
         return("moved " + outfile + " to " + cp_dir)
+
+    else:  # ftp_status is None
+        return("No FTP status set - files not moved or ftp'd")

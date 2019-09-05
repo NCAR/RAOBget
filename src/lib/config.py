@@ -1,19 +1,26 @@
 ###############################################################################
 # Code to read in the project yaml configuration file, which specifies the
-# station list filename and location, whether to ftp data to the catalog or cp
-# it to a local dir, and the server and path to ftp/cp to, e.g.
+# request metadata including, if needed, the station list filename and
+# location, whether to ftp data to the catalog or cp it to a local dir, and the
+# server and path to ftp/cp to, e.g.
 #
 # station_list_file: '../../config/snstns.tbl'
 # ftp: False
 # cp_dir: '../ftp'
 #
-# Parameters:
-#    station_list_file: list of stations with location, description, etc
+# Requires:
+#    A request containing the location of the config file.
+#
+# In --catalog mode, the following parameters are required:
 #    ftp:               ftp data to catalog site, or cp to local dir?
 #    ftp_server:        usually catalog.eol.ucar.edu
 #    ftp_dir:           usually project under pub/incoming/catalog
 #    cp_dir:            usually /net/iftp2/pub/incoming/catalog/<project>
 #
+# Since these parameters don't have defaults defined via the
+# argparse function in lib/raobget.py (maybe this should change??), the only
+# way to get them is from the config file. This class handles notifying the
+# user of this requirement.
 #
 # Written in Python 3
 #
@@ -21,7 +28,6 @@
 ###############################################################################
 import os
 import yaml
-from lib.raobroot import getrootdir
 from lib.messageHandler import printmsg
 
 
@@ -31,8 +37,17 @@ class config():
         self.log = log       # pointer to GUI log, if extant
 
     def read(self, request):
+        """ Read the contents of the YAML file into self.projConfig"""
+
         yamlfile = request.get_config()
-        if not os.path.isdir(yamlfile):
+
+        # If the yamlfile is not defined, return False so code will use default
+        # request
+        if (yamlfile == ""):
+            self.projConfig = {}
+            return(False)
+
+        elif not os.path.isdir(yamlfile):
             if os.path.exists(yamlfile):
                 infile = open(yamlfile)
                 self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
@@ -43,14 +58,18 @@ class config():
                 printmsg(self.log, "WARNING: No config file selected")
                 return(False)
         else:
-            self.projConfig = {'station_list_file': 'config/snstns.tbl'}
+            printmsg(self.log, "WARNING: Path to config file doesn't exist: " +
+                     yamlfile)
+            return(False)
 
         # Load the configuration into the request
         self.load(request)
 
     def load(self, request):
+        """ Load the configuration into the request """
         for key in self.projConfig.keys():
-            # Vet that key is a valid key in request
+            # Vet that key is a valid key in request so code will use default
+            # request
             if key in request.get_keys():
 
                 # Save booleans as booleans
@@ -66,15 +85,6 @@ class config():
                 printmsg(self.log, "ERROR: key " + key + " in config file is" +
                          " not a valid key - skipping.")
 
-    def get_stnlist_file(self):
-        if 'station_list_file' in self.projConfig.keys():
-            return(getrootdir() + "/" + self.projConfig['station_list_file'])
-        else:
-            printmsg(self.log, "ERROR: station list metadata file not " +
-                     "defined. Add 'station_list_file: path' to  config file" +
-                     "and rerun.")
-            exit(1)
-
     def get_ftp_status(self):
         if 'ftp' in self.projConfig.keys():
             if self.projConfig['ftp'] == "False":
@@ -84,7 +94,7 @@ class config():
         else:
             printmsg(self.log, "ERROR: ftp status not defined. " +
                      "Add 'ftp: True/False' to  config file and rerun.")
-            exit(1)
+            return(None)
 
     def get_cp_dir(self):
         if 'cp_dir' in self.projConfig.keys():
@@ -92,7 +102,7 @@ class config():
         else:
             printmsg(self.log, "ERROR: Directory to cp files to not defined." +
                      " Add 'cp_dir: path' to  config file and rerun.")
-            exit(1)
+            return(None)
 
     def get_ftp_server(self):
         if 'ftp_server' in self.projConfig.keys():
@@ -100,7 +110,7 @@ class config():
         else:
             printmsg(self.log, "ERROR: ftp server not defined. " +
                      "Add 'ftp_server: path' to  config file and rerun.")
-            exit(1)
+            return(None)
 
     def get_ftp_dir(self):
         if 'ftp_dir' in self.projConfig.keys():
@@ -108,4 +118,4 @@ class config():
         else:
             printmsg(self.log, "ERROR: Directory to ftp files to not " +
                      "defined. Add 'ftp_dir: path' to  config file and rerun.")
-            exit(1)
+            return(None)

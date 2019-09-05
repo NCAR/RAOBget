@@ -13,7 +13,6 @@ import userlib.catalog
 from lib.rwget import RAOBwget
 from lib.stationlist import RAOBstation_list
 from lib.raobroot import getrootdir
-from lib.config import config
 from lib.messageHandler import printmsg
 
 
@@ -48,9 +47,7 @@ class RAOBgifskewt():
 
     def get_station_info(self, request):
         """ Read in the station metadata for the given station id/number """
-        configfile = config(self.log)
-        configfile.read(request)
-        station_list_file = configfile.get_stnlist_file()
+        station_list_file = getrootdir() + "/" + request.get_stnlist_file()
 
         stationList = RAOBstation_list(self.log)
         stationList.read(station_list_file)
@@ -93,8 +90,8 @@ class RAOBgifskewt():
 
                 # I have seen some products with protected shell characters.
                 # Remove them here.
-                prod = prod.replace("(","")  # Remove open parenthesis
-                prod = prod.replace(")","")  # Remove close parenthesis
+                prod = prod.replace("(", "")  # Remove open parenthesis
+                prod = prod.replace(")", "")  # Remove close parenthesis
                 # ... add more as needed here ...
 
                 # For international skewts, set the product name to
@@ -202,7 +199,7 @@ class RAOBgifskewt():
 
         # If running in catalog mode, ftp files to catalog dir
         if request.get_catalog() is True and status:
-            status = userlib.catalog.to_ftp(outfile, request)
+            status = userlib.catalog.to_ftp(outfile, request, self.log)
             printmsg(self.log, status)
 
         return(outfile)

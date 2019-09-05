@@ -136,6 +136,12 @@ class RAOBdata():
     def get_config(self):
         return(self.request['config'])
 
+    def set_stnlist_file(self, station_list_file):
+        self.request['station_list_file'] = station_list_file
+
+    def get_stnlist_file(self):
+        return(self.request['station_list_file'])
+
     def set_prov(self, args):  # Set provenance of RAOB to retrieve
         """
         Set request from all the metadata specificed on the command line.
@@ -159,6 +165,7 @@ class RAOBdata():
             print("ERROR: --config option required if --catalog is set")
             exit(1)
         self.set_config(args.config)
+        self.set_stnlist_file(args.station_list_file)
         self.set_now(args.now)
 
     def get_request(self):

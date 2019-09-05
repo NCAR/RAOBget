@@ -38,10 +38,16 @@ class GUIconfig():
         self.createMode(box, 1)  # Create and place the mode dropdown
         self.createFreq(box, 2)  # Create and place the frequency dropdown
         self.createType(box, 3)  # Create and place the type dropdown
+        lbl = QLabel("In CATALOG operational mode, ftp params will have to " +
+                     "be set via a config file. Use File->Load config menu " +
+                     "option.")
+        lbl.setWordWrap(True)
+        lbl.setStyleSheet('color: Blue')
+        box.addWidget(lbl, 4, 0, 1, 2)
 
         # Create and place the station list layout in the configuration box
         station = QGroupBox("Station selection")
-        box.addWidget(station, 4, 0, 1, 2)
+        box.addWidget(station, 5, 0, 1, 2)
         stnbox = QGridLayout()
         # Usage info to users
         lbl = QLabel("Enter a single station to download, interactively " +
@@ -56,7 +62,7 @@ class GUIconfig():
 
         # Create and place the time period selection box inside the config box
         time = QGroupBox("Time Period selection")
-        box.addWidget(time, 5, 0, 1, 2)
+        box.addWidget(time, 6, 0, 1, 2)
         timebox = QGridLayout()
         # Usage info to users
         lbl = QLabel("The Wyoming interface only allows downloading a month " +
@@ -142,7 +148,7 @@ class GUIconfig():
 
         # Call dialog box to select a raob station list (rsl) file
         # Once selected, code will loop through contents
-        self.loader = FileSelector("rsl")
+        self.loader = FileSelector("loadRsl")
         self.raob.request.set_rsl(self.loader.get_file())
         if (self.raob.request.get_rsl() == ""):
             printmsg(self.log, "WARNING: Station list not loaded. Please " +

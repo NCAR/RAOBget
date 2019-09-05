@@ -28,6 +28,7 @@ class options():
     now = False
     config = getrootdir() + "/" + "test/data/config_cp.yml"
     freq = "12"
+    station_list_file = "config/snstns.tbl"
 
 
 class TestRAOBget(unittest.TestCase):

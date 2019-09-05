@@ -96,6 +96,11 @@ class RAOBget():
                             ' Requires that --config be set. [False]')
         parser.add_argument('--gui', action="store_true",
                             help='Start RAOBget in GUI mode [False]')
+        parser.add_argument('--station_list_file', type=str,
+                            default='config/snstns.tbl', help='Path to file ' +
+                            'containing station lat/lon, etc. ' +
+                            '[config/snstns.tbl] (snstns.tbl was received' +
+                            'from U Wyoming June 2019.')
         args = parser.parse_args()
 
         return(args)
