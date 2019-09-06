@@ -29,7 +29,7 @@ class RSLWidget(QWidget):
         # If the user cancelled out of selecting a source station list, or
         # requested a non-existent one, capture the error here and warn them.
         error = re.compile("^ERROR:")
-        if error.match(station_list):
+        if isinstance(station_list, str) and error.match(station_list):
             self.textbox.addItem(station_list)
         else:
             for stn in station_list:
