@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QGridLayout, QLabel, QGroupBox, QComboBox, \
      QLineEdit, QPushButton
 from lib.messageHandler import printmsg
 from gui.fileselector import FileSelector
+from gui.RSLcreator import RSLCreator
 # If want to print status messages, use printmsg(self.log, msg)
 
 
@@ -56,8 +57,8 @@ class GUIconfig():
         lbl.setWordWrap(True)
         stnbox.addWidget(lbl, 0, 0, 1, 3)
         self.createStnm(stnbox, 1)
-        self.createLoadStn(stnbox, 2)
-        self.createCreateStnlist(stnbox, 3)
+        self.createLoadRSL(stnbox, 2)
+        self.createCreateRSL(stnbox, 3)
         station.setLayout(stnbox)
 
         # Create and place the time period selection box inside the config box
@@ -134,16 +135,16 @@ class GUIconfig():
         self.raob.request.set_type(text)
         printmsg(self.log, "RAOB type set to " + text)
 
-    def createLoadStn(self, box, row):
+    def createLoadRSL(self, box, row):
         """ Create the Load station list button """
         lbl = QLabel("-or-")
         box.addWidget(lbl, row, 0)
         load = QPushButton("Load station list")
-        load.clicked.connect(self.loadStnlist)
+        load.clicked.connect(self.loadRSL)
         load.setToolTip('Load a list of stations from a file')
         box.addWidget(load, row, 1, 1, 2)
 
-    def loadStnlist(self):
+    def loadRSL(self):
         """ Call dialog box to load a station list """
 
         # Call dialog box to select a raob station list (rsl) file
@@ -157,19 +158,20 @@ class GUIconfig():
             printmsg(self.log, "Station list set to " +
                      self.raob.request.get_rsl())
 
-    def createCreateStnlist(self, box, row):
+    def createCreateRSL(self, box, row):
         """ Create the Create station list button """
         lbl = QLabel("-or-")
         box.addWidget(lbl, row, 0)
         create = QPushButton("Create station list")
-        create.clicked.connect(self.createStnlist)
-        create.setToolTip('Create a list of stations for while to download ' +
+        create.clicked.connect(self.createRSL)
+        create.setToolTip('Create a list of stations for which to download ' +
                           'soundings')
         box.addWidget(create, row, 1, 1, 2)
 
-    def createStnlist(self):
+    def createRSL(self):
         """ Call dialog box to create a station list """
-        printmsg(self.log, "Need to implement create a station list")
+        self.creator = RSLCreator()
+        self.creator.show()
 
     def createStnm(self, box, row):
         """ Create the Stnm text input field """

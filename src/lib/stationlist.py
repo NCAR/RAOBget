@@ -31,23 +31,23 @@ class RAOBstation_list:
         self.station_list = []
         self.log = log
 
-        # Older GEMPAK list from MJ
-        # station_list_file = "../../config/station-query.html"
-
-        # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses
-        # with the UWyo website.
-        self.station_list_file = "../../config/snstns.tbl"
-
     def read(self, station_list_file):
 
         if station_list_file == "":
-            station_list_file = self.station_list_file
+            error = "ERROR: Must select a master\n" + \
+                    "station list to choose\n" + \
+                    "stations from. Close this\n" + \
+                    "window and click\n" + \
+                    "'Create station list' again"
+            printmsg(self.log, error)
+            return(error)
         else:
             # Make sure station_list_file exists
             if not os.path.isfile(station_list_file):
-                printmsg(self.log, "ERROR: station list file " +
-                         station_list_file + " doesn't exist")
-                exit(1)
+                error = "ERROR: station list file " + station_list_file + \
+                        " doesn't exist"
+                printmsg(self.log, error)
+                return(error)
 
         infile = open(station_list_file)
         for line in infile:
@@ -72,6 +72,8 @@ class RAOBstation_list:
 
         infile.close()
 
+        return(self.station_list)
+
     def get_by_id(self, stnid):
 
         # ID need to be 8 chars so right pad with spaces if needed
@@ -90,5 +92,12 @@ class RAOBstation_list:
 
 if __name__ == "__main__":
 
+    # Older GEMPAK list from MJ
+    # station_list_file = "../../config/station-query.html"
+
+    # GEMPAK list from Larry Ooolman as of 2019. This is the list he uses
+    # with the UWyo website.
+    station_list_file = "../../config/snstns.tbl"
+
     stationList = RAOBstation_list()
-    stationList.read(stationList.station_list_file)
+    stationList.read(station_list_file)
