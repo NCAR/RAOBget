@@ -7,20 +7,27 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
                             QListWidget, QPushButton
 from lib.raobroot import getrootdir
 from lib.stationlist import RAOBstation_list
+from lib.messageHandler import printmsg
 from gui.fileselector import FileSelector
 
 
 class RSLWidget(QWidget):
+    # Need a signal to send back to RSLCreator when RSLWidget is closed to tell
+    # it to close the parent window.
+    signal = pyqtSignal()
 
     def __init__(self, station_list):
+        """ Initialize the RSLCreator widget inside the creator main window """
         super().__init__()
 
         layout = QGridLayout(self)
 
+        # Create a QListWidget to hold the source station list
         self.textbox = QListWidget(self)
         self.textbox.show()
         self.textbox.setDragEnabled(True)
@@ -28,15 +35,22 @@ class RSLWidget(QWidget):
 
         # If the user cancelled out of selecting a source station list, or
         # requested a non-existent one, capture the error here and warn them.
+        # Otherwise, display stations in textbox
         error = re.compile("^ERROR:")
         if isinstance(station_list, str) and error.match(station_list):
             self.textbox.addItem(station_list)
         else:
             for stn in station_list:
-                if stn['id'] == "":  # Convert missing to tab for clean spacing
-                    stn['id'] = "\t"
-                self.textbox.addItem(stn['id']+"\t"+stn['number'])
+                if stn['id'] == "        ":  # Use number in place of missing id
+                    stn['id'] = stn['number']
+                self.textbox.addItem(stn['id'])
 
+        # Add another window to display additional metadata to help user select?
+        # Or mouseover shows metadata? Ask Julie what she needs to make selection.
+        # NOT YET IMPLEMENTED
+
+        # Create a QListWidget to hold the selected stations to be saved to
+        # the RSL file.
         self.rslbox = QListWidget(self)
         self.rslbox.setAcceptDrops(True)
         layout.addWidget(self.rslbox, 0, 2, 4, 1)
@@ -55,7 +69,7 @@ class RSLWidget(QWidget):
         layout.addWidget(save, 3, 1)
         save.clicked.connect(self.saveRSL)
 
-    def select_station(self):
+    def select_station(self, item):  # item is a pointer to a QListWidgetItem
         """ Transfer a station from the master list to the RSL list """
         print("Not yet implemented")
 
@@ -64,16 +78,29 @@ class RSLWidget(QWidget):
         # self.rslbox.takeItem(self.rslbox.currentRow()))
 
     def saveRSL(self):
-
-        # Save the list of values out of the GUI (rslbox)
+        """ Save the list of values out of the GUI (rslbox) """
 
         # Call dialog box to select the file to save the RSL list to
         self.loader = FileSelector("saveRsl")
-        outfile = self.loader.get_file()
+        self.outfile = self.loader.get_file()
 
         # Write the RSL list to the open file
-        print("Need to implement saving selected stations to " + outfile)
+        fp = open(self.outfile, 'w')
+        for item in range(self.rslbox.count()):
+            fp.write(str(self.rslbox.item(item).data(0)).strip() + "\n")
+        fp.close()
 
+        # After save, if successful, set RSL to new station list file
+        print("Set station list to RSL file " + self.get_rsl_filename() +
+                 " not yet implemented. Use 'Load station list' to load " +
+                 "newly created RSL file.")
+
+        # close window
+        self.signal.emit()
+        self.close()
+
+    def get_rsl_filename(self):
+        return(self.outfile)
 
 class RSLCreator(QMainWindow):
 
@@ -94,6 +121,9 @@ class RSLCreator(QMainWindow):
         # choose from when creating their RSL file.
         rootdir = getrootdir() + "/config"
         filefilter = "station list files (*.tbl, *.TBL)"
+        # Move this to a menu File-> Load option and use default because
+        # the list will likely only rarely change.
+        # NOT YET IMPLEMENTED
         self.filename = self.initDialog(rootdir, filefilter)
 
         # Read in the contents of the source list of stations.
@@ -104,7 +134,14 @@ class RSLCreator(QMainWindow):
         # list to be included in the RSL file.
         self.win = RSLWidget(self.station_list)
         self.setCentralWidget(self.win)
+        self.win.signal.connect(self.close_win)
         self.win.show()
+
+    def close_win(self):
+        self.close()
+
+    def get_rsl_filename(self):
+        return(self.win.get_rsl_filename)
 
     def initDialog(self, rootdir, filefilter):
         """
