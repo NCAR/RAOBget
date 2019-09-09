@@ -12,7 +12,6 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
                             QListWidget, QPushButton
 from lib.raobroot import getrootdir
 from lib.stationlist import RAOBstation_list
-from lib.messageHandler import printmsg
 from gui.fileselector import FileSelector
 
 
@@ -41,12 +40,13 @@ class RSLWidget(QWidget):
             self.textbox.addItem(station_list)
         else:
             for stn in station_list:
-                if stn['id'] == "        ":  # Use number in place of missing id
+                if stn['id'] == "        ":  # Use number instead of missing id
                     stn['id'] = stn['number']
                 self.textbox.addItem(stn['id'])
 
-        # Add another window to display additional metadata to help user select?
-        # Or mouseover shows metadata? Ask Julie what she needs to make selection.
+        # Add another window to display additional metadata to help user
+        # select stations, or have mouseover show metadata. Ask Julie what she
+        # needs to make selection.
         # NOT YET IMPLEMENTED
 
         # Create a QListWidget to hold the selected stations to be saved to
@@ -92,8 +92,8 @@ class RSLWidget(QWidget):
 
         # After save, if successful, set RSL to new station list file
         print("Set station list to RSL file " + self.get_rsl_filename() +
-                 " not yet implemented. Use 'Load station list' to load " +
-                 "newly created RSL file.")
+              " not yet implemented. Use 'Load station list' to load " +
+              "newly created RSL file.")
 
         # close window
         self.signal.emit()
@@ -101,6 +101,7 @@ class RSLWidget(QWidget):
 
     def get_rsl_filename(self):
         return(self.outfile)
+
 
 class RSLCreator(QMainWindow):
 

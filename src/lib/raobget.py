@@ -14,7 +14,6 @@ import argparse
 from raobtype.textlist import RAOBtextlist
 from raobtype.gifskewt import RAOBgifskewt
 from lib.raobdata import RAOBdata
-from lib.raobroot import getrootdir
 from lib.rsl import RSL
 from lib.messageHandler import printmsg
 from lib.config import config
