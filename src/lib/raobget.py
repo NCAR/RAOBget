@@ -197,7 +197,7 @@ class RAOBget():
             # Retrieve requested data/imagery for a single stn
             self.retrieve()
         else:
-            rslfile = getrootdir() + "/" + self.request.get_rsl()
+            rslfile = self.request.get_rsl()
             if self.test_rsl(rslfile):
                 rsl = RSL()
                 stnlist = rsl.read_rsl(rslfile)
@@ -206,9 +206,8 @@ class RAOBget():
                     self.retrieve()
                 printmsg(self.log, 'Done retrieving RAOBs')
             else:
-                printmsg(self.log, 'File ' + self.request.get_rsl() +
+                printmsg(self.log, 'ERROR: File ' + rslfile +
                          ' does not exist. Check for typo and rerun.')
-                exit(1)
 
     def retrieve(self):
         """ Retrieve data for requested RAOB type """
