@@ -83,9 +83,7 @@ class RAOBview(QMainWindow):
         quitButton.setShortcut('Ctrl+Q')
         quitButton.setToolTip('Exit application')
         quitButton.triggered.connect(self.close)
-        # Decide between these two menu positions
-        fileMenu.addAction(quitButton)
-        self.quit = menubar.addAction(quitButton)
+        menubar.addAction(quitButton)
 
     def loadConfig(self):
         """ Actions to take when the 'Load config' menu item is selected """

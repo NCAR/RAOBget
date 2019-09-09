@@ -49,6 +49,13 @@ class RAOBstation_list:
                 printmsg(self.log, error)
                 return(error)
 
+        # Make sure the RAOBstation dictionary and generated station_list
+        # array are empty
+        self.station.clear()
+        self.station_list.clear()
+
+        # Open the station list file and read the contents into the
+        # dictionary
         infile = open(station_list_file)
         for line in infile:
 

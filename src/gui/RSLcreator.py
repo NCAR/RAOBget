@@ -9,7 +9,7 @@
 import re
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
-                            QListWidget, QPushButton
+                            QListWidget, QPushButton, QAction
 from lib.raobroot import getrootdir
 from lib.stationlist import RAOBstation_list
 from gui.fileselector import FileSelector
@@ -39,10 +39,7 @@ class RSLWidget(QWidget):
         if isinstance(station_list, str) and error.match(station_list):
             self.textbox.addItem(station_list)
         else:
-            for stn in station_list:
-                if stn['id'] == "        ":  # Use number instead of missing id
-                    stn['id'] = stn['number']
-                self.textbox.addItem(stn['id'])
+            self.display_station(station_list)
 
         # Add another window to display additional metadata to help user
         # select stations, or have mouseover show metadata. Ask Julie what she
@@ -68,6 +65,13 @@ class RSLWidget(QWidget):
         save = QPushButton('Save', self)
         layout.addWidget(save, 3, 1)
         save.clicked.connect(self.saveRSL)
+
+    def display_station(self, station_list):
+        # Load stations from station_list into textbox
+        for stn in station_list:
+            if stn['id'] == "        ":  # Use number instead of missing id
+                stn['id'] = stn['number']
+            self.textbox.addItem(stn['id'])
 
     def select_station(self, item):  # item is a pointer to a QListWidgetItem
         """ Transfer a station from the master list to the RSL list """
@@ -105,7 +109,7 @@ class RSLWidget(QWidget):
 
 class RSLCreator(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, request):
         """ Set the initial GUI window size here and initialize the UI """
         super().__init__()
 
@@ -118,18 +122,19 @@ class RSLCreator(QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        # Open a dialog to let the user select the source list of stations to
-        # choose from when creating their RSL file.
-        rootdir = getrootdir() + "/config"
-        filefilter = "station list files (*.tbl, *.TBL)"
-        # Move this to a menu File-> Load option and use default because
-        # the list will likely only rarely change.
-        # NOT YET IMPLEMENTED
-        self.filename = self.initDialog(rootdir, filefilter)
+        self.request = request
+
+        # Configure the menu bar
+        self.createMenuBar()
 
         # Read in the contents of the source list of stations.
-        stationList = RAOBstation_list()
-        self.station_list = stationList.read(self.filename)
+        # Get the filename from the request station_list_file so it will
+        # be the default unless user changes it via menu option 'load master
+        # station list'
+        self.stationList = RAOBstation_list()
+        self.station_list = \
+            self.stationList.read(getrootdir() + "/" +
+                                  self.request.get_stnlist_file())
 
         # Create the GUI that will allow selecting stations from the source
         # list to be included in the RSL file.
@@ -137,6 +142,51 @@ class RSLCreator(QMainWindow):
         self.setCentralWidget(self.win)
         self.win.signal.connect(self.close_win)
         self.win.show()
+
+    def createMenuBar(self):
+        """ Create the menu bar and add options and dropdowns """
+        # A Menu bar will show menus at the top of the QMainWindow
+        menubar = self.menuBar()
+
+        # Mac OS treats menubars differently. To get a similar outcome, we can
+        # add the following line: menubar.setNativeMenuBar(False).
+        menubar.setNativeMenuBar(False)
+
+        # Add a menu option to access config files
+        fileMenu = menubar.addMenu("File")
+
+        # In order for tooltips of actions to display, need to
+        # setToolTipsVisible to True (is False by default)
+        fileMenu.setToolTipsVisible(True)
+
+        # Add a submenu option to load a master station list
+        # Add a submenu option to load a config file
+        loadStationListFile = QAction("Load master station list", self)
+        loadStationListFile.setToolTip('Load file containing list of RAOB ' +
+                                       'station locations, etc to select ' +
+                                       'from to create RSL file.')
+        loadStationListFile.triggered.connect(self.loadStationListFile)
+        fileMenu.addAction(loadStationListFile)
+
+        # Add a menu/submenu? option to quit
+        quitButton = QAction('Quit', self)
+        quitButton.setShortcut('Ctrl+Q')
+        quitButton.setToolTip('Exit application')
+        quitButton.triggered.connect(self.close)
+        menubar.addAction(quitButton)
+
+    def loadStationListFile(self):
+        """
+        Open a dialog to let the user select the source list of stations to
+        choose from when creating their RSL file.
+        """
+        rootdir = getrootdir() + "/config"
+        filefilter = "station list files (*.tbl, *.TBL)"
+        self.request.set_stnlist_file(self.initDialog(rootdir, filefilter))
+        self.station_list = self.stationList.read(
+                                             self.request.get_stnlist_file())
+        self.win.textbox.clear()
+        self.win.display_station(self.station_list)
 
     def close_win(self):
         self.close()

@@ -170,7 +170,7 @@ class GUIconfig():
 
     def createRSL(self):
         """ Call dialog box to create a station list """
-        self.creator = RSLCreator()
+        self.creator = RSLCreator(self.raob.request)
         self.creator.show()
 
     def createStnm(self, box, row):
