@@ -2,3 +2,4 @@ mtp/
 from_loehrer/
 ftp/
 __pycache__
+.DS_Store
