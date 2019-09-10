@@ -69,9 +69,10 @@ class RSLWidget(QWidget):
     def display_station(self, station_list):
         # Load stations from station_list into textbox
         for stn in station_list:
-            if stn['id'] == "        ":  # Use number instead of missing id
-                stn['id'] = stn['number']
-            self.textbox.addItem(stn['id'])
+            self.textbox.addItem(stn['id'] + "\t" + stn['number'] + " " +
+                                 stn['description'] + "\t" + stn['state'] +
+                                 " " + stn['country'] + " " + stn['lat'] +
+                                 " " + stn['lon'] + " " + stn['elev'])
 
     def select_station(self, item):  # item is a pointer to a QListWidgetItem
         """ Transfer a station from the master list to the RSL list """
@@ -91,7 +92,10 @@ class RSLWidget(QWidget):
         # Write the RSL list to the open file
         fp = open(getrootdir() + "/" + self.outfile, 'w')
         for item in range(self.rslbox.count()):
-            fp.write(str(self.rslbox.item(item).data(0)).strip() + "\n")
+            # Only save the beginning of the file until the first space. This
+            # will get the id, or if blank, the number.
+            fp.write(str(self.rslbox.item(item).data(0))
+                     .strip().split(' ', 1)[0]+"\n")
         fp.close()
 
         # After save, if successful, set RSL to new station list file
@@ -116,7 +120,7 @@ class RSLCreator(QMainWindow):
         self.title = 'RSL Creator'
         self.left = 200
         self.top = 100
-        self.width = 500
+        self.width = 1000
         self.height = 500
 
         self.setWindowTitle(self.title)
