@@ -89,7 +89,7 @@ class RSLWidget(QWidget):
         self.outfile = self.loader.get_file()
 
         # Write the RSL list to the open file
-        fp = open(self.outfile, 'w')
+        fp = open(getrootdir() + "/" + self.outfile, 'w')
         for item in range(self.rslbox.count()):
             fp.write(str(self.rslbox.item(item).data(0)).strip() + "\n")
         fp.close()
