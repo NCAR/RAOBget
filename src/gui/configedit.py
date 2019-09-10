@@ -155,7 +155,7 @@ class GUIconfig():
             printmsg(self.log, "WARNING: Station list not loaded. Please " +
                                "select a station/station list.")
         else:
-            printmsg(self.log, "Station list set to " +
+            printmsg(self.log, "RAOB station list set to " +
                      self.raob.request.get_rsl())
 
     def createCreateRSL(self, box, row):
@@ -170,7 +170,7 @@ class GUIconfig():
 
     def createRSL(self):
         """ Call dialog box to create a station list """
-        self.creator = RSLCreator(self.raob.request)
+        self.creator = RSLCreator(self.raob.request, self.log)
         self.creator.show()
 
     def createStnm(self, box, row):

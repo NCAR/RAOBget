@@ -11,6 +11,7 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
                             QListWidget, QPushButton, QAction
 from lib.raobroot import getrootdir
+from lib.messageHandler import printmsg
 from lib.stationlist import RAOBstation_list
 from gui.fileselector import FileSelector
 
@@ -40,11 +41,6 @@ class RSLWidget(QWidget):
             self.textbox.addItem(station_list)
         else:
             self.display_station(station_list)
-
-        # Add another window to display additional metadata to help user
-        # select stations, or have mouseover show metadata. Ask Julie what she
-        # needs to make selection.
-        # NOT YET IMPLEMENTED
 
         # Create a QListWidget to hold the selected stations to be saved to
         # the RSL file.
@@ -99,11 +95,6 @@ class RSLWidget(QWidget):
                      .strip().split(' ', 1)[0]+"\n")
         fp.close()
 
-        # After save, if successful, set RSL to new station list file
-        print("Set station list to RSL file " + self.get_rsl_filename() +
-              " not yet implemented. Use 'Load station list' to load " +
-              "newly created RSL file.")
-
         # close window
         self.signal.emit()
         self.close()
@@ -114,7 +105,7 @@ class RSLWidget(QWidget):
 
 class RSLCreator(QMainWindow):
 
-    def __init__(self, request):
+    def __init__(self, request, log=""):
         """ Set the initial GUI window size here and initialize the UI """
         super().__init__()
 
@@ -128,6 +119,7 @@ class RSLCreator(QMainWindow):
         self.setGeometry(self.left, self.top, self.width, self.height)
 
         self.request = request
+        self.log = log
 
         # Configure the menu bar
         self.createMenuBar()
@@ -197,9 +189,12 @@ class RSLCreator(QMainWindow):
 
     def close_win(self):
         self.close()
+        self.request.set_rsl(self.win.get_rsl_filename())
+        printmsg(self.log, "RAOB station list set to " +
+                 self.request.get_rsl())
 
     def get_rsl_filename(self):
-        return(self.win.get_rsl_filename)
+        return(self.win.get_rsl_filename())
 
     def initDialog(self, rootdir, filefilter):
         """
