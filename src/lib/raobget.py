@@ -16,6 +16,7 @@ from raobtype.gifskewt import RAOBgifskewt
 from lib.raobdata import RAOBdata
 from lib.rsl import RSL
 from lib.messageHandler import printmsg
+from lib.raobroot import getrootdir
 from lib.config import config
 
 
@@ -196,7 +197,7 @@ class RAOBget():
             # Retrieve requested data/imagery for a single stn
             self.retrieve()
         else:
-            rslfile = self.request.get_rsl()
+            rslfile = getrootdir() + "/" + self.request.get_rsl()
             if self.test_rsl(rslfile):
                 rsl = RSL()
                 stnlist = rsl.read_rsl(rslfile)
