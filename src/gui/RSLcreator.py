@@ -67,20 +67,21 @@ class RSLWidget(QWidget):
         save.clicked.connect(self.saveRSL)
 
     def display_station(self, station_list):
-        # Load stations from station_list into textbox
+        """ Load stations from station_list into textbox """
         for stn in station_list:
             self.textbox.addItem(stn['id'] + "\t" + stn['number'] + " " +
                                  stn['description'] + "\t" + stn['state'] +
                                  " " + stn['country'] + " " + stn['lat'] +
                                  " " + stn['lon'] + " " + stn['elev'])
 
-    def select_station(self, item):  # item is a pointer to a QListWidgetItem
+    def select_station(self):
         """ Transfer a station from the master list to the RSL list """
-        print("Not yet implemented")
+        for line in self.textbox.selectedItems():
+            self.rslbox.addItem(line.text())
 
     def remove_station(self):
-        print("Not yet implemented")
-        # self.rslbox.takeItem(self.rslbox.currentRow()))
+        """ Remove station from RSL list """
+        self.rslbox.takeItem(self.rslbox.currentRow())
 
     def saveRSL(self):
         """ Save the list of values out of the GUI (rslbox) """
