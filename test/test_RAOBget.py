@@ -160,15 +160,14 @@ class TestRAOBget(unittest.TestCase):
         """ Make sure code checks for correct metadata for ftp status in
         config file. """
         configfile = config()
-        self.raob.request.set_config(getrootdir() + "/test/data/config_cp.yml")
+        self.raob.request.set_config("test/data/config_cp.yml")
         configfile.read(self.raob.request)
         ftp_status = configfile.get_ftp_status()
         self.assertFalse(ftp_status)
         cp_dir = configfile.get_cp_dir()
         self.assertEqual(cp_dir, '/net/iftp2/pub/incoming/catalog/test')
 
-        self.raob.request.set_config(getrootdir() +
-                                     "/test/data/config_ftp.yml")
+        self.raob.request.set_config("test/data/config_ftp.yml")
         configfile.read(self.raob.request)
         ftp_status = configfile.get_ftp_status()
         self.assertTrue(ftp_status)
