@@ -32,6 +32,11 @@ class RAOBstation_list:
         self.log = log
 
     def read(self, station_list_file):
+        """
+        Read in stations from a master station list.
+
+        Return a station list array of dictionary items, one for each stn.
+        """
 
         if station_list_file == "":
             error = "ERROR: Must select a master\n" + \
