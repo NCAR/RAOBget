@@ -17,9 +17,10 @@ from lib.messageHandler import printmsg
 
 class Widget(QWidget):
 
-    def __init__(self, raob):
+    def __init__(self, raob, app):
         super().__init__()
 
+        self.app = app
         self.initWidget(raob)
 
     def initWidget(self, raob):
@@ -92,4 +93,4 @@ class Widget(QWidget):
         """ Actions to take when the 'Begin retrieval' button is selected """
         printmsg(self.log, "Begin retrieval")
         printmsg(self.log, str(self.raob.request.get_request()))
-        self.raob.get(self.raob.get_args(), self.log)
+        self.raob.get(self.raob.get_args(), self.app, self.log)

@@ -29,17 +29,18 @@ def main():
         # main settings.
         app = QApplication([])
 
-        # Instantiate the RAOBview GUI
-        viewer = RAOBview(raob)
+        # Instantiate the RAOBview GUI. Pass a pointer to the QApplication
+        # so we can force the GUI to redraw when needed.
+        viewer = RAOBview(raob, app)
         viewer.show()
 
         # Run the application until the user closes it.
         app.exec_()
 
-    else:  # Run in command line mode
+    else:  # Run in command line mode. There is no QApplication, so pass None
 
-        # Call method to retrieve raobs
-        raob.get(args)
+        # Call method to retrieve raobs.
+        raob.get(args, None)
 
 
 if __name__ == "__main__":

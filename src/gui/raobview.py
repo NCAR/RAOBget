@@ -14,7 +14,7 @@ from lib.messageHandler import printmsg
 
 class RAOBview(QMainWindow):
 
-    def __init__(self, raob):
+    def __init__(self, raob, app):
         """ Set the initial GUI window size here """
 
         self.raob = raob
@@ -29,9 +29,9 @@ class RAOBview(QMainWindow):
         self.height = 1000  # Pixel height of window
 
         # Create the GUI
-        self.initUI()
+        self.initUI(app)
 
-    def initUI(self):
+    def initUI(self, app):
         """ Create the GUI """
         # Set window title
         self.setWindowTitle('RAOBget - a utility to download soundings from ' +
@@ -43,7 +43,7 @@ class RAOBview(QMainWindow):
         # Set central widget. A QMainWindow must have a central widget. It can
         # also have a menu bar, status bar, toolbars, and dock widgets which
         # appear in a standard layout
-        self.widget = Widget(self.raob)
+        self.widget = Widget(self.raob, app)
         self.setCentralWidget(self.widget)
 
         # Get a pointer to the log message window

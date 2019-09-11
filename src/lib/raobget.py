@@ -121,11 +121,13 @@ class RAOBget():
             configfile = config()
             configfile.read(self.request)
 
-    def get(self, args, log=""):
+    def get(self, args, app, log=""):
         """ Method to retrieve RAOBS
 
         Parameters:
             args: a dictionary of command line arguments/defaults
+            app: if in GUI mode, a pointer to the QApplication, else 
+                 app is None
 
         Returns:
             N/A
@@ -145,7 +147,7 @@ class RAOBget():
                  self.request.get_year() + self.request.get_month() +
                  self.request.get_end())
         if self.request.get_begin() == self.request.get_end():
-            self.stn_loop()
+            self.stn_loop(app)
         else:
             if self.request.get_end() < self.request.get_begin():
                 printmsg(log, "ERROR: Requested end time must be >= " +
@@ -160,7 +162,7 @@ class RAOBget():
                     self.request.set_end(day, '{:02d}'.format(hr))
                     # printmsg(log, "Day 1:",self.request.get_begin() + ' - ' +
                     #          self.request.get_end())
-                    self.stn_loop()
+                    self.stn_loop(app)
                 # Get RAOBs for second to second-to-last day
                 for day in range(int(args.bday) + 1, int(args.eday)):
                     for hr in range(0, 24, int(self.request.get_freq())):
@@ -171,7 +173,7 @@ class RAOBget():
                                              '{:02d}'.format(hr))
                         # printmsg(log, self.request.get_begin() + ' - ' +
                         #          self.request.get_end())
-                        self.stn_loop()
+                        self.stn_loop(app)
                 # Get RAOBs for last day requested
                 day = args.eday
                 for hr in range(0, int(args.ehr)+1,
@@ -181,7 +183,7 @@ class RAOBget():
                     self.request.set_end(day, '{:02d}'.format(hr))
                     # printmsg(log, "Last:" + self.request.get_begin() +
                     # ' - ' + self.request.get_end())
-                    self.stn_loop()
+                    self.stn_loop(app)
 
     def test_rsl(self, rslfile):
         if os.path.exists(rslfile):
@@ -189,7 +191,7 @@ class RAOBget():
         else:
             return(False)
 
-    def stn_loop(self):
+    def stn_loop(self, app):
         # Did user request a single station via --stnm, or a list of stations
         # via an RSL file
         if (self.request.get_rsl() == ''):
@@ -204,6 +206,8 @@ class RAOBget():
                 for stn in stnlist:  # Loop through a list of stations
                     self.request.set_stnm(stn)
                     self.retrieve()
+                    if app is not None:      # Force the GUI to redraw so log
+                        app.processEvents()  # messages, etc are displayed
                 printmsg(self.log, 'Done retrieving RAOBs')
             else:
                 printmsg(self.log, 'ERROR: File ' + rslfile +
