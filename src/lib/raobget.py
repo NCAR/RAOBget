@@ -47,32 +47,32 @@ class RAOBget():
                             help='Region for which to download sonde info. ' +
                             'Not required. Download will fail if region does' +
                             ' not match station location. [''] ')
-        parser.add_argument('--raobtype', type=str, default='TEXT:LIST',
+        parser.add_argument('--raobtype', type=str, default='',
                             help='Data/image type to request - ' +
                             'TEXT:LIST or GIF:SKEWT. [TEXT:LIST]')
-        parser.add_argument('--year', type=str, default='2019',
+        parser.add_argument('--year', type=str, default='',
                             help='Year to request data [2019]')
-        parser.add_argument('--month', type=str, default='05',
+        parser.add_argument('--month', type=str, default='',
                             help='Month to request data [05]')
-        parser.add_argument('--bday', type=str, default='28',
+        parser.add_argument('--bday', type=str, default='',
                             help='Begin day (dd) to request data UTC [28]')
-        parser.add_argument('--bhr', type=str, default='12',
+        parser.add_argument('--bhr', type=str, default='',
                             choices=['00', '03', '06', '09',
                                      '12', '15', '18', '21'],
                             help='Begin hour (hh) to request data UTC [12]')
-        parser.add_argument('--eday', type=str, default='28',
+        parser.add_argument('--eday', type=str, default='',
                             help='End day (dd) to request data UTC [28]')
-        parser.add_argument('--ehr', type=str, default='12',
+        parser.add_argument('--ehr', type=str, default='',
                             choices=['00', '03', '06', '09',
                                      '12', '15', '18', '21'],
                             help='End hour (hh) to request data UTC [12]')
         parser.add_argument('--now', action="store_true",
                             help='Set requested date/time to current ' +
                             'date/time' [False])
-        parser.add_argument('--stnm', type=str, default='72672',
+        parser.add_argument('--stnm', type=str, default='',
                             help='Station number for which to request ' +
                             'data... [72672]')
-        parser.add_argument('--freq', type=str, default='12',
+        parser.add_argument('--freq', type=str, default='',
                             choices=['3', '6', '12'],
                             help='Frequency to look for RAOBs [12]')
         parser.add_argument('--rsl', type=str, default='',
@@ -134,6 +134,22 @@ class RAOBget():
 
         """
         self.log = log             # pointer to GUI log, if running in GUI mode
+
+        # If args are all empty, warn user.
+        empty = True
+        request = self.request.get_request()
+        for key in request.keys():
+            if key != 'station_list_file':
+                if str(request[key]).lower() == 'true':
+                    empty = False
+                elif str(request[key]).lower() != 'false' and \
+                        request[key] != '':
+                    empty = False
+
+        if empty:
+            printmsg(log, "ERROR: Request is empty. Set some metadata or load a" +
+                          " config file and rerun.")
+            return()
 
         # If option --now is set, set year, month, begin, and end to current
         # date/time
