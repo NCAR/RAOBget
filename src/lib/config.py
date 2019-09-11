@@ -42,7 +42,7 @@ class config():
 
         yamlfile = getrootdir() + "/" + request.get_config()
 
-        if (yamlfile == ""):
+        if (request.get_config() == ""):
             printmsg(self.log, "ERROR: File to save config to not defined. " +
                      "Can't save")
             return(False)
@@ -89,9 +89,9 @@ class config():
             if key in request.get_keys():
 
                 # Save booleans as booleans
-                if self.projConfig[key] == 'True':
+                if str(self.projConfig[key]).lower() == 'true':
                     request.set_key(key, True)
-                elif self.projConfig[key] == 'False':
+                elif str(self.projConfig[key]).lower() == 'false':
                     request.set_key(key, False)
                 else:
                     request.set_key(key, self.projConfig[key])
@@ -101,11 +101,15 @@ class config():
                 printmsg(self.log, "ERROR: key " + key + " in config file is" +
                          " not a valid key - skipping.")
 
+    def clear(self, request):
+        for key in request.get_keys():
+            request.set_key(key, "")
+
     def get_ftp_status(self):
         if 'ftp' in self.projConfig.keys():
-            if self.projConfig['ftp'] == "False":
+            if str(self.projConfig['ftp']).lower() == "false":
                 return(False)
-            if self.projConfig['ftp'] == "True":
+            if str(self.projConfig['ftp']).lower() == "true":
                 return(True)
         else:
             printmsg(self.log, "ERROR: ftp status not defined. " +

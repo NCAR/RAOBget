@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction
 from gui.raobwidget import Widget
 from gui.fileselector import FileSelector
 from lib.config import config
+from lib.messageHandler import printmsg
 
 
 class RAOBview(QMainWindow):
@@ -89,14 +90,59 @@ class RAOBview(QMainWindow):
         """ Actions to take when the 'Load config' menu item is selected """
         # This has to be self.editor (not just editor) to avoid garbage
         # collection or the GUIconfig window won't appear.
+        configfile = config(self.log)
 
         # Call dialog box to select the configuration file
         self.loader = FileSelector("loadConfig")
 
+        # Clear the previously loaded config so don't get conflicts
+        configfile.clear(self.raob.request)
+
         # Load the configuration into the raob request
         self.raob.request.set_config(self.loader.get_file())
-        configfile = config(self.log)
         configfile.read(self.raob.request)
+
+        # Update the displayed selections in the configedit portion
+        # of the GUI
+        self.update_displayed_config()
+
+    def update_displayed_config(self):
+        """
+        Update the displayed selections in the configedit portion of the GUI
+        """
+        newconfig = self.widget.configGUI()
+
+        # Update mode
+        if self.raob.request.get_mtp() is True:
+            newconfig.updateMode("MTP")
+        if self.raob.request.get_catalog() is True:
+            newconfig.updateMode("CATALOG")
+        if self.raob.request.get_mtp() is True and \
+           self.raob.request.get_catalog() is True:
+            printmsg(self.log, "ERROR: Both mtp and catalog set to true" +
+                     " in config file. Setting to default mode.")
+            self.raob.request.set_mtp(False)
+            self.raob.request.set_catalog(False)
+            newconfig.updateMode("Default")
+
+        # update Freq (hours)
+        newconfig.updateFreq(self.raob.request.get_freq())
+
+        # update Type of RAOB data to download
+        newconfig.updateType(self.raob.request.get_type())
+
+        # update displayed station number / id
+        newconfig.updateStnm(self.raob.request.get_stnm())
+
+        # update displayed begin time
+        newconfig.updateBtime(self.raob.request.get_year() +
+                              self.raob.request.get_month() +
+                              self.raob.request.get_begin())
+
+        # update displayed end time
+        newconfig.updateEtime(self.raob.request.get_year() +
+                              self.raob.request.get_month() +
+                              self.raob.request.get_end())
 
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """

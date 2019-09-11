@@ -35,14 +35,17 @@ class Widget(QWidget):
         self.log = self.createLogMessageWindow(layout)
 
         # Add configuration editor window
-        self.config = GUIconfig()
-        self.config.createConfigEditor(self, layout, self.log, raob)
+        self.config = GUIconfig(self.log, raob)
+        self.config.createConfigEditor(self, layout)
 
         # Add an image window to hold the skewt
         self.createImageWindow(layout)
 
         # Add a button to begin retrieving RAOBs
         self.createRetrieveButton(layout)
+
+    def configGUI(self):
+        return(self.config)
 
     def get_log(self):
         """ Return a pointer to the log message window """
