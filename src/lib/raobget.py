@@ -25,7 +25,7 @@ from PyQt5.QtGui import QPixmap
 
 class RAOBget():
 
-    def __init__(self):
+    def __init__(self, log=""):
         """
         Initialize a RAOBrequest dictionary to hold request metadata
         """
@@ -235,7 +235,12 @@ class RAOBget():
                 if len(stnlist) > 30:
                     count = 0
                 for stn in stnlist:  # Loop through a list of stations
-                    self.request.set_stnm(stn)
+                    status = self.request.set_stnm(stn)
+                    if not status:
+                        printmsg(self.log, "WARNING: Requested station "
+                                 + stn + " not valid. Update RSL station" +
+                                 " list. Skipping and continuing...")
+                        continue
                     self.retrieve(app)
                     if app is not None:      # Force the GUI to redraw so log
                         app.processEvents()  # messages, etc are displayed

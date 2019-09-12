@@ -6,6 +6,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import logging
+from lib.messageHandler import printmsg
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton
 
 
@@ -30,13 +31,13 @@ class Stnm():
         box.addWidget(use, row, 2)
 
     def set(self):
-        """ Set the station to the value entered in the input field
-
-        NEED TO ADD DATA VALIDATION HERE
-        """
+        """ Set the station to the value entered in the input field """
         textboxValue = self.stnm.text()
-        self.request.set_stnm(textboxValue)
-        logging.info("Station set to " + textboxValue)
+        status = self.request.set_stnm(textboxValue)
+        if not status:
+            printmsg(self.log, "ERROR: Requested station not valid")
+        else:
+            logging.info("Station set to " + textboxValue)
 
         # Since just manually set a station, need to set rsl to '' or
         # any defined rsl file will override user station selection

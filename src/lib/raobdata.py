@@ -7,6 +7,8 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 from datetime import datetime
+from lib.raobroot import getrootdir
+from lib.stationlist import RAOBstation_list
 
 
 class RAOBdata():
@@ -45,6 +47,10 @@ class RAOBdata():
         }
 
         self.request = RAOBrequest  # dictionary to hold all URL components
+
+        # Load a station list so we can validate stnm requests
+        self.stationList = RAOBstation_list()
+        self.stationList.read(getrootdir() + "/config/snstns.tbl")
 
     def set_key(self, key, value):
         self.request[key] = value
@@ -114,6 +120,15 @@ class RAOBdata():
 
     def set_stnm(self, stnm):
         self.request['stnm'] = stnm
+        # This code tests if the station requested is valid by comparing it to
+        # the stations in the master list received from UWyo. If that list gets
+        # out of date with the UWyo website, comment out the next 5 lines to
+        # turn off validation.
+        if stnm != "" and not self.stationList.get_by_stnm(stnm) and \
+           not self.stationList.get_by_id(stnm):
+            return(False)
+        else:
+            return(True)
 
     def get_stnm(self):
         return(self.request['stnm'])
