@@ -82,7 +82,7 @@ class RAOBwget:
             except (HTTPError, URLError) as e:
                 printmsg(self.log, "Can't connect to weather.uwyo.edu. Use " +
                          "option --test for testing with offline sample data" +
-                         " files.")
+                         " files or try again in a few minutes.")
                 printmsg(self.log, str(e))
                 exit(1)
             except socket.timeout as e:
@@ -90,7 +90,15 @@ class RAOBwget:
                 printmsg(self.log, str(e))
 
             # Get requested URL.
-            urllib.request.urlretrieve(url, outfile)
+            try:
+                urllib.request.urlretrieve(url, outfile)
+            except (HTTPError, URLError) as e:
+                printmsg(self.log, "Error downloading file " + outfile +
+                         " Error: " + str(e))
+                return(False)
+            except socket.timeout as e:
+                printmsg(self.log, "There was an error:")
+                printmsg(self.log, str(e))
 
             # Test if text/html file contains good data
             if "gif" not in outfile:
@@ -100,14 +108,16 @@ class RAOBwget:
                     if "Can't get" in line:
                         printmsg(self.log, 'ERROR: Website says "' +
                                  line.rstrip() + '"')
-                        os.system('rm ' + outfile)
+                        if os.path.isfile(outfile):
+                            os.system('rm ' + outfile)
                         out.close()
                         return(False)
                     elif 'Sorry, unable to generate' in line:
                         printmsg(self.log, line.rstrip() + ". Retrieved file" +
                                  " contains error message - gif was got " +
                                  "generated")
-                        os.system('rm ' + outfile)
+                        if os.path.isfile(outfile):
+                            os.system('rm ' + outfile)
                         out.close()
                         return(False)
                     else:
