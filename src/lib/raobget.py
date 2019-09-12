@@ -211,7 +211,9 @@ class RAOBget():
             return(False)
 
     def stn_loop(self, app):
-        if self.request.get_mtp() is True:
+        print(self.request.get_mtp())
+        if self.request.get_mtp() is True and \
+                self.request.get_type() == "GIF:SKEWT":
             printmsg(self.log, 'ERROR: Requested GIF:SKEWT plots in ' +
                      'MTP mode. Check configuration.')
             return()
