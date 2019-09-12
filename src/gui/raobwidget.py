@@ -62,15 +62,15 @@ class Widget(QWidget):
 
     def createImageWindow(self, layout):
         """ Add an image window to hold the Skewt image """
-        image = QLabel()
-        layout.addWidget(image, 0, 1, 1, 2)
+        self.image = QLabel()
+        layout.addWidget(self.image, 0, 1, 1, 2)
         pixmap = self.getImage()
         # This was an attempt to resize from [800,640] to [600,480]. Image
         # quality is unacceptably low. gif's don't resize well.
         # pixmap_resized = pixmap.scaled(600, 480, Qt.KeepAspectRatio)
         # image.setPixmap(pixmap_resized)
-        image.setPixmap(pixmap)
-        image.show()
+        self.image.setPixmap(pixmap)
+        self.image.show()
 
     def getImage(self, gifimage='./gui/message.gif'):
         """ Return the image associated with the latest downloaded RAOB data.
@@ -94,4 +94,4 @@ class Widget(QWidget):
         """ Actions to take when the 'Begin retrieval' button is selected """
         printmsg(self.log, "Begin retrieval")
         logging.info(str(self.raob.request.get_request()))
-        self.raob.get(self.raob.get_args(), self.app, image, self.log)
+        self.raob.get(self.raob.get_args(), self.app, self.image, self.log)

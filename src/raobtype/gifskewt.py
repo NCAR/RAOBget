@@ -61,7 +61,7 @@ class RAOBgifskewt():
             printmsg(self.log, "WARNING: Found more than one station " +
                      "matching request['stnm']")
             for i in range(len(station)):
-                printmsg(self.log, station[i])
+                printmsg(self.log, str(station[i]))
             printmsg(self.log, "Returning first station found")
 
         return(station[0])
@@ -144,7 +144,7 @@ class RAOBgifskewt():
 
         return(url)
 
-    def retrieve(self, request, log=""):
+    def retrieve(self, app, request, log=""):
         """
         Retrieves the requested data from the U Wyoming archive
 
@@ -163,6 +163,8 @@ class RAOBgifskewt():
 
         # Create first request URL from request metadata
         url = self.get_url(request)
+        if app is not None:      # Force the GUI to redraw so log
+            app.processEvents()  # messages, etc are displayed
 
         # Create output filename from request metadata
         self.set_outfile_html(request)
@@ -177,6 +179,8 @@ class RAOBgifskewt():
         # ...else download data
         else:
             status = self.rwget.get_data(url, self.get_outfile_html())
+            if app is not None:      # Force the GUI to redraw so log
+                app.processEvents()  # messages, etc are displayed
 
         # If site returned good html file and thus generated gif
         if status:
@@ -186,9 +190,13 @@ class RAOBgifskewt():
             # Create output filename from request metadata
             self.set_outfile_gif(request)
             outfile = self.get_outfile_gif()
+            if app is not None:      # Force the GUI to redraw so log
+                app.processEvents()  # messages, etc are displayed
 
             # Download gif image
             status = self.rwget.get_data(url, outfile)
+            if app is not None:      # Force the GUI to redraw so log
+                app.processEvents()  # messages, etc are displayed
 
         else:
             if request.get_test() is True:
@@ -201,10 +209,13 @@ class RAOBgifskewt():
         if request.get_catalog() is True and status:
             status = userlib.catalog.to_ftp(outfile, request, self.log)
             printmsg(self.log, status)
+            if app is not None:      # Force the GUI to redraw so log
+                app.processEvents()  # messages, etc are displayed
 
         return(outfile)
 
     def cleanup(self):
         """ Remove now-irrelevant html file """
-        os.system('rm ' + self.get_outfile_html())
-        printmsg(self.log, 'Removed ' + self.get_outfile_html())
+        if os.path.isfile(self.get_outfile_html()):
+            os.system('rm ' + self.get_outfile_html())
+            printmsg(self.log, 'Removed ' + self.get_outfile_html())

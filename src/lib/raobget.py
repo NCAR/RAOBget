@@ -19,6 +19,8 @@ from lib.messageHandler import printmsg
 from lib.raobroot import getrootdir
 from lib.config import config
 
+from PyQt5.QtGui import QPixmap
+
 
 class RAOBget():
 
@@ -41,7 +43,7 @@ class RAOBget():
                         "Please provide each argument only once.",
             epilog="For NCAR/EOL field catalog use " +
                    "the command: python3 RAOBget.py --config " +
-                   "../config/catalog.yml [--stnm <station number> or --rsl " +
+                   "config/catalog.yml [--stnm <station number> or --rsl " +
                    "<RSL file>] --freq <[3,6,12]>")
         parser.add_argument('--region', type=str, default='',
                             help='Region for which to download sonde info. ' +
@@ -121,19 +123,20 @@ class RAOBget():
             configfile = config()
             configfile.read(self.request)
 
-    def get(self, args, app, log=""):
+    def get(self, args, app, image, log=""):
         """ Method to retrieve RAOBS
 
         Parameters:
             args: a dictionary of command line arguments/defaults
-            app: if in GUI mode, a pointer to the QApplication, else 
+            app: if in GUI mode, a pointer to the QApplication, else
                  app is None
 
         Returns:
             N/A
 
         """
-        self.log = log             # pointer to GUI log, if running in GUI mode
+        self.log = log  # pointer to GUI log, if running in GUI mode
+        self.image = image
 
         # If args are all empty, warn user.
         empty = True
@@ -147,8 +150,8 @@ class RAOBget():
                     empty = False
 
         if empty:
-            printmsg(log, "ERROR: Request is empty. Set some metadata or load a" +
-                          " config file and rerun.")
+            printmsg(log, "ERROR: Request is empty. Set some metadata or" +
+                          " load a config file and rerun.")
             return()
 
         # If option --now is set, set year, month, begin, and end to current
@@ -213,7 +216,7 @@ class RAOBget():
         if (self.request.get_rsl() == ''):
             # Stnm already set
             # Retrieve requested data/imagery for a single stn
-            self.retrieve()
+            self.retrieve(app)
         else:
             rslfile = getrootdir() + "/" + self.request.get_rsl()
             if self.test_rsl(rslfile):
@@ -221,7 +224,7 @@ class RAOBget():
                 stnlist = rsl.read_rsl(rslfile)
                 for stn in stnlist:  # Loop through a list of stations
                     self.request.set_stnm(stn)
-                    self.retrieve()
+                    self.retrieve(app)
                     if app is not None:      # Force the GUI to redraw so log
                         app.processEvents()  # messages, etc are displayed
                 printmsg(self.log, 'Done retrieving RAOBs')
@@ -229,7 +232,7 @@ class RAOBget():
                 printmsg(self.log, 'ERROR: File ' + rslfile +
                          ' does not exist. Check for typo and rerun.')
 
-    def retrieve(self):
+    def retrieve(self, app):
         """ Retrieve data for requested RAOB type """
 
         if (self.request.get_type() == 'TEXT:LIST'):
@@ -237,8 +240,10 @@ class RAOBget():
             textlist.retrieve(self.request, self.log)
         elif (self.request.get_type() == 'GIF:SKEWT'):
             gifskewt = RAOBgifskewt(self.log)
-            gifskewt.retrieve(self.request, self.log)
+            outfile = gifskewt.retrieve(app, self.request, self.log)
             gifskewt.cleanup()
+            if app is not None:
+                self.image.setPixmap(QPixmap("../catalog/" + outfile))
         else:
             printmsg(self.log, 'RAOB type ' + self.request.get_type() +
                      ' not implemented yet')
