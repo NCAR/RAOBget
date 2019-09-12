@@ -9,6 +9,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+import time
 import argparse
 
 from raobtype.textlist import RAOBtextlist
@@ -229,11 +230,21 @@ class RAOBget():
             if self.test_rsl(rslfile):
                 rsl = RSL()
                 stnlist = rsl.read_rsl(rslfile)
+                # If use requests more than 50 stns, break them up so don't
+                # overwhelm UWyo server.
+                if len(stnlist) > 30:
+                    count = 0
                 for stn in stnlist:  # Loop through a list of stations
                     self.request.set_stnm(stn)
                     self.retrieve(app)
                     if app is not None:      # Force the GUI to redraw so log
                         app.processEvents()  # messages, etc are displayed
+                    if len(stnlist) > 30:
+                        count = count+1
+                        if count % 10 == 0:
+                            printmsg(self.log, 'Sleeping for 30 seconds to ' +
+                                     'avoid overwhelming UWyo server')
+                            time.sleep(30)
                 printmsg(self.log, 'Done retrieving RAOBs')
             else:
                 printmsg(self.log, 'ERROR: File ' + rslfile +
