@@ -30,11 +30,13 @@ For use with the NCAR/EOL field catalog, use the command:
 this is the only place PyQt5 is installed. Even if you are not using the
 GUI mode, the code will look for the PyQt5 library and fail.**
 
-For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata (UNDER DEVELOPMENT):
+For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata:
 ```
 python3 RAOBget.py --gui
 ```
 
+If you need help reading skewT plots, a good reference is the COMET MetEd module:
+https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
 
 ### To run on a mac ###
 
