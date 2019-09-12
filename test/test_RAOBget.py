@@ -66,7 +66,7 @@ class TestRAOBget(unittest.TestCase):
         url = textlist.get_url(request)
         self.assertEqual(url, ctrlurl)
 
-        outfile = textlist.retrieve(request)
+        outfile = textlist.retrieve(None, request)
 
         return(outfile)
 
@@ -106,7 +106,7 @@ class TestRAOBget(unittest.TestCase):
         self.assertEqual(url, ctrlurl)
 
         # Get the data (html and gif image)
-        self.gifskewt.retrieve(self.raob.request)
+        self.gifskewt.retrieve(None, self.raob.request)
 
         outfile = self.gifskewt.get_outfile_html()
 
