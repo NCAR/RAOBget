@@ -7,11 +7,11 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
+import logging
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
                             QListWidget, QPushButton, QAction
 from lib.raobroot import getrootdir
-from lib.messageHandler import printmsg
 from lib.stationlist import RAOBstation_list
 from gui.fileselector import FileSelector
 
@@ -190,8 +190,8 @@ class RSLCreator(QMainWindow):
     def close_win(self):
         self.close()
         self.request.set_rsl(self.win.get_rsl_filename())
-        printmsg(self.log, "RAOB station list set to " +
-                 self.request.get_rsl())
+        logging.info("RAOB station list set to " +
+                     self.request.get_rsl())
 
     def get_rsl_filename(self):
         return(self.win.get_rsl_filename())

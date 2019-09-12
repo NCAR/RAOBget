@@ -6,8 +6,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QComboBox
-from lib.messageHandler import printmsg
 
 
 class Type():
@@ -37,7 +37,7 @@ class Type():
     def set(self, text):
         """ Save the selected type to the metadata dictionary"""
         self.request.set_type(text)
-        printmsg(self.log, "RAOB type set to " + text)
+        logging.info("RAOB type set to " + text)
 
     def update(self, text):
         self.comboBox.setCurrentText(text)

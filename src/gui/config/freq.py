@@ -6,8 +6,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QComboBox
-from lib.messageHandler import printmsg
 
 
 class Freq():
@@ -38,7 +38,7 @@ class Freq():
     def set(self, text):
         """ Save the selected reporting frequency to the metadata dictionary"""
         self.request.set_freq(text)
-        printmsg(self.log, "Freq set to " + text)
+        logging.info("Freq set to " + text)
 
     def update(self, text):
         """

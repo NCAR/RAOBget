@@ -9,6 +9,10 @@ from lib.raobget import RAOBget
 from gui.raobview import RAOBview
 from PyQt5.QtWidgets import QApplication
 
+# To turn on additional messages for debugging, etc, uncomment these lines
+# import logging
+# logging.basicConfig(level=logging.INFO)
+
 
 def main():
     """ Instantiate a RAOB class and call in either GUI mode or command-line

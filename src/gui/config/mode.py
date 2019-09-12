@@ -6,8 +6,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QComboBox
-from lib.messageHandler import printmsg
 
 
 class Mode():
@@ -36,10 +36,10 @@ class Mode():
         """ Save the mode selected in the GUI to the metadata dictionary """
         if text == "MTP":
             self.request.set_mtp(True)
-            printmsg(self.log, "Mode set to MTP")
+            logging.info("Mode set to MTP")
         if text == "CATALOG":
             self.request.set_catalog(True)
-            printmsg(self.log, "Mode set to Catalog")
+            logging.info("Mode set to Catalog")
 
     def update(self, text):
         """

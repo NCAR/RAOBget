@@ -6,6 +6,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
+import logging
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton
 from lib.messageHandler import printmsg
 
@@ -59,8 +60,8 @@ class BTime():
             day = textboxvalue[6:8]
             hr = textboxvalue[8:10]
             self.request.set_begin(day, hr)
-            printmsg(self.log, "year set to " + year + ", month set to " +
-                     month + ", begin (ddhh) set to " + day + hr)
+            logging.info("year set to " + year + ", month set to " +
+                         month + ", begin (ddhh) set to " + day + hr)
 
     def update(self, text):
         """

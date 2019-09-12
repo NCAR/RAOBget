@@ -6,6 +6,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QPushButton
 from gui.fileselector import FileSelector
 from lib.messageHandler import printmsg
@@ -42,8 +43,8 @@ class LoadRSL():
                                "select a station/station list.")
         else:
             self.load.setText(self.request.get_rsl())
-            printmsg(self.log, "RAOB station list set to " +
-                     self.request.get_rsl())
+            logging.info("RAOB station list set to " +
+                         self.request.get_rsl())
 
         # When load an RSL file, set stnm to empty in request and reset display
         # text to empty.

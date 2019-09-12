@@ -5,8 +5,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QPushButton
-from lib.messageHandler import printmsg
 
 
 class Now():
@@ -31,7 +31,7 @@ class Now():
     def set(self):
         self.request.set_now(True)
         self.createRAOB.setText("Time set to now")
-        printmsg(self.log, "Time to retrieve set to now")
+        logging.info("Time to retrieve set to now")
 
     def get_default_label(self):
         return(self.label)

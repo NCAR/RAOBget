@@ -5,8 +5,8 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton
-from lib.messageHandler import printmsg
 
 
 class Stnm():
@@ -36,7 +36,7 @@ class Stnm():
         """
         textboxValue = self.stnm.text()
         self.request.set_stnm(textboxValue)
-        printmsg(self.log, "Station set to " + textboxValue)
+        logging.info("Station set to " + textboxValue)
 
         # Since just manually set a station, need to set rsl to '' or
         # any defined rsl file will override user station selection

@@ -26,6 +26,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 import os
 import yaml
 from lib.messageHandler import printmsg
@@ -96,7 +97,7 @@ class config():
                 else:
                     request.set_key(key, self.projConfig[key])
 
-                printmsg(self.log, key + " set to " + self.projConfig[key])
+                logging.info(key + " set to " + self.projConfig[key])
             else:
                 printmsg(self.log, "ERROR: key " + key + " in config file is" +
                          " not a valid key - skipping.")

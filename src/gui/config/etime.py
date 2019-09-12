@@ -6,6 +6,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
+import logging
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton
 from lib.messageHandler import printmsg
 
@@ -75,7 +76,7 @@ class ETime():
             # Parse entered date into end day, hr and assign to
             # request metadata
             self.request.set_end(day, hr)
-            printmsg(self.log, "End (ddhh) set to " + day + hr)
+            logging.info("End (ddhh) set to " + day + hr)
 
     def update(self, text):
         """
