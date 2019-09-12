@@ -55,7 +55,7 @@ class RAOBtextlist():
 
         return(self.outfile)
 
-    def retrieve(self, request, log=""):
+    def retrieve(self, app, request, log=""):
         """
         Retrieves the requested data from the U Wyoming archive
 
@@ -83,6 +83,8 @@ class RAOBtextlist():
         else:
             # Create request URL from request metadata
             url = self.get_url(request)
+            if app is not None:      # Force the GUI to redraw so log
+                app.processEvents()  # messages, etc are displayed
 
             status = self.rwget.get_data(url, outfile)
 

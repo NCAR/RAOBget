@@ -237,7 +237,7 @@ class RAOBget():
 
         if (self.request.get_type() == 'TEXT:LIST'):
             textlist = RAOBtextlist(self.log)
-            textlist.retrieve(self.request, self.log)
+            textlist.retrieve(app, self.request, self.log)
         elif (self.request.get_type() == 'GIF:SKEWT'):
             gifskewt = RAOBgifskewt(self.log)
             outfile = gifskewt.retrieve(app, self.request, self.log)
