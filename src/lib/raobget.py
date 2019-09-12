@@ -212,7 +212,6 @@ class RAOBget():
             return(False)
 
     def stn_loop(self, app):
-        print(self.request.get_mtp())
         if self.request.get_mtp() is True and \
                 self.request.get_type() == "GIF:SKEWT":
             printmsg(self.log, 'ERROR: Requested GIF:SKEWT plots in ' +
@@ -266,7 +265,7 @@ class RAOBget():
             outfile = gifskewt.retrieve(app, self.request, self.log)
             gifskewt.cleanup()
             if app is not None:
-                self.image.setPixmap(QPixmap("../catalog/" + outfile))
+                self.image.setPixmap(QPixmap(outfile))
         else:
             printmsg(self.log, 'RAOB type ' + self.request.get_type() +
                      ' not implemented yet')
