@@ -1,15 +1,19 @@
-catalog: True
-raobtype: 'GIF:SKEWT'
-now: True
-stnm: 'DNR'
-#rsl: 'config/sample.RSL'
-# List of stations with location, description, etc
-# Give path relative to RAOBget dir
-station_list_file: 'config/snstns.tbl'
-# Ftp data to catalog site, or cp to local dir?
-ftp: False
-# If ftp is Yes, need ftp_server and ftp_dir
-ftp_server: 'catalog.eol.ucar.edu'
-ftp_dir: 'pub/incoming/catalog/test'
-# If ftp is False, need cp_dir
-cp_dir: '../catalog'
+begin: '1112'
+catalog: true
+config: config/catalog.yml
+cp_dir: ../catalog
+end: '1112'
+freq: '12'
+ftp: false
+ftp_dir: pub/incoming/catalog/test
+ftp_server: catalog.eol.ucar.edu
+month: 09
+mtp: ''
+now: false
+raobtype: GIF:SKEWT
+region: ''
+rsl: 'config/sample.RSL'
+station_list_file: config/snstns.tbl
+stnm: ''
+test: ''
+year: '2019'
