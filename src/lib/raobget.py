@@ -211,6 +211,11 @@ class RAOBget():
             return(False)
 
     def stn_loop(self, app):
+        if self.request.get_mtp() is True:
+            printmsg(self.log, 'ERROR: Requested GIF:SKEWT plots in ' +
+                     'MTP mode. Check configuration.')
+            return()
+
         # Did user request a single station via --stnm, or a list of stations
         # via an RSL file
         if (self.request.get_rsl() == ''):
