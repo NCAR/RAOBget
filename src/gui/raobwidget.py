@@ -5,6 +5,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import logging
 from PyQt5.QtWidgets import QLabel, QPushButton, QGridLayout, QWidget, \
      QFrame, QPlainTextEdit
 from PyQt5.QtGui import QPixmap
@@ -92,5 +93,5 @@ class Widget(QWidget):
     def clickRetrieve(self):
         """ Actions to take when the 'Begin retrieval' button is selected """
         printmsg(self.log, "Begin retrieval")
-        printmsg(self.log, str(self.raob.request.get_request()))
-        self.raob.get(self.raob.get_args(), self.app, self.log)
+        logging.info(str(self.raob.request.get_request()))
+        self.raob.get(self.raob.get_args(), self.app, image, self.log)
