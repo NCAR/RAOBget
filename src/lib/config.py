@@ -36,7 +36,8 @@ from lib.raobroot import getrootdir
 class config():
 
     def __init__(self, log=""):
-        self.log = log       # pointer to GUI log, if extant
+        self.log = log        # pointer to GUI log, if extant
+        self.projConfig = {}  # initialize dictionary to hold yamlfile contents
 
     def write(self, request):
         """ Write the request metadata to a YAML config file"""
@@ -59,9 +60,8 @@ class config():
         yamlfile = getrootdir() + "/" + request.get_config()
 
         # If the yamlfile is not defined, return False so code will use default
-        # request
-        if (yamlfile == ""):
-            self.projConfig = {}
+        # request (e.g, cancelled out so didn't append a file)
+        if (request.get_config() == ""):
             return(False)
 
         elif not os.path.isdir(yamlfile):

@@ -17,9 +17,16 @@ def to_ftp(outfile, request, log=""):
     """
 
     # Get the user specified ftp status and dirs from the YAML config file
-    # given on the command line
+    # given on the command line. If there is no config file, then can't ftp/cp.
+    # Let user know and return.
     configfile = config(log)
-    configfile.read(request)
+    if os.path.exists(configfile.get_config()):
+        configfile.read(request)
+    else:
+        return("WARNING: No config file defined so ftp status not set." +
+               "Downloaded files are in working dir.")
+
+    # Have a config file. Get ftp status, or warn user not set
     ftp_status = configfile.get_ftp_status()
 
     if ftp_status is True:  # USER IS REQUESTING FTP TO FTP SERVER AND DIR
