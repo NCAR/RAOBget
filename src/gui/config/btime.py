@@ -32,13 +32,15 @@ class BTime():
         use.clicked.connect(self.set)
         box.addWidget(use, row, 2)
 
+        # Return a pointer to the 'set' button. This is used for unittests
+        return(use)
+
     def set(self):
         """ Set the beginning of the time range to download """
 
         # Now that user has entered text, set the color of the text to black
         self.btime.setStyleSheet("color: black")
         textboxvalue = self.btime.text()
-
         # Validate entered data
         time = re.compile(r'[12][0-9][0-9][0-9][0-1][0-9][0-3][0-9][0-9][0-9]')
         if not time.match(textboxvalue):
@@ -48,6 +50,8 @@ class BTime():
                      "2019051012 for noon May 10th, 2019")
             printmsg(self.log, "Begin date/time not set. Please reenter and " +
                      "click 'Set'")
+            # Data not valid, so return False to indicate setting value failed
+            self.status = False
         else:
             # Parse entered date into year, month, day, hr and assign to
             # request metadata
@@ -62,6 +66,17 @@ class BTime():
             self.request.set_begin(day, hr)
             logging.info("year set to " + year + ", month set to " +
                          month + ", begin (ddhh) set to " + day + hr)
+
+            # Data is valid, so return True to indicate setting value succeeded
+            self.status = True
+
+    def getText(self):
+        """ Return the value currently in the Begin time field """
+        return(self.btime.text())
+
+    def getStatus(self):
+        """ Return whether setting begin time succeeded or failed """
+        return(self.status)
 
     def update(self, text):
         """
