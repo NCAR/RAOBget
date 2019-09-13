@@ -41,6 +41,18 @@ https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
 ### To run on a mac ###
 
  * pip3 install PyYAML
+Either:
+```
+ * install conda
+ * conda install -c conda-forge metpy
+```
+Or:
+```
+ * brew install geos
+ * brew install proj
+ * pip3 install cython
+ * pip3 install git+https://github.com/SciTools/cartopy.git@master  (see http://louistiao.me/posts/installing-cartopy-on-mac-osx-1011/)
+```
 
 ### Developer Notes ###
 
