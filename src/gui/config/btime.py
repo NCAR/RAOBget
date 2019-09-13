@@ -18,6 +18,7 @@ class BTime():
         self.btime = QLineEdit('yyyymmddhh')
         self.log = log
         self.request = request
+        self.status = None
 
     def create(self, box, row):
         """ Create the begin time input field """

@@ -41,6 +41,7 @@ https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
 ### To run on a mac ###
 
  * pip3 install PyYAML
+
 Either:
 ```
  * install conda
