@@ -114,6 +114,13 @@ class GUIconfig():
         """ Update the type displayed in the GUI to show the value in text """
         self.stnm.update(text)
 
+    def updateRSL(self, text):
+        """
+        Update the RSL file displayed on the 'Load RSL station list' button
+        """
+        rsl = self.loadRSL.get_button()
+        rsl.setText(text)
+
     def updateBtime(self, text):
         """ Update the type displayed in the GUI to show the value in text """
         self.btime.update(text)
@@ -123,3 +130,8 @@ class GUIconfig():
         self.etime.update(text)
         now = self.now.get_button()
         now.setText(self.now.get_default_label())
+
+    def updatenow(self, text):
+        """ Update the text of the 'Return most recent RAOB' button """
+        now = self.now.get_button()
+        now.setText(text)

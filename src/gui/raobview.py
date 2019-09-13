@@ -144,6 +144,14 @@ class RAOBview(QMainWindow):
                               self.raob.request.get_month() +
                               self.raob.request.get_end())
 
+        # update displayed RSL file
+        if self.raob.request.get_rsl() != '':
+            newconfig.updateRSL(self.raob.request.get_rsl())
+
+        # update displayed time if now
+        if self.raob.request.get_now() is True:
+            newconfig.updatenow("Time set to now")
+
     def saveConfig(self):
         """ Actions to take when the 'save config' menu item is selected """
 
