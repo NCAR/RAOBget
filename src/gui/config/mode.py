@@ -36,9 +36,11 @@ class Mode():
         """ Save the mode selected in the GUI to the metadata dictionary """
         if text == "MTP":
             self.request.set_mtp(True)
+            self.request.set_catalog(False)
             logging.info("Mode set to MTP")
         if text == "CATALOG":
             self.request.set_catalog(True)
+            self.request.set_mtp(False)
             logging.info("Mode set to Catalog")
 
     def update(self, text):
