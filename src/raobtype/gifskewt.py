@@ -194,7 +194,7 @@ class RAOBgifskewt():
                 app.processEvents()  # messages, etc are displayed
 
             # Download gif image
-            status = self.rwget.get_data(url, outfile)
+            gifstatus = self.rwget.get_data(url, outfile)
             if app is not None:      # Force the GUI to redraw so log
                 app.processEvents()  # messages, etc are displayed
 
@@ -206,13 +206,13 @@ class RAOBgifskewt():
             outfile = "upperair.SkewT.201905280000.Riverton_WY.gif"
 
         # If running in catalog mode, ftp files to catalog dir
-        if request.get_catalog() is True and status:
-            status = userlib.catalog.to_ftp(outfile, request, self.log)
-            printmsg(self.log, status)
+        if request.get_catalog() is True and gifstatus:
+            ftpstatus = userlib.catalog.to_ftp(outfile, request, self.log)
+            printmsg(self.log, ftpstatus)
             if app is not None:      # Force the GUI to redraw so log
                 app.processEvents()  # messages, etc are displayed
 
-        return(outfile)
+        return(gifstatus, outfile)
 
     def cleanup(self):
         """ Remove now-irrelevant html file """
