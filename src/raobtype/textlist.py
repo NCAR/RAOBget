@@ -91,4 +91,4 @@ class RAOBtextlist():
             if request.get_mtp() is True and status:
                 userlib.mtp.strip_html(request, outfile)
 
-        return(outfile)
+        return(status, outfile)

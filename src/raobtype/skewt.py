@@ -1,0 +1,102 @@
+###############################################################################
+# Use a pandas dataframe, matplotlib, and metpy to plot a skewt of the
+# downloaded TEXT:LIST formatted RAOB data.
+#
+# Written in Python 3
+#
+# COPYRIGHT:   University Corporation for Atmospheric Research, 2019
+###############################################################################
+import re
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import (
+    FigureCanvasQTAgg as FigureCanvas)
+
+from metpy.plots import SkewT
+from metpy.units import units
+
+
+class Skewt():
+
+    def create_skewt(self, datafile):
+
+        # Read in the title from the header.
+        title = pd.read_fwf(datafile, header=1, nrows=1).columns
+        # Remove the HTML
+        self.title = title[0].replace('<H2>', '')
+        self.title = self.title.replace('</H2>', '')
+
+        # Read in the column names from the header. For a description, see:
+        # http://weather.uwyo.edu/upperair/columns.html
+        col_names = pd.read_fwf(datafile, header=4, nrows=1).columns
+        col_names = col_names[0].split()
+
+        # Read the data from the data file into a pandas dataframe
+        # Only read in columns we need [P, T, Td], and skip header and footer
+        # lines (identified by having letters or 2 or more dashes)
+        header = re.compile(r'.*[A-Za-z-][A-Za-z-].*')
+
+        # lambda function is failing with TypeError: argument of type
+        # 'function' is not iterable so code workaround
+        # rdat = pd.read_fwf(datafile+".plot",
+        #                    skiprows=lambda x: x not in header.match(x),
+        #                    usecols=[0, 2, 3], names=col_names)
+        f = open(datafile, 'r')
+        data = f.readlines()
+        f.close()
+
+        f = open(datafile+".plot", 'w')
+        for line in data:
+            if not header.match(line):
+                f.write(line)
+        f.close()
+
+        rdat = pd.read_fwf(datafile+".plot", usecols=[0, 2, 3],
+                           names=col_names)
+
+        # Drop any rows with all NaN values for T, Td
+        rdat = rdat.dropna(subset=('TEMP', 'DWPT'),
+                           how='all').reset_index(drop=True)
+
+        # Extract pressure from data
+        P = rdat['PRES'].values * units.hPa
+
+        # Extract temperature from data
+        T = rdat['TEMP'].values * units.degC
+
+        # Extract dewpt from data
+        Td = rdat['DWPT'].values * units.degC
+
+        # Create a figure instance to hold the plot
+        fig = plt.figure(figsize=(9, 9))
+        plt.title(self.title)
+
+        # A canvas widget that displays the figure
+        self.canvas = FigureCanvas(fig)
+
+        skew = SkewT(fig, rotation=45)
+        # Change to read in min/max from data arrays??
+        skew.ax.set_ylim(1000, 100)
+        skew.ax.set_xlim(-20, 80)
+        skew.plot(P, T, 'r', linewidth=2)
+        skew.plot(P, Td, 'g', linewidth=2)
+
+        # Plot a zero degree isotherm
+        skew.ax.axvline(0, color='c', linestyle='--', linewidth=2)
+
+        # Add the relevant special lines
+        skew.plot_dry_adiabats()
+        skew.plot_moist_adiabats()
+        skew.plot_mixing_lines()
+
+        # Show the plot
+        return(self.canvas, plt)
+
+
+if __name__ == "__main__":
+
+    datafile = "../../test/data/726722019052812.ctrl.mtp"
+    skewt = Skewt()
+    skewt.create_skewt(datafile)
+    plt.show()
+    plt.close()
