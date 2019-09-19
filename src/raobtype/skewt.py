@@ -87,12 +87,9 @@ class Skewt():
         # Change to read in min/max from data arrays??
         skew.ax.set_ylim(1000, 100)
         skew.ax.set_xlim(-40, 80)
+        skew.ax.set_title(self.title)
         skew.plot(P, T, 'r', linewidth=2)
         skew.plot(P, Td, 'g', linewidth=2)
-
-        # Add a title - have to do this AFTER set x- and y-lims, else will
-        # get default axis AND your limits (ugly!)
-        plt.title(self.title)
 
         # Plot a zero degree isotherm
         skew.ax.axvline(0, color='c', linestyle='--', linewidth=2)
