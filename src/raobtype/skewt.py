@@ -44,22 +44,24 @@ class Skewt():
         # rdat = pd.read_fwf(datafile+".plot",
         #                    skiprows=lambda x: x not in header.match(x),
         #                    usecols=[0, 2, 3], names=col_names)
+
+        # Read in contents of data file
         f = open(datafile, 'r')
         data = f.readlines()
         f.close()
 
-        f = open(datafile+".plot", 'w')
+        # Create an empty data frame to hold data file
+        rdat = pd.DataFrame(columns=col_names)
+
+        # Loop through data and remove lines that match header, i.e. remove
+        # header/footer.
         for line in data:
             if not header.match(line):
-                f.write(line)
-        f.close()
-
-        rdat = pd.read_fwf(datafile+".plot", usecols=[0, 2, 3],
-                           names=col_names)
-
-        # Drop any rows with all NaN values for T, Td
-        rdat = rdat.dropna(subset=('TEMP', 'DWPT'),
-                           how='all').reset_index(drop=True)
+                # Skip lines with missing data
+                if (len(line.split())) == len(col_names):
+                    # Save good data lines to data frame
+                    rdat = rdat.append(pd.DataFrame.from_records([tuple( \
+                                       line.split())], columns=col_names))
 
         return(rdat)
 
@@ -81,7 +83,7 @@ class Skewt():
         skew = SkewT(self.fig, rotation=45)
         # Change to read in min/max from data arrays??
         skew.ax.set_ylim(1000, 100)
-        skew.ax.set_xlim(-20, 80)
+        skew.ax.set_xlim(-40, 80)
         skew.plot(P, T, 'r', linewidth=2)
         skew.plot(P, Td, 'g', linewidth=2)
 
