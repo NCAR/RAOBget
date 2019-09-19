@@ -79,3 +79,13 @@ e.g
 ```
 > flake8 .
 ```
+
+### References ###
+This code uses the SkewT plot function from metpy to display downloaded
+TEXT:LIST-formatted data for visual QC:
+
+May, R. M., Arms, S. C., Marsh, P., Bruning, E. and Leeman, J. R., 2017:
+    MetPy: A Python Package for Meteorological Data.
+    Unidata, Accessed 31 March 2017.
+    [Available online at https://github.com/Unidata/MetPy.]
+    doi:10.5065/D6WW7G29.

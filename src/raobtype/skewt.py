@@ -19,9 +19,11 @@ from metpy.units import units
 class Skewt():
 
     def __init__(self, app):
+        """ Import link to GUI """
         self.app = app
 
     def read_data(self, datafile):
+        """ Read in data from the downloaded TEXT:LIST-formatted RAOB """
 
         # Read in the title from the header.
         title = pd.read_fwf(datafile, header=1, nrows=1).columns
@@ -60,16 +62,17 @@ class Skewt():
                 # Skip lines with missing data
                 if (len(line.split())) == len(col_names):
                     # Save good data lines to data frame
-                    rdat = rdat.append(pd.DataFrame.from_records([tuple( \
+                    rdat = rdat.append(pd.DataFrame.from_records([tuple(
                                        line.split())], columns=col_names))
 
         return(rdat)
 
     def set_fig(self):
-        # Create a figure instance to hold the plot
+        """ Create a figure instance to hold the plot """
         self.fig = plt.figure(figsize=(9, 9))
 
     def create_skewt(self, rdat):
+        """ Create the SkewT plot inside the figure instance """
 
         # Extract pressure from data
         P = rdat['PRES'].values * units.hPa
@@ -100,21 +103,32 @@ class Skewt():
         skew.plot_mixing_lines()
 
     def set_canvas(self):
+        """ Link the canvas to the calling GUI (if extant) """
         # A canvas widget that displays the figure
         if self.app is not None:
             self.canvas = FigureCanvas(self.fig)
 
     def get_canvas(self):
+        """ Return link to GUI """
         return(self.canvas)
 
     def clear(self):
+        """ Clear a previous plot - ready to display new plot """
         self.fig.clear()
 
     def close(self):
+        """ Be sure to close plots to free memory """
         plt.close()
 
 
 if __name__ == "__main__":
+    """
+    This class can run indenpendently on a TEXT:LIST file and create
+    a free-standing plot window.
+
+    Requires:
+        input data file in UWyo TEXT:LIST format
+    """
 
     datafile = "../../test/data/726722019052812.ctrl.mtp"
     skewt = Skewt(None)
