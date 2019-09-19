@@ -9,13 +9,9 @@ import logging
 from PyQt5.QtWidgets import QLabel, QPushButton, QGridLayout, QWidget, \
      QFrame, QPlainTextEdit
 from PyQt5.QtGui import QPixmap
-# from PyQt5.QtCore import Qt
 from gui.configedit import GUIconfig
 from lib.messageHandler import printmsg
 from raobtype.skewt import Skewt
-
-# from PIL import Image
-# from resizeimage import resizeimage
 
 
 class Widget(QWidget):
@@ -27,6 +23,11 @@ class Widget(QWidget):
         self.initWidget(raob)
 
     def initWidget(self, raob):
+        """
+        Initialize the central widget with a configuration editor section, a
+        plot display section, and a status/log window
+        """
+
         # Make raob accessible throughout this file
         self.raob = raob
 
@@ -49,6 +50,7 @@ class Widget(QWidget):
         self.createRetrieveButton()
 
     def configGUI(self):
+        """ Return a pointer to the configuration editor """
         return(self.config)
 
     def get_log(self):
@@ -56,6 +58,7 @@ class Widget(QWidget):
         return(self.log)
 
     def createRetrieveButton(self):
+        """ Create button which when clicked starts RAOB retrieval """
         retrieve = QPushButton("Retrieve RAOBs")
         self.layout.addWidget(retrieve, 2, 0)
         retrieve.clicked.connect(self.clickRetrieve)
@@ -67,33 +70,34 @@ class Widget(QWidget):
         self.image = QLabel()
         self.layout.addWidget(self.image, 0, 1, 1, 2)
         pixmap = self.getImage()
-        # This was an attempt to resize from [800,640] to [600,480]. Image
-        # quality is unacceptably low. gif's don't resize well.
-        # pixmap_resized = pixmap.scaled(600, 480, Qt.KeepAspectRatio)
-        # image.setPixmap(pixmap_resized)
         self.image.setPixmap(pixmap)
         self.image.show()
 
     def getImage(self, gifimage='./gui/message.gif'):
-        """ Return the image associated with the latest downloaded RAOB data.
+        """
+        Return the image associated with the latest downloaded RAOB data.
         Defaults to usage message on initialization.
         """
         self.pixmap = \
             QPixmap(gifimage)
         return(self.pixmap)
 
+    def setImage(self, outfile):
+        """ Set the gif image to display """
+        self.image.setPixmap(QPixmap(outfile))
+
     def resetImageWindow(self):
-        # Am I creating a bunch of widgets on top of each other, or
-        # replacing the previous one??
+        """
+        Change the image window from hosting a QLabel widget, which can hold a
+        gif image, to a matplotlib FigureCanvas which can hold a metpy skewt
+        plot.
+        """
         self.layout.removeWidget(self.image)
         self.skewt = Skewt(self.app)
         self.skewt.set_fig()
         self.skewt.set_canvas()
         self.canvas = self.skewt.get_canvas()
         self.layout.addWidget(self.canvas, 0, 1, 1, 2)
-
-    def setImage(self, outfile):
-        self.image.setPixmap(QPixmap(outfile))
 
     def createLogMessageWindow(self):
         """ Add a log message window """
@@ -112,8 +116,13 @@ class Widget(QWidget):
         self.raob.get(self, self.app, self.log)
 
     def createSkewt(self, outfile):
-        """ Create a skewt image from a downloaded TEXT:LIST data file """
+        """
+        Create a skewt image from a downloaded TEXT:LIST data file and display
+        it.
+        """
+        # Clear previous plot
         self.skewt.clear()
+
         rdat = self.skewt.read_data(outfile)
         self.skewt.create_skewt(rdat)
         self.canvas = self.skewt.get_canvas()
