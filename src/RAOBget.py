@@ -44,7 +44,7 @@ def main():
     else:  # Run in command line mode. There is no QApplication, so pass None
 
         # Call method to retrieve raobs.
-        raob.get(args, None, None)
+        raob.get(None, None)
 
 
 if __name__ == "__main__":

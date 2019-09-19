@@ -65,7 +65,7 @@ class TestRAOBget(unittest.TestCase):
         url = textlist.get_url(request)
         self.assertEqual(url, ctrlurl)
 
-        outfile = textlist.retrieve(None, request)
+        status, outfile = textlist.retrieve(None, request)
 
         return(outfile)
 
@@ -76,7 +76,6 @@ class TestRAOBget(unittest.TestCase):
             os.system('rm 7267220190528122812.txt')
 
         outfile = self.get_data()
-        print("\n" + outfile)
 
         # Compare retrieved text file to control file
         ctrlfile = getrootdir() + "/test/data/7267220190528122812.ctrl"

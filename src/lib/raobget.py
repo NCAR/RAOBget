@@ -20,8 +20,6 @@ from lib.messageHandler import printmsg
 from lib.raobroot import getrootdir
 from lib.config import config
 
-from PyQt5.QtGui import QPixmap
-
 
 class RAOBget():
 
@@ -124,7 +122,7 @@ class RAOBget():
             configfile = config()
             configfile.read(self.request)
 
-    def get(self, args, app, image, log=""):
+    def get(self, widget, app, log=""):
         """ Method to retrieve RAOBS
 
         Parameters:
@@ -137,7 +135,8 @@ class RAOBget():
 
         """
         self.log = log  # pointer to GUI log, if running in GUI mode
-        self.image = image
+        self.widget = widget
+        args = self.get_args()
 
         # If args are all empty, warn user.
         empty = True
@@ -218,6 +217,10 @@ class RAOBget():
                      'MTP mode. Check configuration.')
             return()
 
+        # If TEXT:LIST, change the image to a canvas
+        if (app is not None) and (self.request.get_type() == 'TEXT:LIST'):
+            self.widget.resetImageWindow()
+
         # Did user request a single station via --stnm, or a list of stations
         # via an RSL file
         if (self.request.get_rsl() == ''):
@@ -241,8 +244,6 @@ class RAOBget():
                                  " list. Skipping and continuing...")
                         continue
                     self.retrieve(app)
-                    if app is not None:      # Force the GUI to redraw so log
-                        app.processEvents()  # messages, etc are displayed
                     if len(stnlist) > 30:
                         count = count+1
                         if count % 10 == 0:
@@ -259,13 +260,21 @@ class RAOBget():
 
         if (self.request.get_type() == 'TEXT:LIST'):
             textlist = RAOBtextlist(self.log)
-            textlist.retrieve(app, self.request, self.log)
+            (status, outfile) = textlist.retrieve(app, self.request, self.log)
+            # If in GUI mode and successfully downloaded a text file, create a
+            # skewT and display it in the GUI
+            if status and (app is not None):
+                self.widget.createSkewt(outfile)
+                app.processEvents()
         elif (self.request.get_type() == 'GIF:SKEWT'):
             gifskewt = RAOBgifskewt(self.log)
-            outfile = gifskewt.retrieve(app, self.request, self.log)
+            (status, outfile) = gifskewt.retrieve(app, self.request, self.log)
             gifskewt.cleanup()
-            if app is not None:
-                self.image.setPixmap(QPixmap(outfile))
+            # If in GUI mode and successfully downloaded a gif image, display
+            # it in the GUI
+            if status and (app is not None):
+                self.widget.setImage(outfile)
+                app.processEvents()
         else:
             printmsg(self.log, 'RAOB type ' + self.request.get_type() +
                      ' not implemented yet')

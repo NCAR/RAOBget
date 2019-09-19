@@ -17,7 +17,7 @@ class RAOBview(QMainWindow):
     def __init__(self, raob, app):
         """ Set the initial GUI window size here """
 
-        self.raob = raob
+        self.raob = raob  # RAOBget instance
 
         # The QMainWindow class provides a main application window
         QMainWindow.__init__(self)

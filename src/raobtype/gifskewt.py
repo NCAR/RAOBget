@@ -199,6 +199,7 @@ class RAOBgifskewt():
                 app.processEvents()  # messages, etc are displayed
 
         else:
+            gifstatus = None
             if request.get_test() is True:
                 os.system('cp ' + getrootdir() + '/test/data/' +
                           'upperair.SkewT.201905280000.Riverton_WY.gif.ctrl' +

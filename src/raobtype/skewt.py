@@ -10,7 +10,7 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import (
-    FigureCanvasQTAgg as FigureCanvas)
+        FigureCanvasQTAgg as FigureCanvas)
 
 from metpy.plots import SkewT
 from metpy.units import units
@@ -18,7 +18,10 @@ from metpy.units import units
 
 class Skewt():
 
-    def create_skewt(self, datafile):
+    def __init__(self, app):
+        self.app = app
+
+    def read_data(self, datafile):
 
         # Read in the title from the header.
         title = pd.read_fwf(datafile, header=1, nrows=1).columns
@@ -58,6 +61,14 @@ class Skewt():
         rdat = rdat.dropna(subset=('TEMP', 'DWPT'),
                            how='all').reset_index(drop=True)
 
+        return(rdat)
+
+    def set_fig(self):
+        # Create a figure instance to hold the plot
+        self.fig = plt.figure(figsize=(9, 9))
+
+    def create_skewt(self, rdat):
+
         # Extract pressure from data
         P = rdat['PRES'].values * units.hPa
 
@@ -67,19 +78,16 @@ class Skewt():
         # Extract dewpt from data
         Td = rdat['DWPT'].values * units.degC
 
-        # Create a figure instance to hold the plot
-        fig = plt.figure(figsize=(9, 9))
-        plt.title(self.title)
-
-        # A canvas widget that displays the figure
-        self.canvas = FigureCanvas(fig)
-
-        skew = SkewT(fig, rotation=45)
+        skew = SkewT(self.fig, rotation=45)
         # Change to read in min/max from data arrays??
         skew.ax.set_ylim(1000, 100)
         skew.ax.set_xlim(-20, 80)
         skew.plot(P, T, 'r', linewidth=2)
         skew.plot(P, Td, 'g', linewidth=2)
+
+        # Add a title - have to do this AFTER set x- and y-lims, else will
+        # get default axis AND your limits (ugly!)
+        plt.title(self.title)
 
         # Plot a zero degree isotherm
         skew.ax.axvline(0, color='c', linestyle='--', linewidth=2)
@@ -89,14 +97,29 @@ class Skewt():
         skew.plot_moist_adiabats()
         skew.plot_mixing_lines()
 
-        # Show the plot
-        return(self.canvas, plt)
+    def set_canvas(self):
+        # A canvas widget that displays the figure
+        if self.app is not None:
+            self.canvas = FigureCanvas(self.fig)
+
+    def get_canvas(self):
+        return(self.canvas)
+
+    def clear(self):
+        self.fig.clear()
+
+    def close(self):
+        plt.close()
 
 
 if __name__ == "__main__":
 
     datafile = "../../test/data/726722019052812.ctrl.mtp"
-    skewt = Skewt()
-    skewt.create_skewt(datafile)
+    skewt = Skewt(None)
+    rdat = skewt.read_data(datafile)
+    skewt.set_fig()
+    skewt.set_canvas()
+    skewt.create_skewt(rdat)
     plt.show()
-    plt.close()
+    skewt.close()
+    skewt.clear()
