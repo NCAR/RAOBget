@@ -9,6 +9,7 @@
 import os
 from ftplib import FTP
 from lib.config import config
+from lib.raobroot import getrootdir
 
 
 def to_ftp(outfile, request, log=""):
@@ -20,11 +21,11 @@ def to_ftp(outfile, request, log=""):
     # given on the command line. If there is no config file, then can't ftp/cp.
     # Let user know and return.
     configfile = config(log)
-    if os.path.exists(request.get_config()):
+    if os.path.exists(getrootdir() + "/" + request.get_config()):
         configfile.read(request)
     else:
         return("WARNING: No config file defined so ftp status not set." +
-               "Downloaded files are in working dir.")
+               " Downloaded files are in working dir.")
 
     # Have a config file. Get ftp status, or warn user not set
     ftp_status = configfile.get_ftp_status()
@@ -56,8 +57,8 @@ def to_ftp(outfile, request, log=""):
             return("Could not copy files")
 
         # Move downloaded image to dest file in ftp_dir
-        os.system("cp " + outfile + " " + cp_dir + "/" + outfile)
-        return("copied " + outfile + " to " + cp_dir)
+        os.system("mv " + outfile + " " + cp_dir + "/" + outfile)
+        return("moved " + outfile + " to " + cp_dir)
 
     else:  # ftp_status is None
         return("No FTP status set - files not moved or ftp'd")
