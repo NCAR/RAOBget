@@ -144,7 +144,7 @@ class RAOBget():
         empty = True
         request = self.request.get_request()
         for key in request.keys():
-            if key != 'station_list_file':
+            if key != 'station_list_file' and key != 'mtpdir':
                 if str(request[key]).lower() == 'true':
                     empty = False
                 elif str(request[key]).lower() != 'false' and \
