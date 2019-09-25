@@ -1,7 +1,6 @@
 # RAOBget
 
-This repository contains scripts to download RAOBS from the University of
-Wyoming Radiosonde Archive by building URLs like:
+This repository contains scripts to download RAOBS from the [University of Wyoming Radiosonde Archive](http://weather.uwyo.edu/upperair/sounding.html) by building URLs like:
 
  * for accessing TEXT:LIST data:
 ```
