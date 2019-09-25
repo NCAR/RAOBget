@@ -2,7 +2,7 @@ begin: ''
 catalog: false
 config: ../config/mtp.yml
 cp_dir: ''
-mtp_dir: ../mtp
+mtpdir: ../mtp
 end: ''
 freq: '12'
 ftp: false
