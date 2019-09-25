@@ -42,9 +42,12 @@ https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
 ### Dependencies ###
 
 ```
- * install PyYAML (pip3 install PyYAML on MAC)
- * install conda
- * conda install -c conda-forge metpy
+ * python3
+ * pyqt5
+ * PyYAML
+ * metpy (which drags in cartopy, hopefully)
+    * install conda
+    * conda install -c conda-forge metpy
 ```
 
 ### Developer Notes ###
