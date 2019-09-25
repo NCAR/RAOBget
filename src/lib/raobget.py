@@ -17,7 +17,6 @@ from raobtype.gifskewt import RAOBgifskewt
 from lib.raobdata import RAOBdata
 from lib.rsl import RSL
 from lib.messageHandler import printmsg
-from lib.raobroot import getrootdir
 from lib.config import config
 
 
@@ -91,6 +90,9 @@ class RAOBget():
                             ' and rename file to match MTP requirements. In ' +
                             'mtp mode begin and end times must be the same. ' +
                             '[False]')
+        parser.add_argument('--mtpdir', type=str, default='../mtp',
+                            help='Directory to write downloaded mtp data ' +
+                            '[../mtp]')
         parser.add_argument('--catalog', action="store_true",
                             help='Download gif images for catalog use. ' +
                             'Rename to match catalog filename requirements.' +
@@ -228,7 +230,7 @@ class RAOBget():
             # Retrieve requested data/imagery for a single stn
             self.retrieve(app)
         else:
-            rslfile = getrootdir() + "/" + self.request.get_rsl()
+            rslfile = os.getcwd() + "/" + self.request.get_rsl()
             if self.test_rsl(rslfile):
                 rsl = RSL()
                 stnlist = rsl.read_rsl(rslfile)

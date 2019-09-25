@@ -10,14 +10,14 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
-from lib.raobroot import getrootdir
 
 
 def set_outfile(request):
     # The MTP VB6 code requires that only the begin date be given in the RAOB
     # filename.
-    return(getrootdir() + '/mtp/' + request.get_stnm() + request.get_year() +
-           request.get_month() + request.get_begin() + ".txt")
+    return(os.getcwd() + '/' + request.get_mtp_dir() + '/' + request.get_stnm()
+           + request.get_year() + request.get_month() + request.get_begin() +
+           ".txt")
 
 
 def strip_html(request, outfile):

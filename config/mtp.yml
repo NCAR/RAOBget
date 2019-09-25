@@ -1,7 +1,8 @@
 begin: ''
 catalog: false
-config: config/mtp.yml
+config: ../config/mtp.yml
 cp_dir: ''
+mtp_dir: ../mtp
 end: ''
 freq: '12'
 ftp: false
@@ -12,7 +13,7 @@ mtp: true
 now: true
 raobtype: TEXT:LIST
 region: ''
-rsl: config/sample.RSL
+rsl: ../config/sample.RSL
 station_list_file: config/snstns.tbl
 stnm: ''
 test: false

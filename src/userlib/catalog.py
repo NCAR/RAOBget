@@ -9,7 +9,6 @@
 import os
 from ftplib import FTP
 from lib.config import config
-from lib.raobroot import getrootdir
 
 
 def to_ftp(outfile, request, log=""):
@@ -21,7 +20,7 @@ def to_ftp(outfile, request, log=""):
     # given on the command line. If there is no config file, then can't ftp/cp.
     # Let user know and return.
     configfile = config(log)
-    if os.path.exists(getrootdir() + "/" + request.get_config()):
+    if os.path.exists(os.getcwd() + "/" + request.get_config()):
         configfile.read(request)
     else:
         return("WARNING: No config file defined so ftp status not set." +

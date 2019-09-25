@@ -30,7 +30,6 @@ import logging
 import os
 import yaml
 from lib.messageHandler import printmsg
-from lib.raobroot import getrootdir
 
 
 class config():
@@ -42,7 +41,7 @@ class config():
     def write(self, request):
         """ Write the request metadata to a YAML config file"""
 
-        yamlfile = getrootdir() + "/" + request.get_config()
+        yamlfile = os.getcwd() + "/" + request.get_config()
 
         if (request.get_config() == ""):
             printmsg(self.log, "ERROR: File to save config to not defined. " +
@@ -57,7 +56,7 @@ class config():
     def read(self, request):
         """ Read the contents of the YAML file into self.projConfig"""
 
-        yamlfile = getrootdir() + "/" + request.get_config()
+        yamlfile = os.getcwd() + "/" + request.get_config()
 
         # If the yamlfile is not defined, return False so code will use default
         # request (e.g, cancelled out so didn't append a file)

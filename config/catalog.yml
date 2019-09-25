@@ -1,6 +1,6 @@
 begin: '1112'
 catalog: true
-config: config/catalog.yml
+config: ../config/catalog.yml
 cp_dir: ../catalog
 end: '1112'
 freq: '12'
@@ -12,7 +12,7 @@ mtp: ''
 now: false
 raobtype: GIF:SKEWT
 region: ''
-rsl: 'config/sample.RSL'
+rsl: ../config/sample.RSL
 station_list_file: config/snstns.tbl
 stnm: ''
 test: ''

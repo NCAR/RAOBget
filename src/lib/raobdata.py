@@ -33,6 +33,7 @@ class RAOBdata():
             'config': "",    # Name of config file
             'test': False,   # Run in test/dev mode
             'mtp': False,    # MTP-specific processing
+            'mtpdir': "",    # Dir to write RAOBs for MTP use
             'catalog': False,  # catalog-specific processing
             'now': False,    # Set requested date/time to current time,
                              # i.e. retrieve current RAOB.
@@ -106,6 +107,12 @@ class RAOBdata():
     def get_mtp(self):
         return(self.request['mtp'])
 
+    def set_mtp_dir(self, mtpdir):
+        self.request['mtpdir'] = mtpdir
+
+    def get_mtp_dir(self):
+        return(self.request['mtpdir'])
+
     def set_catalog(self, catalog):
         self.request['catalog'] = catalog
 
@@ -175,6 +182,7 @@ class RAOBdata():
         self.set_freq(args.freq)
         self.set_test(args.test)
         self.set_mtp(args.mtp)
+        self.set_mtp_dir(args.mtpdir)
         self.set_catalog(args.catalog)
         if args.catalog is True and args.config == '':
             print("ERROR: --config option required if --catalog is set")
