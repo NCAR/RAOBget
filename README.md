@@ -81,3 +81,9 @@ May, R. M., Arms, S. C., Marsh, P., Bruning, E. and Leeman, J. R., 2017:
     Unidata, Accessed 31 March 2017.
     [Available online at https://github.com/Unidata/MetPy.]
     doi:10.5065/D6WW7G29.
+    
+### Other resources ###
+If this tool doesn't provide what you need, here are a list of other potential resources:
+
+* The Unidata Siphon Python utility collection can be used to write a simple Python script to download Wyoming Upper Air data into a PANDAS data frame.
+https://unidata.github.io/siphon/latest/examples/upperair/Wyoming_Request.html#sphx-glr-examples-upperair-wyoming-request-py
