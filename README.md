@@ -11,11 +11,16 @@ http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST&YEAR=201
 http://weather.uwyo.edu/upperair/images/2019052812.72672.skewt.parc.gif
 ```
 
-To run the code, use the command:
-```
-> cd src
-> python3 RAOBget.py <-h>
-```
+### Usage ###
+To run on windows 10:
+'''
+- open an xterm
+> conda activate (to get the base environment where libraries have been installed)
+> python RAOBget.py <-h> ...
+
+To run on a mac:
+- open an xterm
+> python3 RAOBget.py <-h> ...
 
 **NCAR/EOL users: To run on barolo, you need to use
 /opt/local/anaconda3/bin/python3.7 as this is the only place PyQt5 and other
@@ -35,6 +40,9 @@ For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata:
 ```
 python3 RAOBget.py --gui
 ```
+then save your config and for future runs:
+```
+python3 RAOBget.py --config <configfile>
 
 If you need help reading skewT plots, a good reference is the COMET MetEd module:
 https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
@@ -46,8 +54,38 @@ https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
  * pyqt5
  * PyYAML
  * metpy (which drags in cartopy, hopefully)
-    * install conda
-    * conda install -c conda-forge metpy
+```
+
+### Installation ###
+
+To install on Windows, use miniconda to install all needed packages:
+ * https://docs.conda.io/en/latest/miniconda.html
+   * download win 64 bit installer for python3.7 and install
+ * (Optional) Add Miniconda3 and Miniconda3\condabin to your path
+   * Windows search -> type "env" -> click "Edit the system environment variables"
+   * In lower "System variables" window, click the "Path" row and click edit
+   * Click "New" and add the new paths, e.g.
+     * C:\Users\lroot\Miniconda3
+     * C:\Users\lroot\Miniconda3\condabin
+ * Activate a conda environment (I used the default base environment) - see - https://conda.io/activation 
+```
+   > conda activate
+```
+ * Update conda if warned following instructions
+ * Install packages
+```
+   > conda install -c conda-forge metpy
+     - Drags in pyqt5 and cartopy
+   > conda install -c conda-forge pyyaml
+```
+    * If the packages are not available via the conda-forge channel, you can search for alternative channels at https://anaconda.org
+
+Then install Git (if not already there) and download RAOBget:
+ * Git-scm.com -> Download latest per automatic OS detection. Run .exe file to install. I used default settings as suggested by installer, except that I asked to install a desktop icon for “Git Bash”
+ * Launch “Git Bash”
+ * At the prompt 
+```
+    git clone http://github.com/NCAR/RAOBget
 ```
 
 ### Developer Notes ###
