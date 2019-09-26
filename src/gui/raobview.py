@@ -24,9 +24,9 @@ class RAOBview(QMainWindow):
 
         # Set the initial size of the window created. It is user resizeable
         self.left = 500     # Pixel distance from left of screen to open window
-        self.top = 100      # Pixel distance from top of screen to open window
-        self.width = 800    # Pixel width of window
-        self.height = 1000  # Pixel height of window
+        self.top = 10       # Pixel distance from top of screen to open window
+        self.width = 1200   # Pixel width of window
+        self.height = 800   # Pixel height of window
 
         # Create the GUI
         self.initUI(app)
