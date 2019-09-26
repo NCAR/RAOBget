@@ -13,14 +13,19 @@ http://weather.uwyo.edu/upperair/images/2019052812.72672.skewt.parc.gif
 
 ### Usage ###
 To run on windows 10:
-'''
+
+```
 - open an xterm
 > conda activate (to get the base environment where libraries have been installed)
 > python RAOBget.py <-h> ...
+```
 
 To run on a mac:
+
+```
 - open an xterm
 > python3 RAOBget.py <-h> ...
+```
 
 **NCAR/EOL users: To run on barolo, you need to use
 /opt/local/anaconda3/bin/python3.7 as this is the only place PyQt5 and other
@@ -30,6 +35,7 @@ will look for the PyQt5 library and fail.**
 The -h option lists and identifies the parameters you can pass to the code, like requested station id and dates. So for example, **python3 RAOBget.py --raobtype TEXT:LIST --now --stnm DNR** will download the latest 12-hour sounding from Denver/Stapleton.
 
 For use with the NCAR/EOL field catalog, use the command:
+
 ```
 > cd src
 > python3 RAOBget.py --config config/catalog.yml [--stnm <station number> or --rsl <station_list_file>] [--freq <[3,6,12]>]
@@ -43,7 +49,7 @@ python3 RAOBget.py --gui
 then save your config and for future runs:
 ```
 python3 RAOBget.py --config <configfile>
-
+```
 If you need help reading skewT plots, a good reference is the COMET MetEd module:
 https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
 
@@ -78,7 +84,7 @@ To install on Windows, use miniconda to install all needed packages:
      - Drags in pyqt5 and cartopy
    > conda install -c conda-forge pyyaml
 ```
-    * If the packages are not available via the conda-forge channel, you can search for alternative channels at https://anaconda.org
+If the packages are not available via the conda-forge channel, you can search for alternative channels at https://anaconda.org
 
 Then install Git (if not already there) and download RAOBget:
  * Git-scm.com -> Download latest per automatic OS detection. Run .exe file to install. I used default settings as suggested by installer, except that I asked to install a desktop icon for “Git Bash”
