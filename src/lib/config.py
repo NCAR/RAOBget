@@ -57,6 +57,7 @@ class config():
         """ Read the contents of the YAML file into self.projConfig"""
 
         yamlfile = os.getcwd() + "/" + request.get_config()
+        printmsg(self.log, "Reading configuration from " + yamlfile)
 
         # If the yamlfile is not defined, return False so code will use default
         # request (e.g, cancelled out so didn't append a file)

@@ -6,9 +6,9 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
+import os
 
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from lib.raobroot import getrootdir
 
 
 class FileSelector(QMainWindow):
@@ -18,7 +18,7 @@ class FileSelector(QMainWindow):
         # The QMainWindow class provides a main application window
         super().__init__()
 
-        rootdir = getrootdir() + "/config"
+        rootdir = os.getcwd()
 
         # Set the file type filter
         config = re.compile("^.*Config")
@@ -52,13 +52,14 @@ class FileSelector(QMainWindow):
         # string containing the filter used. Ignore the filter return.
         # If user selects cancel, returns None.
         filename, _ = QFileDialog.getSaveFileName(self, "Select a file",
-                                                  rootdir, filefilter,
+                                                  rootdir + "/config",
+                                                  filefilter,
                                                   options=options)
 
         # QFileDialog returns the complete path to the file. We want to only
         # save the relative path in the request, starting with config so
-        # remove the value of getrootdir() from the filename
-        return(filename.replace(getrootdir() + "/", ''))
+        # remove the value of rootdir from the filename
+        return(filename.replace(rootdir + "/", ''))
 
     def initDialog(self, rootdir, filefilter):
         """ Instantiate the file dialog """
@@ -73,13 +74,14 @@ class FileSelector(QMainWindow):
         # string containing the filter used. Ignore the filter return.
         # If user selects cancel, returns None.
         filename, _ = QFileDialog.getOpenFileName(self, "Select a file",
-                                                  rootdir, filefilter,
+                                                  rootdir + "/config",
+                                                  filefilter,
                                                   options=options)
 
         # QFileDialog returns the complete path to the file. We want to only
         # save the relative path in the request, starting with config so
-        # remove the value of getrootdir() from the filename
-        return(filename.replace(getrootdir() + "/", ''))
+        # remove the value of rootdir from the filename
+        return(filename.replace(rootdir + "/", ''))
 
     def get_file(self):
         return(self.filename)
