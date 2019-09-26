@@ -80,4 +80,4 @@ def strip_html(request, outfile):
     temp.close()
 
     # move temp back to outfile
-    os.rename(outfile + '.temp', outfile)
+    os.replace(outfile + '.temp', outfile)
