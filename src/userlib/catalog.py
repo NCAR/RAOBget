@@ -56,8 +56,8 @@ def to_ftp(outfile, request, log=""):
             return("Could not copy files")
 
         # Move downloaded image to dest file in ftp_dir
-        os.system("mv " + outfile + " " + cp_dir + "/" + outfile)
-        return("moved " + outfile + " to " + cp_dir)
+        os.system("cp " + outfile + " " + cp_dir + "/" + outfile)
+        return("copied " + outfile + " to " + cp_dir)
 
     else:  # ftp_status is None
-        return("No FTP status set - files not moved or ftp'd")
+        return("No FTP status set - files not copied or ftp'd")
