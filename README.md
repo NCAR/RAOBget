@@ -11,7 +11,7 @@ http://weather.uwyo.edu/cgi-bin/sounding?region=naconf&TYPE=TEXT%3ALIST&YEAR=201
 http://weather.uwyo.edu/upperair/images/2019052812.72672.skewt.parc.gif
 ```
 
-### Usage ###
+## Usage ##
 To run on windows 10:
 
 ```
@@ -53,7 +53,7 @@ python3 RAOBget.py --config <configfile>
 If you need help reading skewT plots, a good reference is the COMET MetEd module:
 https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
 
-### Dependencies ###
+## Dependencies ##
 
 ```
  * python3
@@ -62,9 +62,19 @@ https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
  * metpy (which drags in cartopy, hopefully)
 ```
 
-### Installation ###
+## Installation ##
 
-To install on Windows, use miniconda to install all needed packages:
+### To install on a MAC ###
+```
+> brew upgrade python (to 3.7.x)
+unset PYTHONPATH
+> python3 -m pip install PyQt5
+> pip3 install pyyaml
+> pip3 install metpy
+```
+
+### To install on Windows ###
+Use miniconda to install all needed packages:
  * https://docs.conda.io/en/latest/miniconda.html
    * download win 64 bit installer for python3.7 and install
  * (Optional) Add Miniconda3 and Miniconda3\condabin to your path
@@ -94,7 +104,7 @@ Then install Git (if not already there) and download RAOBget:
     git clone http://github.com/NCAR/RAOBget
 ```
 
-### Developer Notes ###
+## Developer Notes ##
 
 For complete documentation on each class/method, useful if you need to modify the code, use pydoc to extract embedded documentation from each file:
 ```
@@ -119,7 +129,7 @@ e.g
 > flake8 .
 ```
 
-### References ###
+## References ##
 This code uses the SkewT plot function from metpy to display downloaded
 TEXT:LIST-formatted data for visual QC:
 
@@ -129,7 +139,7 @@ May, R. M., Arms, S. C., Marsh, P., Bruning, E. and Leeman, J. R., 2017:
     [Available online at https://github.com/Unidata/MetPy.]
     doi:10.5065/D6WW7G29.
     
-### Other resources ###
+## Other resources ##
 If this tool doesn't provide what you need, here are a list of other potential resources:
 
 * The Unidata Siphon Python utility collection can be used to write a simple Python script to download Wyoming Upper Air data into a PANDAS data frame.
