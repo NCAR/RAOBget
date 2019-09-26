@@ -6,7 +6,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
-import os
+import shutil
 
 import userlib.mtp
 from lib.rwget import RAOBwget
@@ -74,10 +74,11 @@ class RAOBtextlist():
         # If in test mode, copy file from data dir to simulate download...
         if request.get_test() is True:
             if request.get_mtp() is True:
-                os.system('cp data/726722019052812.ctrl 726722019052812.txt')
+                shutil.copyfile('data/726722019052812.ctrl',
+                                '726722019052812.txt')
             else:
-                os.system('cp data/7267220190528122812.ctrl ' +
-                          '7267220190528122812.txt')
+                shutil.copyfile('data/7267220190528122812.ctrl',
+                                '7267220190528122812.txt')
 
         # ...else download data
         else:

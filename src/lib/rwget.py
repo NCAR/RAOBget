@@ -109,7 +109,7 @@ class RAOBwget:
                         printmsg(self.log, 'ERROR: Website says "' +
                                  line.rstrip() + '"')
                         if os.path.isfile(outfile):
-                            os.system('rm ' + outfile)
+                            os.remove(outfile)
                         out.close()
                         return(False)
                     elif 'Sorry, unable to generate' in line:
@@ -117,7 +117,7 @@ class RAOBwget:
                                  " contains error message - gif was got " +
                                  "generated")
                         if os.path.isfile(outfile):
-                            os.system('rm ' + outfile)
+                            os.remove(outfile)
                         out.close()
                         return(False)
                     else:

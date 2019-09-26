@@ -8,6 +8,7 @@
 ###############################################################################
 import os
 import re
+import shutil
 
 import userlib.catalog
 from lib.rwget import RAOBwget
@@ -171,9 +172,9 @@ class RAOBgifskewt():
 
         # If in test mode, copy file from data dir to simulate download...
         if request.get_test() is True:
-            os.system('cp ' + getrootdir() +
-                      '/test/data/7267220190528122812.html.ctrl' +
-                      ' 7267220190528122812.html')
+            shutil.copyfile(getrootdir() +
+                            '/test/data/7267220190528122812.html.ctrl',
+                            '7267220190528122812.html')
             status = False
 
         # ...else download data
@@ -201,9 +202,10 @@ class RAOBgifskewt():
         else:
             gifstatus = None
             if request.get_test() is True:
-                os.system('cp ' + getrootdir() + '/test/data/' +
-                          'upperair.SkewT.201905280000.Riverton_WY.gif.ctrl' +
-                          ' upperair.SkewT.201905280000.Riverton_WY.gif')
+                shutil.copyfile(getrootdir() + '/test/data/' +
+                                'upperair.SkewT.201905280000.Riverton_WY.gif' +
+                                '.ctrl',
+                                'upperair.SkewT.201905280000.Riverton_WY.gif')
             outfile = "upperair.SkewT.201905280000.Riverton_WY.gif"
 
         # If running in catalog mode, ftp files to catalog dir
@@ -218,5 +220,5 @@ class RAOBgifskewt():
     def cleanup(self):
         """ Remove now-irrelevant html file """
         if os.path.isfile(self.get_outfile_html()):
-            os.system('rm ' + self.get_outfile_html())
+            os.remove(self.get_outfile_html())
             printmsg(self.log, 'Removed ' + self.get_outfile_html())

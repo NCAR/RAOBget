@@ -74,7 +74,7 @@ class TestRAOBget(unittest.TestCase):
 
         # Remove files if we downloaded them before
         if os.path.isfile("7267220190528122812.txt"):
-            os.system('rm 7267220190528122812.txt')
+            os.remove('7267220190528122812.txt')
 
         outfile = self.get_data()
 
@@ -115,10 +115,10 @@ class TestRAOBget(unittest.TestCase):
 
         # Remove files if we downloaded them before
         if os.path.isfile("7267220190528122812.html"):
-            os.system('rm 7267220190528122812.html')
+            os.remove('7267220190528122812.html')
 
         if os.path.isfile("upperair.SkewT2019052812.RIW_Riverton.gif"):
-            os.system('rm upperair.SkewT2019052812.RIW_Riverton.gif')
+            os.remove('upperair.SkewT2019052812.RIW_Riverton.gif')
 
         outfile = self.get_skewt()
 
@@ -138,7 +138,7 @@ class TestRAOBget(unittest.TestCase):
 
         # Remove files if we downloaded them before
         if os.path.isfile("726722019052812.txt"):
-            os.system('rm 726722019052812.txt')
+            os.remove('726722019052812.txt')
 
         self.option.mtp = True
         self.raob.request.set_prov(self.option)
@@ -195,11 +195,11 @@ class TestRAOBget(unittest.TestCase):
 
         # Remove downloaded file since it's just for testing
         if os.path.isfile("7267220190528122812.txt"):
-            os.system('rm 7267220190528122812.txt')
+            os.remove('7267220190528122812.txt')
         if os.path.isfile("726722019052812.txt"):
-            os.system('rm 726722019052812.txt')
+            os.remove('726722019052812.txt')
         if os.path.isfile("mtp/726722019052812.txt"):
-            os.system('rm mtp/726722019052812.txt')
+            os.remove('mtp/726722019052812.txt')
 
 
 if __name__ == "__main__":

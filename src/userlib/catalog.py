@@ -7,6 +7,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+import shutil
 from ftplib import FTP
 from lib.config import config
 
@@ -56,7 +57,7 @@ def to_ftp(outfile, request, log=""):
             return("Could not copy files")
 
         # Move downloaded image to dest file in ftp_dir
-        os.system("cp " + outfile + " " + cp_dir + "/" + outfile)
+        shutil.copyfile(outfile, cp_dir + "/" + outfile)
         return("copied " + outfile + " to " + cp_dir)
 
     else:  # ftp_status is None
