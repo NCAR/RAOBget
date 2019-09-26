@@ -12,6 +12,7 @@ from PyQt5.QtGui import QPixmap
 from gui.configedit import GUIconfig
 from lib.messageHandler import printmsg
 from raobtype.skewt import Skewt
+from lib.raobroot import getrootdir
 
 
 class Widget(QWidget):
@@ -73,11 +74,12 @@ class Widget(QWidget):
         self.image.setPixmap(pixmap)
         self.image.show()
 
-    def getImage(self, gifimage='./gui/message.gif'):
+    def getImage(self, gifimage=getrootdir() + '/src/gui/message.gif'):
         """
         Return the image associated with the latest downloaded RAOB data.
         Defaults to usage message on initialization.
         """
+        print(gifimage)
         self.pixmap = \
             QPixmap(gifimage)
         return(self.pixmap)
