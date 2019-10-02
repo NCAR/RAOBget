@@ -20,7 +20,7 @@ To run on windows 10:
 > python RAOBget.py <-h> ...
 ```
 
-or copy windows10/RAOBget.bat to the desktop and just click on it
+or create a shortcut to windows10/RAOBget.bat and move it to the desktop and just click on it
 
 To run on a mac:
 
