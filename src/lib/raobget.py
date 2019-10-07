@@ -90,7 +90,7 @@ class RAOBget():
                             ' and rename file to match MTP requirements. In ' +
                             'mtp mode begin and end times must be the same. ' +
                             '[False]')
-        parser.add_argument('--mtpdir', type=str, default='../mtp',
+        parser.add_argument('--mtpdir', type=str, default='./mtp',
                             help='Directory to write downloaded mtp data ' +
                             '[../mtp]')
         parser.add_argument('--catalog', action="store_true",
