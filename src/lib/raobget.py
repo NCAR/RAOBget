@@ -183,7 +183,9 @@ class RAOBget():
                     self.request.set_end(day, '{:02d}'.format(hr))
                     # printmsg(log, "Day 1:",self.request.get_begin() + ' - ' +
                     #          self.request.get_end())
-                    self.stn_loop(app)
+                    status = self.stn_loop(app)
+                    if not status:
+                        return
                 # Get RAOBs for second to second-to-last day
                 for day in range(int(args.bday) + 1, int(args.eday)):
                     for hr in range(0, 24, int(self.request.get_freq())):
@@ -245,7 +247,9 @@ class RAOBget():
                                  + stn + " not valid. Update RSL station" +
                                  " list. Skipping and continuing...")
                         continue
-                    self.retrieve(app)
+                    status = self.retrieve(app)
+                    if not status:
+                        return(status)
                     if len(stnlist) > 30:
                         count = count+1
                         if count % 10 == 0:
@@ -280,3 +284,4 @@ class RAOBget():
         else:
             printmsg(self.log, 'RAOB type ' + self.request.get_type() +
                      ' not implemented yet')
+        return(status)

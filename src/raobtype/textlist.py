@@ -40,7 +40,7 @@ class RAOBtextlist():
             request: a RAOBrequest dictionary of request metadata
         """
         if request.get_mtp() is True:
-            self.outfile = userlib.mtp.set_outfile(request)
+            self.outfile = userlib.mtp.set_outfile(request, self.log)
         else:
             self.outfile = request.get_stnm() + request.get_year() + \
                 request.get_month() + request.get_begin() + request.get_end() \
@@ -68,8 +68,10 @@ class RAOBtextlist():
         """
 
         # Create output filename from request metadata
-        self.set_outfile(request)
+        status = self.set_outfile(request)
         outfile = self.get_outfile()
+        if not self.outfile:  # outfile is set to False, indicates problem finding path
+            return(False, False)
 
         # If in test mode, copy file from data dir to simulate download...
         if request.get_test() is True:
@@ -90,6 +92,6 @@ class RAOBtextlist():
             status = self.rwget.get_data(url, outfile)
 
             if request.get_mtp() is True and status:
-                userlib.mtp.strip_html(request, outfile)
+                userlib.mtp.strip_html(request, outfile, self.log)
 
         return(status, outfile)

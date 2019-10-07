@@ -10,17 +10,27 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+from lib.messageHandler import printmsg
 
 
-def set_outfile(request):
+def set_outfile(request, log):
+    """ Create an output filename, including the full path """
+
+    dir = os.getcwd() + '/' + request.get_mtp_dir()
+
+    # Make sure directory exists. If not, warn user.
+    if not os.path.exists(dir):
+        printmsg(log, "ERROR: Directory to write MTP data does not exist: " +
+                 dir + ". Create dir and retry retrieval")
+        return(False)
+
     # The MTP VB6 code requires that only the begin date be given in the RAOB
     # filename.
-    return(os.getcwd() + '/' + request.get_mtp_dir() + '/' + request.get_stnm()
-           + request.get_year() + request.get_month() + request.get_begin() +
-           ".txt")
+    return(dir + '/' + request.get_stnm() + request.get_year() +
+           request.get_month() + request.get_begin() + ".txt")
 
 
-def strip_html(request, outfile):
+def strip_html(request, outfile, log):
 
     # Strip unneeded HTML from the retrieved data.
     # The VB6 MTP sofware strips part of the HTML from the downloaded RAOB
@@ -37,9 +47,9 @@ def strip_html(request, outfile):
             # Add double quote before <HTML> on first line
             temp.write('"' + line)
         else:
-            print("ERROR: RAOB textlist file " + outfile +
+            printmsg(log, "ERROR: RAOB textlist file " + outfile +
                   " does not begin with <HTML>")
-            print(line.rstrip())
+            printmsg(log, line.rstrip())
             return()
 
         # Remove <TITLE>, <LINK>, and <BODY> lines
@@ -61,11 +71,11 @@ def strip_html(request, outfile):
             if "Observation time" in line:
                 obstime = ''.join(filter(str.isdigit, line))
                 if obstime[0:8] not in outfile:
-                    print("\nObs time " + obstime + " and filename " +
+                    printmsg(log, "\nObs time " + obstime + " and filename " +
                           outfile + " don't match. Fixing...\n")
                     outfile = request.get_stnm() + "20" + \
                         obstime[0:8] + ".txt"
-                    print("New filename is " + outfile)
+                    printmsg(log, "New filename is " + outfile)
             temp.write(line)
             line = out.readline()
 

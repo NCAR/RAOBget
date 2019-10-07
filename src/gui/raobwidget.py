@@ -79,7 +79,6 @@ class Widget(QWidget):
         Return the image associated with the latest downloaded RAOB data.
         Defaults to usage message on initialization.
         """
-        print(gifimage)
         self.pixmap = \
             QPixmap(gifimage)
         return(self.pixmap)
