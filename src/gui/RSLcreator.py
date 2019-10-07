@@ -88,7 +88,7 @@ class RSLWidget(QWidget):
         self.outfile = self.loader.get_file()
 
         # Write the RSL list to the open file
-        fp = open(os.getcwd() + "/" + self.outfile, 'w')
+        fp = open(self.outfile, 'w')
         for item in range(self.rslbox.count()):
             # Only save the beginning of the file until the first space. This
             # will get the id, or if blank, the number.

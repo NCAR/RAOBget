@@ -115,9 +115,13 @@ class RAOBget():
         return(args)
 
     def set_args(self, args):
+        """
+        Populate the request with values from the command line or from a config
+        file.
+        """
         # Set requested region, type, and date to values requested via command
         # line
-        self.request.set_prov(args)
+        status = self.request.set_prov(args)
 
         # If --config supplied, set request to values in config file
         if self.request.get_config() != '':
@@ -234,7 +238,7 @@ class RAOBget():
             # Retrieve requested data/imagery for a single stn
             self.retrieve(app)
         else:
-            rslfile = os.getcwd() + "/" + self.request.get_rsl()
+            rslfile = self.request.get_rsl()
             if self.test_rsl(rslfile):
                 rsl = RSL()
                 stnlist = rsl.read_rsl(rslfile)
