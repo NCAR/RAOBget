@@ -81,6 +81,7 @@ class config():
 
         # Load the configuration into the request
         self.load(request)
+        return(True)
 
     def load(self, request):
         """ Load the configuration into the request """

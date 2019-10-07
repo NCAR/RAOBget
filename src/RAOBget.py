@@ -25,7 +25,9 @@ def main():
     args = raob.get_args()
 
     # Set either the command line or default args as the request
-    raob.set_args(args)
+    status = raob.set_args(args)
+    if not status:  # status returned False, so something went wrong
+        exit(1)
 
     if args.gui is True:  # Run in GUI mode
         # Every GUI app must have exactly one instance of QApplication. The

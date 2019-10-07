@@ -122,7 +122,9 @@ class RAOBget():
         # If --config supplied, set request to values in config file
         if self.request.get_config() != '':
             configfile = config()
-            configfile.read(self.request)
+            status = configfile.read(self.request)
+
+        return(status)
 
     def get(self, widget, app, log=""):
         """ Method to retrieve RAOBS
