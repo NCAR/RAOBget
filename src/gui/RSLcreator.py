@@ -7,7 +7,6 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
-import os
 import logging
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
