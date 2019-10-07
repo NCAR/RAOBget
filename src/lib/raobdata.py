@@ -191,6 +191,8 @@ class RAOBdata():
         self.set_stnlist_file(args.station_list_file)
         self.set_now(args.now)
 
+        return(True)
+
     def get_request(self):
         """ Return request metadata dictionary """
 
