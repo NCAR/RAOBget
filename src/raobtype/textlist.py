@@ -70,7 +70,7 @@ class RAOBtextlist():
         # Create output filename from request metadata
         status = self.set_outfile(request)
         outfile = self.get_outfile()
-        if not self.outfile:  # outfile is set to False, indicates problem finding path
+        if not self.outfile:  # outfile set to False, problem with path
             return(False, False)
 
         # If in test mode, copy file from data dir to simulate download...

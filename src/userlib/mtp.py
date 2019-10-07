@@ -48,7 +48,7 @@ def strip_html(request, outfile, log):
             temp.write('"' + line)
         else:
             printmsg(log, "ERROR: RAOB textlist file " + outfile +
-                  " does not begin with <HTML>")
+                     " does not begin with <HTML>")
             printmsg(log, line.rstrip())
             return()
 
@@ -72,7 +72,7 @@ def strip_html(request, outfile, log):
                 obstime = ''.join(filter(str.isdigit, line))
                 if obstime[0:8] not in outfile:
                     printmsg(log, "\nObs time " + obstime + " and filename " +
-                          outfile + " don't match. Fixing...\n")
+                             outfile + " don't match. Fixing...\n")
                     outfile = request.get_stnm() + "20" + \
                         obstime[0:8] + ".txt"
                     printmsg(log, "New filename is " + outfile)
