@@ -105,6 +105,10 @@ Then install Git (if not already there) and download RAOBget:
 ```
     git clone http://github.com/NCAR/RAOBget
 ```
+Copy Windows10 bat file from RAOBget/windows10 to desktop
+```
+cp RAOBget/windows10/RAOBget.bat /c/Users/lroot/Desktop/.
+```
 
 ## Developer Notes ##
 
