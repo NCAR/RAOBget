@@ -201,8 +201,8 @@ class RSLCreator(QMainWindow):
         self.request.set_stnlist_file(self.initDialog(rootdir, filefilter))
         if self.request.get_stnlist_file() != "":
             self.station_list = \
-                self.stationList.read(getrootdir() + "/" +
-                                      self.request.get_stnlist_file())
+                self.stationList.read(os.path.join(rootdir,
+                                                   self.request.get_stnlist_file()))
             self.win.textbox.clear()
             self.win.display_station(self.station_list)
 
@@ -216,7 +216,7 @@ class RSLCreator(QMainWindow):
         self.request.set_rsl(self.initDialog(rootdir, filefilter))
         if self.request.get_rsl() != "":
             self.rsl = RSL()
-            self.rslList = self.rsl.read_rsl(os.path.join(os.getcwd(),
+            self.rslList = self.rsl.read_rsl(os.path.join(rootdir,
                                              self.request.get_rsl()))
 
             # Populate the RSL window with the contents of the file
@@ -260,4 +260,4 @@ class RSLCreator(QMainWindow):
             # QFileDialog returns the complete path to the file. We want to only
             # save the relative path in the request, starting with config so
             # remove the value of getrootdir() from the filename
-            return(os.path.relpath(filename, start=os.getcwd()))
+            return(os.path.relpath(filename, start=rootdir))
