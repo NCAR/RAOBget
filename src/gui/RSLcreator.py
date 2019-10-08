@@ -201,8 +201,9 @@ class RSLCreator(QMainWindow):
         self.request.set_stnlist_file(self.initDialog(rootdir, filefilter))
         if self.request.get_stnlist_file() != "":
             self.station_list = \
-                self.stationList.read(os.path.join(rootdir,
-                                                   self.request.get_stnlist_file()))
+                self.stationList.read(os.path.join(
+                                      rootdir,
+                                      self.request.get_stnlist_file()))
             self.win.textbox.clear()
             self.win.display_station(self.station_list)
 
@@ -257,7 +258,7 @@ class RSLCreator(QMainWindow):
             # When user hits cancel, QFileDIalog return an empty string
             return(filename)
         else:
-            # QFileDialog returns the complete path to the file. We want to only
-            # save the relative path in the request, starting with config so
-            # remove the value of getrootdir() from the filename
+            # QFileDialog returns the complete path to the file. We want to
+            # only save the relative path in the request, starting with config
+            # so remove the value of getrootdir() from the filename
             return(os.path.relpath(filename, start=rootdir))
