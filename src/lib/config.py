@@ -44,8 +44,7 @@ class config():
         yamlfile = os.path.abspath(request.get_config())
 
         if (request.get_config() == ""):
-            printmsg(self.log, "ERROR: File to save config to not defined. " +
-                     "Can't save")
+            printmsg(self.log, "WARNING: File not saved")
             return(False)
 
         with open(yamlfile, 'w') as outfile:
@@ -57,7 +56,6 @@ class config():
         """ Read the contents of the YAML file into self.projConfig"""
 
         yamlfile = os.path.abspath(request.get_config())
-        printmsg(self.log, "Reading configuration from " + yamlfile)
 
         # If the yamlfile is not defined, return False so code will use default
         # request (e.g, cancelled out so didn't append a file)
@@ -66,6 +64,7 @@ class config():
 
         elif not os.path.isdir(yamlfile):
             if os.path.exists(yamlfile):
+                printmsg(self.log, "Reading configuration from " + yamlfile)
                 infile = open(yamlfile)
                 self.projConfig = yaml.load(infile, Loader=yaml.BaseLoader)
                 # for key, value in self.projConfig.items():
