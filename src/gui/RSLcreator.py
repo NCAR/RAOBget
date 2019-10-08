@@ -99,7 +99,7 @@ class RSLWidget(QWidget):
         self.outfile = self.loader.get_file()
 
         # Write the RSL list to the open file
-        fp = open(os.getcwd() + "/" + self.outfile, 'w')
+        fp = open(os.path.relpath(self.outfile, start=os.getcwd()), 'w')
         for item in range(self.rslbox.count()):
             # Only save the beginning of the file until the first space. This
             # will get the id, or if blank, the number.
@@ -199,29 +199,31 @@ class RSLCreator(QMainWindow):
         filefilter = "station list files (*.tbl, *.TBL)"
 
         self.request.set_stnlist_file(self.initDialog(rootdir, filefilter))
-        self.station_list = \
-            self.stationList.read(getrootdir() + "/" +
-                                  self.request.get_stnlist_file())
-        self.win.textbox.clear()
-        self.win.display_station(self.station_list)
+        if self.request.get_stnlist_file() != "":
+            self.station_list = \
+                self.stationList.read(getrootdir() + "/" +
+                                      self.request.get_stnlist_file())
+            self.win.textbox.clear()
+            self.win.display_station(self.station_list)
 
     def loadRSLFile(self):
         """
         Open a dialog to let the user select an RSL file to be modified
         """
-        rootdir = os.path.join(getrootdir(), "config")
+        rootdir = os.path.join(os.getcwd(), "config")
         filefilter = "RSL files (*.rsl, *.RSL)"
 
         self.request.set_rsl(self.initDialog(rootdir, filefilter))
-        self.rsl = RSL()
-        self.rslList = self.rsl.read_rsl(os.path.join(getrootdir(),
-                                         self.request.get_rsl()))
+        if self.request.get_rsl() != "":
+            self.rsl = RSL()
+            self.rslList = self.rsl.read_rsl(os.path.join(os.getcwd(),
+                                             self.request.get_rsl()))
 
-        # Populate the RSL window with the contents of the file
-        self.win.rslbox.clear()
-        for stn in self.rslList:
-            print(stn)
-            self.win.rslbox.addItem(stn)
+            # Populate the RSL window with the contents of the file
+            self.win.rslbox.clear()
+            for stn in self.rslList:
+                print(stn)
+                self.win.rslbox.addItem(stn)
 
     def close_win(self):
         self.close()
@@ -251,7 +253,11 @@ class RSLCreator(QMainWindow):
                                                   rootdir, filefilter,
                                                   options=options)
 
-        # QFileDialog returns the complete path to the file. We want to only
-        # save the relative path in the request, starting with config so
-        # remove the value of getrootdir() from the filename
-        return(filename.replace(getrootdir() + "/", ''))
+        if filename == "":
+            # When user hits cancel, QFileDIalog return an empty string
+            return(filename)
+        else:
+            # QFileDialog returns the complete path to the file. We want to only
+            # save the relative path in the request, starting with config so
+            # remove the value of getrootdir() from the filename
+            return(os.path.relpath(filename, start=os.getcwd()))
