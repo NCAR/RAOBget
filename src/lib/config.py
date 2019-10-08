@@ -41,7 +41,7 @@ class config():
     def write(self, request):
         """ Write the request metadata to a YAML config file"""
 
-        yamlfile = request.get_config()
+        yamlfile = os.getcwd() + "/" + request.get_config()
 
         if (request.get_config() == ""):
             printmsg(self.log, "ERROR: File to save config to not defined. " +
@@ -56,7 +56,7 @@ class config():
     def read(self, request):
         """ Read the contents of the YAML file into self.projConfig"""
 
-        yamlfile = request.get_config()
+        yamlfile = os.getcwd() + "/" + request.get_config()
         printmsg(self.log, "Reading configuration from " + yamlfile)
 
         # If the yamlfile is not defined, return False so code will use default

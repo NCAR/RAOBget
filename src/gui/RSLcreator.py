@@ -7,6 +7,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import re
+import os
 import logging
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
@@ -87,7 +88,7 @@ class RSLWidget(QWidget):
         self.outfile = self.loader.get_file()
 
         # Write the RSL list to the open file
-        fp = open(self.outfile, 'w')
+        fp = open(os.getcwd() + "/" + self.outfile, 'w')
         for item in range(self.rslbox.count()):
             # Only save the beginning of the file until the first space. This
             # will get the id, or if blank, the number.
