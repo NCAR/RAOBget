@@ -9,11 +9,12 @@
 import re
 import os
 import logging
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QWidget, QGridLayout, \
-                            QListWidget, QPushButton, QAction
+                            QListWidget, QPushButton, QAction, QLabel
 from lib.raobroot import getrootdir
 from lib.stationlist import RAOBstation_list
+from lib.rsl import RSL
 from gui.fileselector import FileSelector
 
 
@@ -32,7 +33,12 @@ class RSLWidget(QWidget):
         self.textbox = QListWidget(self)
         self.textbox.show()
         self.textbox.setDragEnabled(True)
-        layout.addWidget(self.textbox, 0, 0, 4, 1)
+        layout.addWidget(self.textbox, 1, 0, 12, 1)
+
+        # Add a title above the source station list
+        lbl = QLabel("Master Station List")
+        lbl.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
+        layout.addWidget(lbl, 0, 0)
 
         # If the user cancelled out of selecting a source station list, or
         # requested a non-existent one, capture the error here and warn them.
@@ -47,20 +53,25 @@ class RSLWidget(QWidget):
         # the RSL file.
         self.rslbox = QListWidget(self)
         self.rslbox.setAcceptDrops(True)
-        layout.addWidget(self.rslbox, 0, 2, 4, 1)
+        layout.addWidget(self.rslbox, 1, 2, 12, 1)
+
+        # Add a title above the RSL file
+        lbl = QLabel("RSL file")
+        lbl.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
+        layout.addWidget(lbl, 0, 2)
 
         # Add arrows that move stuff back and forth between boxes
         select = QPushButton('->', self)
-        layout.addWidget(select, 0, 1)
+        layout.addWidget(select, 1, 1)
         select.clicked.connect(self.select_station)
 
         remove = QPushButton('<-', self)
-        layout.addWidget(remove, 1, 1)
+        layout.addWidget(remove, 2, 1)
         remove.clicked.connect(self.remove_station)
 
         # Add a Save button to save RSL
         save = QPushButton('Save', self)
-        layout.addWidget(save, 3, 1)
+        layout.addWidget(save, 11, 1)
         save.clicked.connect(self.saveRSL)
 
     def display_station(self, station_list):
@@ -158,13 +169,19 @@ class RSLCreator(QMainWindow):
         fileMenu.setToolTipsVisible(True)
 
         # Add a submenu option to load a master station list
-        # Add a submenu option to load a config file
         loadStationListFile = QAction("Load master station list", self)
         loadStationListFile.setToolTip('Load file containing list of RAOB ' +
                                        'station locations, etc to select ' +
                                        'from to create RSL file.')
         loadStationListFile.triggered.connect(self.loadStationListFile)
         fileMenu.addAction(loadStationListFile)
+
+        # Add a submenu option to load an existing RSL file for modification
+        loadRSLFile = QAction("Load RSL file", self)
+        loadRSLFile.setToolTip('Load an existing RSL file to be ' +
+                               'modified')
+        loadRSLFile.triggered.connect(self.loadRSLFile)
+        fileMenu.addAction(loadRSLFile)
 
         # Add a menu/submenu? option to quit
         quitButton = QAction('Quit', self)
@@ -187,6 +204,24 @@ class RSLCreator(QMainWindow):
                                   self.request.get_stnlist_file())
         self.win.textbox.clear()
         self.win.display_station(self.station_list)
+
+    def loadRSLFile(self):
+        """
+        Open a dialog to let the user select an RSL file to be modified
+        """
+        rootdir = os.path.join(getrootdir(), "config")
+        filefilter = "RSL files (*.rsl, *.RSL)"
+
+        self.request.set_rsl(self.initDialog(rootdir, filefilter))
+        self.rsl = RSL()
+        self.rslList = self.rsl.read_rsl(os.path.join(getrootdir(),
+                                         self.request.get_rsl()))
+
+        # Populate the RSL window with the contents of the file
+        self.win.rslbox.clear()
+        for stn in self.rslList:
+            print(stn)
+            self.win.rslbox.addItem(stn)
 
     def close_win(self):
         self.close()
