@@ -52,14 +52,15 @@ class FileSelector(QMainWindow):
         # string containing the filter used. Ignore the filter return.
         # If user selects cancel, returns None.
         filename, _ = QFileDialog.getSaveFileName(self, "Select a file",
-                                                  rootdir + "/config",
+                                                  os.path.join(rootdir,
+                                                               "config"),
                                                   filefilter,
                                                   options=options)
 
         # QFileDialog returns the complete path to the file. We want to only
         # save the relative path in the request, starting with config so
         # remove the value of rootdir from the filename
-        return(filename.replace(rootdir + "/", ''))
+        return(os.path.relpath(filename, start = rootdir))
 
     def initDialog(self, rootdir, filefilter):
         """ Instantiate the file dialog """
@@ -74,14 +75,15 @@ class FileSelector(QMainWindow):
         # string containing the filter used. Ignore the filter return.
         # If user selects cancel, returns None.
         filename, _ = QFileDialog.getOpenFileName(self, "Select a file",
-                                                  rootdir + "/config",
+                                                  os.path.join(rootdir,
+                                                               "config"),
                                                   filefilter,
                                                   options=options)
 
         # QFileDialog returns the complete path to the file. We want to only
         # save the relative path in the request, starting with config so
         # remove the value of rootdir from the filename
-        return(filename.replace(rootdir + "/", ''))
+        return(os.path.relpath(filename, start = rootdir))
 
     def get_file(self):
         return(self.filename)
