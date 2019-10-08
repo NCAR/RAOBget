@@ -169,10 +169,10 @@ class RAOBget():
 
         # If user has requested more than one RAOB, loop over the requested
         # frequency
-        printmsg(log, "Getting RAOBs from: " + self.request.get_year() +
-                 self.request.get_month() + self.request.get_begin() + " to " +
-                 self.request.get_year() + self.request.get_month() +
-                 self.request.get_end())
+        printmsg(log, "Getting RAOBs from: '" + self.request.get_year() +
+                 self.request.get_month() + self.request.get_begin() +
+                 "' to '" + self.request.get_year() +
+                 self.request.get_month() + self.request.get_end() + "'")
         if self.request.get_begin() == self.request.get_end():
             self.stn_loop(app)
         else:
@@ -288,6 +288,8 @@ class RAOBget():
                 self.widget.setImage(outfile)
                 app.processEvents()
         else:
-            printmsg(self.log, 'RAOB type ' + self.request.get_type() +
-                     ' not implemented yet')
+            printmsg(self.log, "RAOB type '" + self.request.get_type() +
+                     "' not implemented yet")
+            status = False
+
         return(status)
