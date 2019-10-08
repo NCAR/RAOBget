@@ -151,4 +151,4 @@ If this tool doesn't provide what you need, here are a list of other potential r
 * The Unidata Siphon Python utility collection can be used to write a simple Python script to download Wyoming Upper Air data into a PANDAS data frame.
 https://unidata.github.io/siphon/latest/examples/upperair/Wyoming_Request.html#sphx-glr-examples-upperair-wyoming-request-py
 
-* [Software Component Diagram](https://github.com/NCAR/RAOBget/doc/RAOBget%20Component%20Diagram.png)
+* [Software Component Diagram](https://github.com/NCAR/RAOBget/blob/master/doc/RAOBget%20Component%20Diagram.png)
