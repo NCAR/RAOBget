@@ -16,7 +16,7 @@ from lib.messageHandler import printmsg
 def set_outfile(request, log):
     """ Create an output filename, including the full path """
 
-    dir = os.getcwd() + '/' + request.get_mtp_dir()
+    dir = os.path.join(os.getcwd(), request.get_mtp_dir())
 
     # Make sure directory exists. If not, warn user.
     if not os.path.exists(dir):

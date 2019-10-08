@@ -238,7 +238,7 @@ class RAOBget():
             # Retrieve requested data/imagery for a single stn
             self.retrieve(app)
         else:
-            rslfile = os.getcwd() + "/" + self.request.get_rsl()
+            rslfile = os.path.join(os.getcwd(), self.request.get_rsl())
             if self.test_rsl(rslfile):
                 rsl = RSL()
                 stnlist = rsl.read_rsl(rslfile)
