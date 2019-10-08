@@ -205,6 +205,9 @@ class RAOBdata():
     def set_time_now(self):
         """ Set request time to most recent 12 hour (UTC) RAOB unless freq is
         set higher. """
+        if self.request['freq'] == "":
+            print("ERROR: freq must be set before can set times to now")
+            return(False)
         time = datetime.utcnow()
         self.set_year(str(time.year))
         self.set_month('{:02d}'.format(time.month))
