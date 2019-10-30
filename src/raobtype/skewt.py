@@ -120,7 +120,7 @@ class Skewt():
 
 if __name__ == "__main__":
     """
-    This class can run indenpendently on a TEXT:LIST file and create
+    This class can run independently on a TEXT:LIST file and create
     a free-standing plot window.
 
     Requires:

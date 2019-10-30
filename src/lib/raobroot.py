@@ -1,5 +1,5 @@
 ###############################################################################
-# Function to identify the RAOBget project root dir so all hardcoded paths can
+# Function to identify the project root dir so all hardcoded paths can
 # be relative to that dir.
 #
 # Written in Python 3

@@ -41,16 +41,16 @@ class TESTgui(unittest.TestCase):
         # Test if color is black - once figure out. See comment above.
 
         # Set text to a invalid date and test mouse click on 'Set'
-        # Text is box is updated, but should print error message
+        # Text in box is updated, but should print error message
         config.btime.update("20190505")
-        QTest.mouseClick(self.bset, Qt.LeftButton)
+        QTest.mouseClick(self.bset, Qt.LeftButton)  # Send a left mouse click
         self.assertEqual(config.btime.getStatus(), False)
         self.assertEqual(config.btime.getText(), "20190505")
         # Test if color is black - once figure out. See comment above.
 
         # Set text to a valid date and test mouse click on 'Set'
-        # Text is box is updated and status is OK
+        # Text in box is updated and status is OK
         config.btime.update("2019050512")
-        QTest.mouseClick(self.bset, Qt.LeftButton)
+        QTest.mouseClick(self.bset, Qt.LeftButton)  # Send a left mouse click
         self.assertEqual(config.btime.getStatus(), True)
         # Test if color is black - once figure out. See comment above.
