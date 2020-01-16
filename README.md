@@ -99,7 +99,7 @@ Use miniconda to install all needed packages:
 If the packages are not available via the conda-forge channel, you can search for alternative channels at https://anaconda.org
 
 Then install Git (if not already there) and download RAOBget:
- * Git-scm.com -> Download latest per automatic OS detection. Run .exe file to install. I used default settings as suggested by installer, except that I asked to install a desktop icon for “Git Bash”
+ * https://git-scm.com/ -> Download latest per automatic OS detection. Run .exe file to install. I used default settings as suggested by installer, except that I asked to install a desktop icon for “Git Bash”
  * Launch “Git Bash”
  * At the prompt 
 ```
