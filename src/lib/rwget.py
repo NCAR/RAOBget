@@ -88,6 +88,8 @@ class RAOBwget:
             except socket.timeout as e:
                 printmsg(self.log, "There was an error:")
                 printmsg(self.log, str(e))
+            except Exception as e:
+                printmsg(self.log, "Unknown error connecting to UWyo: " + e)
 
             # Get requested URL.
             try:

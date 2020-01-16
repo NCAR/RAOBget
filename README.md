@@ -93,7 +93,8 @@ Use miniconda to install all needed packages:
  * Install packages
 ```
    > conda install -c conda-forge metpy
-     - Drags in pyqt5 and cartopy
+     - Drags in pyqt5 and cartopy. If it doesn't...
+   > conda install -c conda-forge pyqt
    > conda install -c conda-forge pyyaml
 ```
 If the packages are not available via the conda-forge channel, you can search for alternative channels at https://anaconda.org
