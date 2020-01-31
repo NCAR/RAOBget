@@ -264,7 +264,11 @@ class RAOBget():
                             printmsg(self.log, 'Sleeping for 30 seconds to ' +
                                      'avoid overwhelming UWyo server')
                             time.sleep(30)
-                printmsg(self.log, 'Done retrieving RAOBs')
+                printmsg(self.log, "Done retrieving RAOBs from: '" +
+                         self.request.get_year() + self.request.get_month() +
+                         self.request.get_begin() + "' to '" +
+                         self.request.get_year() + self.request.get_month() +
+                         self.request.get_end() + "'")
             else:
                 printmsg(self.log, 'ERROR: File ' + rslfile +
                          ' does not exist. Check for typo and rerun.')
