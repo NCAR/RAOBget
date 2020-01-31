@@ -181,17 +181,22 @@ class RAOBget():
                          "requested begin time")
             else:
                 # Get RAOBs for first day requested
-                day = args.bday
-                for hr in range(int(args.bhr), 24,
+                begin = self.request.get_begin()
+                bday = begin[0:2]
+                bhr = begin[2:4]
+                end = self.request.get_end()
+                eday = end[0:2]
+                ehr = end[2:4]
+                for hr in range(int(bhr), 24,
                                 int(self.request.get_freq())):
                     # get RAOBs
-                    self.request.set_begin(day, '{:02d}'.format(hr))
-                    self.request.set_end(day, '{:02d}'.format(hr))
-                    # printmsg(log, "Day 1:",self.request.get_begin() + ' - ' +
-                    #          self.request.get_end())
+                    self.request.set_begin(bday, '{:02d}'.format(hr))
+                    self.request.set_end(bday, '{:02d}'.format(hr))
+                    # printmsg(log, "Day 1:" + self.request.get_begin() +
+                    #          ' - ' + self.request.get_end())
                     self.stn_loop(app)
                 # Get RAOBs for second to second-to-last day
-                for day in range(int(args.bday) + 1, int(args.eday)):
+                for day in range(int(bday) + 1, int(eday)):
                     for hr in range(0, 24, int(self.request.get_freq())):
                         # get RAOBs
                         self.request.set_begin('{:02d}'.format(day),
@@ -202,14 +207,13 @@ class RAOBget():
                         #          self.request.get_end())
                         self.stn_loop(app)
                 # Get RAOBs for last day requested
-                day = args.eday
-                for hr in range(0, int(args.ehr)+1,
+                for hr in range(0, int(ehr)+1,
                                 int(self.request.get_freq())):
                     # get RAOBs
-                    self.request.set_begin(day, '{:02d}'.format(hr))
-                    self.request.set_end(day, '{:02d}'.format(hr))
+                    self.request.set_begin(eday, '{:02d}'.format(hr))
+                    self.request.set_end(eday, '{:02d}'.format(hr))
                     # printmsg(log, "Last:" + self.request.get_begin() +
-                    # ' - ' + self.request.get_end())
+                    #          ' - ' + self.request.get_end())
                     self.stn_loop(app)
 
     def test_rsl(self, rslfile):
