@@ -78,6 +78,9 @@ class ETime():
             self.request.set_end(day, hr)
             logging.info("End (ddhh) set to " + day + hr)
 
+            # Since sucessfully set a begin date, ensure that now flag is false
+            self.request.set_now(False)
+
     def update(self, text):
         """
         Update the etime displayed in the GUI

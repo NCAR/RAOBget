@@ -68,6 +68,9 @@ class BTime():
             logging.info("year set to " + year + ", month set to " +
                          month + ", begin (ddhh) set to " + day + hr)
 
+            # Since sucessfully set a begin date, ensure that now flag is false
+            self.request.set_now(False)
+
             # Data is valid, so return True to indicate setting value succeeded
             self.status = True
 
