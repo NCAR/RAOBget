@@ -80,10 +80,10 @@ class RAOBwget:
             try:
                 urllib.request.urlopen(url)
             except (HTTPError, URLError) as e:
-                printmsg(self.log, "Can't connect to weather.uwyo.edu. Use " +
-                         "option --test for testing with offline sample data" +
-                         " files or try again in a few minutes.")
-                printmsg(self.log, str(e))
+                print(self.log, "Can't connect to weather.uwyo.edu. Use " +
+                      "option --test for testing with offline sample data" +
+                      " files or try again in a few minutes.")
+                print(self.log, str(e))
                 exit(1)
             except socket.timeout as e:
                 printmsg(self.log, "There was an error:")
