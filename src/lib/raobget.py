@@ -174,6 +174,8 @@ class RAOBget():
                  "' to '" + self.request.get_year() +
                  self.request.get_month() + self.request.get_end() + "'")
         if self.request.get_begin() == self.request.get_end():
+            # printmsg(log, "Single Day:" + self.request.get_begin() +
+            #          ' - ' + self.request.get_end())
             self.stn_loop(app)
         else:
             if self.request.get_end() < self.request.get_begin():
