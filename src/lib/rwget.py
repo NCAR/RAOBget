@@ -84,9 +84,9 @@ class RAOBwget:
                 # Get reference to existing QApplication
                 app = QApplication.instance()
 
-                msg = "Can't connect to weather.uwyo.edu. Use " +
-                      "option --test for testing with offline sample data" +
-                      " files or try again in a few minutes.\n" + str(e) +
+                msg = "Can't connect to weather.uwyo.edu. Use " + \
+                      "option --test for testing with offline sample data" + \
+                      " files or try again in a few minutes.\n" + str(e) + \
                       " When you click OK, code will try to retrieve next RAOB"
                 if app is None:
                     print(self.log, msg)
