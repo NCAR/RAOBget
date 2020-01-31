@@ -14,6 +14,7 @@ from urllib.error import HTTPError, URLError
 from util.region import RAOBregion
 from raobtype.raobtype import RAOBtype
 from lib.messageHandler import printmsg
+from PyQt5.QtWidgets import QMessageBox, QApplication
 
 
 class RAOBwget:
@@ -80,11 +81,21 @@ class RAOBwget:
             try:
                 urllib.request.urlopen(url)
             except (HTTPError, URLError) as e:
-                print(self.log, "Can't connect to weather.uwyo.edu. Use " +
+                # Get reference to existing QApplication
+                app = QApplication.instance()
+
+                msg = "Can't connect to weather.uwyo.edu. Use " +
                       "option --test for testing with offline sample data" +
-                      " files or try again in a few minutes.")
-                print(self.log, str(e))
-                exit(1)
+                      " files or try again in a few minutes.\n" + str(e) +
+                      " When you click OK, code will try to retrieve next RAOB"
+                if app is None:
+                    print(self.log, msg)
+                else:
+                    msgBox = QMessageBox()
+                    msgBox.setText(msg)
+                    msgBox.setIcon(QMessageBox.Information)
+                    msgBox.exec()
+                return(False)
             except socket.timeout as e:
                 printmsg(self.log, "There was an error:")
                 printmsg(self.log, str(e))
@@ -116,7 +127,7 @@ class RAOBwget:
                         return(False)
                     elif 'Sorry, unable to generate' in line:
                         printmsg(self.log, line.rstrip() + ". Retrieved file" +
-                                 " contains error message - gif was got " +
+                                 " contains error message - gif was not " +
                                  "generated")
                         out.close()
                         if os.path.isfile(outfile):
