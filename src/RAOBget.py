@@ -5,7 +5,6 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
-import logging
 from lib.raobget import RAOBget
 from gui.raobview import RAOBview
 from PyQt5.QtWidgets import QApplication
@@ -18,9 +17,6 @@ from PyQt5.QtWidgets import QApplication
 def main():
     """ Instantiate a RAOB class and call in either GUI mode or command-line
         mode """
-
-    log = logging.getLogger()
-    log.setLevel(logging.INFO)
 
     # Instantiate RAOB class
     raob = RAOBget()
