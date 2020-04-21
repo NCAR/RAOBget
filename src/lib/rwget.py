@@ -14,7 +14,7 @@ from urllib.error import HTTPError, URLError
 from util.region import RAOBregion
 from raobtype.raobtype import RAOBtype
 from lib.messageHandler import printmsg
-from PyQt5.QtWidgets import QMessageBox, QApplication
+from PyQt5.QtWidgets import QMessageBox, QApplication, QAction
 
 
 class RAOBwget:
@@ -84,16 +84,24 @@ class RAOBwget:
                 # Get reference to existing QApplication
                 app = QApplication.instance()
 
-                msg = "Can't connect to weather.uwyo.edu. Use " + \
-                      "option --test for testing with offline sample data" + \
-                      " files or try again in a few minutes.\n" + str(e) + \
+                msg = "Can't connect to weather.uwyo.edu. Received error:" + \
+                      "\n" + str(3) + "Use option --test for testing with " + \
+                      "offline sample data files or confirm that you are " + \
+                      "online and try again in a few minutes.\n\n Unable " + \
+                      "to download " + outfile + "\n\n" + \
                       " When you click OK, code will try to retrieve next RAOB"
                 if app is None:
                     print(self.log, msg)
                 else:
+                    quitButton = QAction('Quit')
+                    quitButton.setShortcut('Ctrl+Q')
+                    quitButton.setToolTip('Exit application')
+                    #quitButton.triggered.connect(QMessageBox.close)
+
                     msgBox = QMessageBox()
                     msgBox.setText(msg)
                     msgBox.setIcon(QMessageBox.Information)
+                    msgBox.addButton(quitButton, QMessageBox.close)
                     msgBox.exec()
                 return(False)
             except socket.timeout as e:
