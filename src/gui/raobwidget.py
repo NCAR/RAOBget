@@ -124,7 +124,10 @@ class Widget(QWidget):
         # Clear previous plot
         self.skewt.clear()
 
-        rdat = self.skewt.read_data(outfile)
+        # read_data currently is specific to the format changes made for MTP
+        # data backward compatibility. If Mode is set to CATALOG or Default, it
+        # will crash, so check for that here.
+        rdat = self.skewt.read_data(outfile, self.raob.request.get_mtp())
         self.skewt.create_skewt(rdat)
         self.canvas = self.skewt.get_canvas()
         self.canvas.draw()

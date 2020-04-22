@@ -22,18 +22,33 @@ class Skewt():
         """ Import link to GUI """
         self.app = app
 
-    def read_data(self, datafile):
+    def read_data(self, datafile, mtp):
         """ Read in data from the downloaded TEXT:LIST-formatted RAOB """
 
+        # Number of lines before title and column in files as downloaded from
+        # the UWyo server.
+        title_hdr_len = 3
+        col_hdr_len = 6
+
+        # For MTP data, the number of lines in the header is edited using
+        # userlib.mtp.strip_html to maintain backward compatibility with the
+        # VB6 code. So for the MTP data, set the number of header lines
+        # differently than for data files read from the UWyo server and NOT
+        # modified.
+        if mtp:
+            title_hdr_len = 1
+            col_hdr_len = 4
+
         # Read in the title from the header.
-        title = pd.read_fwf(datafile, header=1, nrows=1).columns
+        title = pd.read_fwf(datafile, header=title_hdr_len, nrows=1).columns
+
         # Remove the HTML
         self.title = title[0].replace('<H2>', '')
         self.title = self.title.replace('</H2>', '')
 
         # Read in the column names from the header. For a description, see:
         # http://weather.uwyo.edu/upperair/columns.html
-        col_names = pd.read_fwf(datafile, header=4, nrows=1).columns
+        col_names = pd.read_fwf(datafile, header=col_hdr_len, nrows=1).columns
         col_names = col_names[0].split()
 
         # Read the data from the data file into a pandas dataframe
@@ -127,9 +142,16 @@ if __name__ == "__main__":
         input data file in UWyo TEXT:LIST format
     """
 
-    datafile = "../../test/data/726722019052812.ctrl.mtp"
+    # Run in MTP mode
+    # datafile = "../../test/data/726722019052812.ctrl.mtp"
+    # mtp = True
+
+    # Run not in MTP mode (so could be default or CATALOG)
+    datafile = "../../test/data/726722019052812.ctrl"
+    mtp = False
+
     skewt = Skewt(None)
-    rdat = skewt.read_data(datafile)
+    rdat = skewt.read_data(datafile, mtp)
     skewt.set_fig()
     skewt.set_canvas()
     skewt.create_skewt(rdat)
