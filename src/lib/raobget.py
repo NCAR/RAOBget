@@ -134,7 +134,6 @@ class RAOBget():
         """ Method to retrieve RAOBS
 
         Parameters:
-            args: a dictionary of command line arguments/defaults
             app: if in GUI mode, a pointer to the QApplication, else
                  app is None
 
@@ -144,7 +143,6 @@ class RAOBget():
         """
         self.log = log  # pointer to GUI log, if running in GUI mode
         self.widget = widget
-        args = self.get_args()
 
         # If args are all empty, warn user.
         empty = True

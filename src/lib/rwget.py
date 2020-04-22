@@ -85,7 +85,7 @@ class RAOBwget:
                 app = QApplication.instance()
 
                 msg = "Can't connect to weather.uwyo.edu. Received error:" + \
-                      "\n" + str(3) + "Use option --test for testing with " + \
+                      "\n" + str(e) + "Use option --test for testing with " + \
                       "offline sample data files or confirm that you are " + \
                       "online and try again in a few minutes.\n\n Unable " + \
                       "to download " + outfile + "\n\n" + \
@@ -96,7 +96,7 @@ class RAOBwget:
                     quitButton = QAction('Quit')
                     quitButton.setShortcut('Ctrl+Q')
                     quitButton.setToolTip('Exit application')
-                    #quitButton.triggered.connect(QMessageBox.close)
+                    # quitButton.triggered.connect(QMessageBox.close)
 
                     msgBox = QMessageBox()
                     msgBox.setText(msg)
