@@ -149,6 +149,10 @@ May, R. M., Arms, S. C., Marsh, P., Bruning, E. and Leeman, J. R., 2017:
     [Available online at https://github.com/Unidata/MetPy.]
     doi:10.5065/D6WW7G29.
     
+## Citation ##
+```
+Aquino, J. (2020). RAOBget [Software]. UCAR/NCAR - Earth Observing Laboratory. https://doi.org/10.26023/5SMY-QP26
+```
 ## Other resources ##
 If this tool doesn't provide what you need, here are a list of other potential resources:
 
