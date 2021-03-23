@@ -1,3 +1,6 @@
+
+[![DOI](https://img.shields.io/badge/DOI-10.26023/5smy-qp26)](https://doi.org/10.26023/5smy-qp26)
+
 # RAOBget
 
 This repository contains scripts to download RAOBS from the [University of Wyoming Radiosonde Archive](http://weather.uwyo.edu/upperair/sounding.html) by building URLs like:
