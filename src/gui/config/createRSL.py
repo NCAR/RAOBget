@@ -21,7 +21,7 @@ class CreateRSL():
         """ Create the Create station list button """
         lbl = QLabel("-or-")
         box.addWidget(lbl, row, 0)
-        create = QPushButton("Create station list")
+        create = QPushButton("Create/Edit station list")
         create.clicked.connect(self.createRSL)
         create.setToolTip('Create a list of stations for which to download ' +
                           'soundings')

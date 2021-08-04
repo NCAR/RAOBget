@@ -161,12 +161,8 @@ class RSLCreator(QMainWindow):
         # add the following line: menubar.setNativeMenuBar(False).
         menubar.setNativeMenuBar(False)
 
-        # Add a menu option to access config files
-        fileMenu = menubar.addMenu("File")
-
-        # In order for tooltips of actions to display, need to
-        # setToolTipsVisible to True (is False by default)
-        fileMenu.setToolTipsVisible(True)
+        # ToolTips don't display in QMenuBar items, but leave them in in
+        # case this changes in the future.
 
         # Add a submenu option to load a master station list
         loadStationListFile = QAction("Load master station list", self)
@@ -174,14 +170,14 @@ class RSLCreator(QMainWindow):
                                        'station locations, etc to select ' +
                                        'from to create RSL file.')
         loadStationListFile.triggered.connect(self.loadStationListFile)
-        fileMenu.addAction(loadStationListFile)
+        menubar.addAction(loadStationListFile)
 
         # Add a submenu option to load an existing RSL file for modification
         loadRSLFile = QAction("Load RSL file", self)
         loadRSLFile.setToolTip('Load an existing RSL file to be ' +
                                'modified')
         loadRSLFile.triggered.connect(self.loadRSLFile)
-        fileMenu.addAction(loadRSLFile)
+        menubar.addAction(loadRSLFile)
 
         # Add a menu/submenu? option to quit
         quitButton = QAction('Quit', self)
