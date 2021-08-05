@@ -44,7 +44,7 @@ def to_ftp(outfile, request, log=""):
             ftp = FTP(ftp_server, 'anonymous', '')
             ftp.cwd(ftp_dir)
             f = open(outfile, 'rb')
-            ftp.storbinary(f'STOR ' + outfile, f)
+            ftp.storbinary(f'{"STOR "}' + outfile, f)
             ftp.quit()
             return("FTPd " + outfile + " to " + ftp_server + "/" + ftp_dir)
         except Exception:
