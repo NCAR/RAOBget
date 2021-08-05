@@ -31,12 +31,12 @@ def set_outfile(request, log):
 
 
 def strip_html(request, outfile, log):
-
-    # Strip unneeded HTML from the retrieved data.
+    """ Strip unneeded HTML from the retrieved data. """
     # The VB6 MTP sofware strips part of the HTML from the downloaded RAOB
     # file. We are preserving this format here for backward compatibility
     # so RAOBman VB code will still work.
 
+    status = False  # Keep track of if found any data in the file
     out = open(outfile)
     temp = open(outfile + '.temp', 'w')
 
@@ -58,6 +58,7 @@ def strip_html(request, outfile, log):
 
         # Search for SECOND </PRE>, keep everything before and including it
         while line[0:6] != '</PRE>' and line != '':
+            status = True  # Found at least one data line
             temp.write(line)
             line = out.readline()
 
@@ -91,3 +92,8 @@ def strip_html(request, outfile, log):
 
     # move temp back to outfile
     os.replace(outfile + '.temp', outfile)
+
+    # At this point, if status=False, file did not contain any data.
+    if (status is False):
+        printmsg(log, outfile + " did not contain any data.")
+    return(status)

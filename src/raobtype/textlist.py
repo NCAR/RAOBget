@@ -89,9 +89,11 @@ class RAOBtextlist():
             if app is not None:      # Force the GUI to redraw so log
                 app.processEvents()  # messages, etc are displayed
 
+            # status here returns true if successfully downloaded a RAOB
             status = self.rwget.get_data(url, outfile)
 
             if request.get_mtp() is True and status:
-                userlib.mtp.strip_html(request, outfile, self.log)
+                # status here returns true if RAOB file is not empty
+                status = userlib.mtp.strip_html(request, outfile, self.log)
 
         return(status, outfile)
