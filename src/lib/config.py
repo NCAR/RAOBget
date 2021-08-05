@@ -30,6 +30,7 @@ import logging
 import os
 import yaml
 from lib.messageHandler import printmsg
+from datetime import date
 
 
 class config():
@@ -48,6 +49,15 @@ class config():
             return(False)
 
         with open(yamlfile, 'w') as outfile:
+            # Add a header
+            outfile.write("################################################\n")
+            outfile.write("# Configuration file for RAOBget\n")
+            outfile.write("# To use, start RAOBget and click File->Load c..\n")
+            outfile.write("# Written in YAML (https://yaml.org)\n")
+            outfile.write("# Copyright: UCAR, " + str(date.today()) + "\n")
+            outfile.write("################################################\n")
+
+            # Dump the metadata
             yaml.dump(request.get_dict(), outfile)
 
         printmsg(self.log, "Successfully saved config to " + yamlfile)
