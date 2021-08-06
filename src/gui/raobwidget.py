@@ -115,7 +115,8 @@ class Widget(QWidget):
         """ Actions to take when the 'Begin retrieval' button is selected """
         printmsg(self.log, "Begin retrieval")
         logging.info(str(self.raob.request.get_request()))
-        self.raob.request.set_mtp_dir(userlib.mtp.set_dir(self.log))
+        # Ask user where to save RAOB files
+        userlib.mtp.set_dir(self.log, self.raob.request)
         self.raob.get(self, self.app, self.log)
 
     def createSkewt(self, outfile):

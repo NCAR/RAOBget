@@ -14,34 +14,39 @@ from lib.messageHandler import printmsg
 from gui.fileselector import FileSelector
 
 
-def set_dir(log):
+def set_dir(log, request):
     """ Ask user where to save RAOB files. """
 
     getdir = FileSelector("dir")
     dir = getdir.get_file()
 
+    # If user hit cancel, set dir to previous dir (usually default)
+    if not dir:
+        dir = os.path.join(os.getcwd(), request.get_mtp_dir())
+
     printmsg(log, "RAOBs will be written to " + dir)
 
-    return(dir)
+    request.set_mtp_dir(dir)
 
 
 def set_outfile(request, dir, log):
     """ Create an output filename, including the full path """
 
     # If user did not select output dir, default to args default.
-    if dir == "":
+    if not dir:
         dir = os.path.join(os.getcwd(), request.get_mtp_dir())
 
     # Make sure directory exists. If not, warn user.
     if not os.path.exists(dir):
         printmsg(log, "ERROR: Directory to write MTP data does not exist: " +
                  dir + ". Choose another dir.")
-        dir = set_dir(log)
+        set_dir(log, request)
 
     # The MTP VB6 code requires that only the begin date be given in the RAOB
     # filename.
-    return(dir + '/' + request.get_stnm() + request.get_year() +
-           request.get_month() + request.get_begin() + ".txt")
+    return(request.get_mtp_dir() + '/' + request.get_stnm() +
+           request.get_year() + request.get_month() + request.get_begin() +
+           ".txt")
 
 
 def strip_html(request, outfile, log):
