@@ -13,6 +13,7 @@ from gui.configedit import GUIconfig
 from lib.messageHandler import printmsg
 from raobtype.skewt import Skewt
 from lib.raobroot import getrootdir
+import userlib.mtp
 
 
 class Widget(QWidget):
@@ -114,6 +115,7 @@ class Widget(QWidget):
         """ Actions to take when the 'Begin retrieval' button is selected """
         printmsg(self.log, "Begin retrieval")
         logging.info(str(self.raob.request.get_request()))
+        self.raob.request.set_mtp_dir(userlib.mtp.set_dir(self.log))
         self.raob.get(self, self.app, self.log)
 
     def createSkewt(self, outfile):

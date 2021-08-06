@@ -40,7 +40,9 @@ class RAOBtextlist():
             request: a RAOBrequest dictionary of request metadata
         """
         if request.get_mtp() is True:
-            self.outfile = userlib.mtp.set_outfile(request, self.log)
+            self.outfile = userlib.mtp.set_outfile(request,
+                                                   request.get_mtp_dir(),
+                                                   self.log)
         else:
             self.outfile = request.get_stnm() + request.get_year() + \
                 request.get_month() + request.get_begin() + request.get_end() \

@@ -23,12 +23,13 @@ class FileSelector(QMainWindow):
         # Set the file type filter
         config = re.compile("^.*Config")
         rsl = re.compile("^.*Rsl")
+        dir = re.compile("dir")
 
         if config.match(filetype):
             filefilter = "config files (*.yml, *.YML)"
         elif rsl.match(filetype):
             filefilter = "RSL Files (*.rsl, *.RSL)"
-        else:
+        elif not dir.match(filetype):
             print("Software engineer goofed - called filetype that hasn't" +
                   " been coded. Contact SE for code changes.")
 
@@ -39,8 +40,11 @@ class FileSelector(QMainWindow):
             self.filename = self.initDialog(rootdir, filefilter)
         elif save.match(filetype):
             self.filename = self.initSaveAs(rootdir, filefilter)
+        elif dir.match(filetype):
+            self.filename = self.initGetDir(rootdir)
 
     def initSaveAs(self, rootdir, filefilter):
+        """ Instantiate the file dialog to select a file to save to """
         # When use native dialogs, get an error that Class
         # FIFinderSyncExtensionHost is implemented twice. Googling seems to
         # indicate this is an incompatability with the latest Mac OS's, so for
@@ -67,7 +71,7 @@ class FileSelector(QMainWindow):
             return(os.path.relpath(filename, start=rootdir))
 
     def initDialog(self, rootdir, filefilter):
-        """ Instantiate the file dialog """
+        """ Instantiate the file dialog to select a file to load """
         # When use native dialogs, get an error that Class
         # FIFinderSyncExtensionHost is implemented twice. Googling seems to
         # indicate this is an incompatability with the latest Mac OS's, so for
@@ -92,6 +96,29 @@ class FileSelector(QMainWindow):
             # only save the relative path in the request, starting with
             # config so remove the value of rootdir from the filename.
             return(os.path.relpath(filename, start=rootdir))
+
+    def initGetDir(self, rootdir):
+        """ Instantiate the file dialog to select a dir """
+        # When use native dialogs, get an error that Class
+        # FIFinderSyncExtensionHost is implemented twice. Googling seems to
+        # indicate this is an incompatability with the latest Mac OS's, so for
+        # now disable Native Dialog
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+
+        dir = QFileDialog.getExistingDirectory(self,
+                                               "Select a directory",
+                                               os.path.join(rootdir),
+                                               options=options)
+
+        if dir == "":
+            # When user hits Cancel, QFileDialog returns an empty string
+            return(dir)
+        else:
+            # QFileDialog returns the complete path to the file. We want to
+            # only save the relative path in the request, starting with
+            # config so remove the value of rootdir from the filename.
+            return(dir)
 
     def get_file(self):
         return(self.filename)

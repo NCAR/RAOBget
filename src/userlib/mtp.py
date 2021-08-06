@@ -11,18 +11,32 @@
 ###############################################################################
 import os
 from lib.messageHandler import printmsg
+from gui.fileselector import FileSelector
 
 
-def set_outfile(request, log):
+def set_dir(log):
+    """ Ask user where to save RAOB files. """
+
+    getdir = FileSelector("dir")
+    dir = getdir.get_file()
+
+    printmsg(log, "RAOBs will be written to " + dir)
+
+    return(dir)
+
+
+def set_outfile(request, dir, log):
     """ Create an output filename, including the full path """
 
-    dir = os.path.join(os.getcwd(), request.get_mtp_dir())
+    # If user did not select output dir, default to args default.
+    if dir == "":
+        dir = os.path.join(os.getcwd(), request.get_mtp_dir())
 
     # Make sure directory exists. If not, warn user.
     if not os.path.exists(dir):
         printmsg(log, "ERROR: Directory to write MTP data does not exist: " +
-                 dir + ". Create dir and retry retrieval")
-        return(False)
+                 dir + ". Choose another dir.")
+        dir = set_dir(log)
 
     # The MTP VB6 code requires that only the begin date be given in the RAOB
     # filename.
