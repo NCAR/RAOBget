@@ -89,7 +89,7 @@ class RAOBwget:
                       "\n" + str(e) + \
                       "\n\nUnable to download " + outfile + "\n\n" + \
                       " Confirm that you are online and click OK to try to" + \
-                      " retrieve next RAOB or click Quit to exit program. " + \
+                      " retrieve same RAOB or click Quit to exit program. " + \
                       " Restart with option --test for testing with" + \
                       " offline sample data files"
                 if app is None:
