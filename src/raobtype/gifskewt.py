@@ -200,7 +200,13 @@ class RAOBgifskewt():
                 app.processEvents()  # messages, etc are displayed
 
         else:
-            gifstatus = None
+            # Differentiate between not being able to retrieve data because
+            # web connection is down (None) and because data does not exist
+            # (False).
+            if (status is None):
+                gifstatus = None
+            else:
+                gifstatus = False
             if request.get_test() is True:
                 shutil.copyfile(getrootdir() + '/test/data/' +
                                 'upperair.SkewT.201905280000.Riverton_WY.gif' +

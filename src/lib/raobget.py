@@ -248,7 +248,9 @@ class RAOBget():
                 # overwhelm UWyo server.
                 if len(stnlist) > 30:
                     count = 0
-                for stn in stnlist:  # Loop through a list of stations
+                i = 0
+                while i < len(stnlist):  # Loop through a list of stations
+                    stn = stnlist[i]
                     status = self.request.set_stnm(stn)
                     if not status:
                         printmsg(self.log, "WARNING: Requested station "
@@ -256,14 +258,20 @@ class RAOBget():
                                  " list. Skipping and continuing...")
                         continue
                     status = self.retrieve(app)
-                    if not status:
+                    if status is False:
                         printmsg(self.log, "Skipping station and continuing")
+                    elif status is None:
+                        # TBD: If status is None (as opposed to False), user
+                        # clocked OK and wants to try to retrieve stn again.
+                        printmsg(self.log, "Try to retrieve " + stn + " again")
+                        i = i-1
                     if len(stnlist) > 30:
                         count = count+1
                         if count % 10 == 0:
                             printmsg(self.log, 'Sleeping for 30 seconds to ' +
                                      'avoid overwhelming UWyo server')
                             time.sleep(30)
+                    i = i+1
                 printmsg(self.log, "Done retrieving RAOBs from: '" +
                          self.request.get_year() + self.request.get_month() +
                          self.request.get_begin() + "' to '" +

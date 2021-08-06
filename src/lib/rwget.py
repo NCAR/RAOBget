@@ -103,7 +103,7 @@ class RAOBwget:
                     reply = msgBox.exec()
                     if reply == QMessageBox.RejectRole:
                         sys.exit()
-                return(False)
+                return(None)
             except socket.timeout as e:
                 printmsg(self.log, "There was an error:")
                 printmsg(self.log, str(e))
