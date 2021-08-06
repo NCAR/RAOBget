@@ -7,6 +7,7 @@
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
 import os
+import sys
 import urllib.request
 import socket
 
@@ -85,24 +86,23 @@ class RAOBwget:
                 app = QApplication.instance()
 
                 msg = "Can't connect to weather.uwyo.edu. Received error:" + \
-                      "\n" + str(e) + "Use option --test for testing with " + \
-                      "offline sample data files or confirm that you are " + \
-                      "online and try again in a few minutes.\n\n Unable " + \
-                      "to download " + outfile + "\n\n" + \
-                      " When you click OK, code will try to retrieve next RAOB"
+                      "\n" + str(e) + \
+                      "\n\nUnable to download " + outfile + "\n\n" + \
+                      " Confirm that you are online and click OK to try to" + \
+                      " retrieve next RAOB or click Quit to exit program. " + \
+                      " Restart with option --test for testing with" + \
+                      " offline sample data files"
                 if app is None:
                     print(self.log, msg)
                 else:
-                    quitButton = QAction('Quit')
-                    quitButton.setShortcut('Ctrl+Q')
-                    quitButton.setToolTip('Exit application')
-                    # quitButton.triggered.connect(QMessageBox.close)
-
                     msgBox = QMessageBox()
                     msgBox.setText(msg)
                     msgBox.setIcon(QMessageBox.Information)
-                    msgBox.addButton(quitButton, QMessageBox.close)
-                    msgBox.exec()
+                    msgBox.addButton('OK', QMessageBox.AcceptRole)
+                    msgBox.addButton('Quit',QMessageBox.RejectRole)
+                    reply = msgBox.exec()
+                    if reply == QMessageBox.RejectRole:
+                        sys.exit()
                 return(False)
             except socket.timeout as e:
                 printmsg(self.log, "There was an error:")
