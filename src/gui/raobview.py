@@ -5,6 +5,7 @@
 #
 # COPYRIGHT:   University Corporation for Atmospheric Research, 2019
 ###############################################################################
+import sys
 from PyQt5.QtWidgets import QMainWindow, QAction
 from gui.raobwidget import Widget
 from gui.fileselector import FileSelector
@@ -83,7 +84,7 @@ class RAOBview(QMainWindow):
         quitButton = QAction('Quit', self)
         quitButton.setShortcut('Ctrl+Q')
         quitButton.setToolTip('Exit application')
-        quitButton.triggered.connect(self.close)
+        quitButton.triggered.connect(self.exitApp)
         menubar.addAction(quitButton)
 
     def loadConfig(self):
@@ -162,3 +163,7 @@ class RAOBview(QMainWindow):
         self.raob.request.set_config(self.loader.get_file())
         configfile = config(self.log)
         configfile.write(self.raob.request)
+
+    def exitApp(self):
+        """ Exit the application """
+        sys.exit(1)
