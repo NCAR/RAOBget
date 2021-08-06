@@ -15,7 +15,7 @@ from urllib.error import HTTPError, URLError
 from util.region import RAOBregion
 from raobtype.raobtype import RAOBtype
 from lib.messageHandler import printmsg
-from PyQt5.QtWidgets import QMessageBox, QApplication, QAction
+from PyQt5.QtWidgets import QMessageBox, QApplication
 
 
 class RAOBwget:
@@ -99,7 +99,7 @@ class RAOBwget:
                     msgBox.setText(msg)
                     msgBox.setIcon(QMessageBox.Information)
                     msgBox.addButton('OK', QMessageBox.AcceptRole)
-                    msgBox.addButton('Quit',QMessageBox.RejectRole)
+                    msgBox.addButton('Quit', QMessageBox.RejectRole)
                     reply = msgBox.exec()
                     if reply == QMessageBox.RejectRole:
                         sys.exit()
