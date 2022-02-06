@@ -15,7 +15,8 @@ http://weather.uwyo.edu/upperair/images/2019052812.72672.skewt.parc.gif
 ```
 
 ## Usage ##
-To run on windows 10:
+
+### To run on windows 10: ###
 
 ```
 - open an xterm
@@ -25,21 +26,20 @@ To run on windows 10:
 
 or create a shortcut to windows10/RAOBget.bat and move it to the desktop and just click on it
 
-To run on a mac:
+### To run on a mac: ###
 
 ```
 - open an xterm
 > python3 RAOBget.py <-h> ...
 ```
 
-**NCAR/EOL users: To run on barolo, you need to use
-/opt/local/anaconda3/bin/python3.7 as this is the only place PyQt5 and other
-needed packages are installed. Even if you are not using the GUI mode, the code
-will look for the PyQt5 library and fail.**
-
+### To run on barolo: ###
+```
+> python3 /opt/local/RAOBget/src/RAOBget <-h>
+```
 The -h option lists and identifies the parameters you can pass to the code, like requested station id and dates. So for example, **python3 RAOBget.py --raobtype TEXT:LIST --now --stnm DNR** will download the latest 12-hour sounding from Denver/Stapleton.
 
-For use with the NCAR/EOL field catalog, use the command:
+### For use with the NCAR/EOL field catalog, use the command: ###
 
 ```
 > cd src
@@ -47,11 +47,13 @@ For use with the NCAR/EOL field catalog, use the command:
 ```
 (or edit the sample config file, config/catalog.yml, and add stnm or rsl keywords)
 
-For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata:
+### For use with the NCAR/EOL MTP, use the GUI to set all the needed metadata: ###
+  
 ```
 python3 RAOBget.py --gui
 ```
-then save your config and for future runs:
+
+Set Mode = MTP; Freq = 12; Data Format = TEXT:LIST; create or load an RSF file; select dates. You can then save your configuration for future runs:
 ```
 python3 RAOBget.py --config <configfile>
 ```
