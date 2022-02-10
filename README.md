@@ -33,7 +33,7 @@ or create a shortcut to windows10/RAOBget.bat and move it to the desktop and jus
 > python3 RAOBget.py <-h> ...
 ```
 
-### To run on barolo: ###
+### For EOL staff, to run on barolo (CentOS7) or relampago (CentOS8-stream): ###
 ```
 > python3 /opt/local/RAOBget/src/RAOBget <-h>
 ```
@@ -66,10 +66,20 @@ https://www.meted.ucar.edu/training_module.php?id=225#.XXrMpZNKiwQ
  * python3
  * pyqt5
  * PyYAML
- * metpy (which drags in cartopy, hopefully)
+ * metpy
 ```
 
 ## Installation ##
+
+Note re. cartopy: This software does NOT require Cartopy. It does require Metpy. Metpy 0.10.# inadvertently developed a hard dependency on Cartopy. If you get an error that Metpy can't find Cartopy, switch to a version of Metpy that does not have this dependency.
+
+### Install on CentOS7/8 ###
+```
+Make sure you have python3 installed
+> python3 -m pip install PyQt5
+> python3 -m pip install pyyaml
+> python3 -m pip install metpy
+```
 
 ### To install on a MAC ###
 ```
