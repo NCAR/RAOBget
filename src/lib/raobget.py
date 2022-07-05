@@ -252,10 +252,11 @@ class RAOBget():
                 while i < len(stnlist):  # Loop through a list of stations
                     stn = stnlist[i]
                     status = self.request.set_stnm(stn)
-                    if not status:
+                    if status is False:
                         printmsg(self.log, "WARNING: Requested station "
                                  + stn + " not valid. Update RSL station" +
                                  " list. Skipping and continuing...")
+                        i = i+1
                         continue
                     status = self.retrieve(app)
                     if status is False:
