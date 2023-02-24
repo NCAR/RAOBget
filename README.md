@@ -33,7 +33,8 @@ or create a shortcut to windows10/RAOBget.bat and move it to the desktop and jus
 > python3 RAOBget.py <-h> ...
 ```
 
-### For EOL staff, to run on barolo (CentOS7) or relampago (CentOS8-stream): ###
+### For EOL staff, to run on mercury (RHEL8) or relampago (CentOS8-stream): ###
+(Note: You can run on barolo using /bin/python3, but as CentOS 7 reaches end-of-life June 2024, please try one of the other machines before then.)
 ```
 > python3 /opt/local/RAOBget/src/RAOBget <-h>
 ```
