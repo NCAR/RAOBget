@@ -116,7 +116,7 @@
    29.5  24079  -55.6  -67.6     21   0.14     55     21  595.1  596.3  595.1
    29.1  24174  -55.9  -67.9     21   0.14     60     22  596.8  598.0  596.9
    28.2  24384  -55.0  -67.0     21   0.17     70     23  605.1  606.5  605.1
-   28.1  24397  -54.9  -66.9     21   0.17     71     23  605.6  607.0  605.6
+   28.1  24397  -54.9  -66.9     21   0.17     71     23  605.6  607.0  605.7
    27.5  24535  -54.3  -69.3     14   0.12     80     24  611.0  612.1  611.1
    26.9  24689  -53.7  -68.3     15   0.14     90     24  616.8  618.1  616.9
    24.7  25227  -51.7  -64.7     20   0.26     84     25  637.5  639.8  637.6
@@ -154,6 +154,7 @@
           Bulk Richardson Number using CAPV: 0.00
   Temp [K] of the Lifted Condensation Level: 275.89
 Pres [hPa] of the Lifted Condensation Level: 796.06
+   Equivalent potential temp [K] of the LCL: 311.83
      Mean mixed layer potential temperature: 294.49
               Mean mixed layer mixing ratio: 5.89
               1000 hPa to 500 hPa thickness: 5527.00
