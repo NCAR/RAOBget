@@ -1,0 +1,11 @@
+name: raobget
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - conda
+  - python=3.10
+  - metpy
+  - pyqt=5
+  - pyyaml
+prefix: C:\Users\lroot\Miniconda3
